@@ -19,37 +19,48 @@ function authMiddleware(req, res, next) {
 
 router.use(authMiddleware);
 
-router.get("/", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM books WHERE user_id = ?", [
-    req.user.id,
-  ]);
-  res.json(rows);
+// Ambil semua buku
+router.get("/", (req, res) => {
+  db.query("SELECT * FROM books", (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result);
+  });
 });
 
-router.post("/", async (req, res) => {
+// Tambah buku baru
+router.post("/", (req, res) => {
   const { title, author } = req.body;
-  await pool.query(
-    "INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)",
-    [title, author, req.user.id]
+  db.query(
+    "INSERT INTO books (title, author) VALUES (?, ?)",
+    [title, author],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ message: "Book added", id: result.insertId });
+    }
   );
-  res.status(201).json({ message: "Book added" });
 });
 
-router.put("/:id", async (req, res) => {
+// Edit (Update) buku
+router.put("/:id", (req, res) => {
+  const bookId = req.params.id;
   const { title, author } = req.body;
-  await pool.query(
-    "UPDATE books SET title = ?, author = ? WHERE id = ? AND user_id = ?",
-    [title, author, req.params.id, req.user.id]
+  db.query(
+    "UPDATE books SET title = ?, author = ? WHERE id = ?",
+    [title, author, bookId],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: "Book updated" });
+    }
   );
-  res.json({ message: "Book updated" });
 });
 
-router.delete("/:id", async (req, res) => {
-  await pool.query("DELETE FROM books WHERE id = ? AND user_id = ?", [
-    req.params.id,
-    req.user.id,
-  ]);
-  res.json({ message: "Book deleted" });
+// Hapus buku
+router.delete("/:id", (req, res) => {
+  const bookId = req.params.id;
+  db.query("DELETE FROM books WHERE id = ?", [bookId], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: "Book deleted" });
+  });
 });
 
 module.exports = router;
