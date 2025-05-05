@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Book Catalog App</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: auto;
+      }
+      input,
+      button {
+        margin: 5px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Login / Register</h2>
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+
+    <div id="app" class="hidden">
+      <h2>Book List</h2>
+      <input id="title" placeholder="Title" />
+      <input id="author" placeholder="Author" />
+      <button onclick="addBook()">Add Book</button>
+      <ul id="bookList"></ul>
+    </div>
+
+    <script>
+      const API = "/api";
+      let token = localStorage.getItem("token");
+      if (token) document.getElementById("app").classList.remove("hidden");
+
+      async function register() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        await fetch(`${API}/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+        alert("Registered! Now login.");
+      }
+
+      async function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const res = await fetch(`${API}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (data.token) {
+          token = data.token;
+          localStorage.setItem("token", token);
+          document.getElementById("app").classList.remove("hidden");
+          loadBooks();
+        } else alert("Login failed");
+      }
+
+      async function loadBooks() {
+        const res = await fetch(`${API}/books`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const books = await res.json();
+        const list = document.getElementById("bookList");
+        list.innerHTML = "";
+        books.forEach((b) => {
+          const li = document.createElement("li");
+          li.innerHTML = `${b.title} by ${b.author} <button onclick="deleteBook(${b.id})">Delete</button>`;
+          list.appendChild(li);
+        });
+      }
+
+      async function addBook() {
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        await fetch(`${API}/books`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title, author }),
+        });
+        loadBooks();
+      }
+
+      async function deleteBook(id) {
+        await fetch(`${API}/books/${id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        loadBooks();
+      }
+    </script>
+  </body>
+</html>
