@@ -2,105 +2,48 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Book Catalog App</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        max-width: 600px;
-        margin: auto;
-      }
-      input,
-      button {
-        margin: 5px;
-      }
-      .hidden {
-        display: none;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h2>Login / Register</h2>
-    <input id="username" placeholder="Username" />
-    <input id="password" type="password" placeholder="Password" />
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
+    <header>
+      <div class="container">
+        <h1>📚 Book Catalog</h1>
+        <nav>
+          <span id="welcome-user"></span>
+          <button id="logoutBtn" class="btn secondary hidden">Logout</button>
+        </nav>
+      </div>
+    </header>
 
-    <div id="app" class="hidden">
-      <h2>Book List</h2>
-      <input id="title" placeholder="Title" />
-      <input id="author" placeholder="Author" />
-      <button onclick="addBook()">Add Book</button>
-      <ul id="bookList"></ul>
-    </div>
+    <main>
+      <section class="auth-section card" id="authSection">
+        <h2>Login / Register</h2>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <div>
+          <button id="registerBtn" class="btn primary">Register</button>
+          <button id="loginBtn" class="btn secondary">Login</button>
+        </div>
+      </section>
 
-    <script>
-      const API = "/api";
-      let token = localStorage.getItem("token");
-      if (token) document.getElementById("app").classList.remove("hidden");
+      <section class="book-section hidden">
+        <div class="card">
+          <h2>Add New Book</h2>
+          <input type="text" id="title" placeholder="Book Title" />
+          <input type="text" id="author" placeholder="Author" />
+          <button id="addBookBtn" class="btn primary">Add Book</button>
+        </div>
 
-      async function register() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        await fetch(`${API}/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-        alert("Registered! Now login.");
-      }
+        <div id="booksContainer" class="book-grid"></div>
+      </section>
+    </main>
 
-      async function login() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const res = await fetch(`${API}/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-        const data = await res.json();
-        if (data.token) {
-          token = data.token;
-          localStorage.setItem("token", token);
-          document.getElementById("app").classList.remove("hidden");
-          loadBooks();
-        } else alert("Login failed");
-      }
+    <footer>
+      <p>&copy; 2025 Book Catalog App - Inspired by Gramedia</p>
+    </footer>
 
-      async function loadBooks() {
-        const res = await fetch(`${API}/books`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const books = await res.json();
-        const list = document.getElementById("bookList");
-        list.innerHTML = "";
-        books.forEach((b) => {
-          const li = document.createElement("li");
-          li.innerHTML = `${b.title} by ${b.author} <button onclick="deleteBook(${b.id})">Delete</button>`;
-          list.appendChild(li);
-        });
-      }
-
-      async function addBook() {
-        const title = document.getElementById("title").value;
-        const author = document.getElementById("author").value;
-        await fetch(`${API}/books`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ title, author }),
-        });
-        loadBooks();
-      }
-
-      async function deleteBook(id) {
-        await fetch(`${API}/books/${id}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        loadBooks();
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
