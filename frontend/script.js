@@ -1,8 +1,8 @@
 // Dummy endpoint base
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:3000";
 
 // Dummy image URL
-const DUMMY_IMAGE = "https://via.placeholder.com/300x160.png?text=Book+Cover";
+const DUMMY_IMAGE = "/image/default-book.jpg";
 
 // Auth state
 let currentUser = null;
@@ -45,8 +45,11 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   });
 
   const data = await res.json();
-  if (res.ok) {
+  console.log("Login response:", data);
+
+  if (res.ok && data.user && data.token) {
     currentUser = data.user;
+    localStorage.setItem("token", data.token); // Save token
     welcomeUser.textContent = `Hello, ${currentUser.username}`;
     authSection.classList.add("hidden");
     bookSection.classList.remove("hidden");
@@ -59,6 +62,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 logoutBtn.addEventListener("click", () => {
   currentUser = null;
+  localStorage.removeItem("token");
   authSection.classList.remove("hidden");
   bookSection.classList.add("hidden");
   logoutBtn.classList.add("hidden");
@@ -70,9 +74,14 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
   const author = document.getElementById("author").value.trim();
   if (!title || !author) return alert("Please fill in all fields");
 
+  const token = localStorage.getItem("token");
+
   const res = await fetch(`${BASE_URL}/api/books`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify({ title, author }),
   });
 
@@ -81,13 +90,26 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
     document.getElementById("author").value = "";
     fetchBooks();
   } else {
-    alert("Failed to add book");
+    const data = await res.json();
+    alert(data.message || "Failed to add book");
   }
 });
 
 async function fetchBooks() {
-  const res = await fetch(`${BASE_URL}/api/books`);
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/api/books`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   const books = await res.json();
+
+  if (!Array.isArray(books)) {
+    console.error("Unexpected response:", books);
+    alert(books.message || "Failed to fetch books.");
+    return;
+  }
 
   booksContainer.innerHTML = "";
   books.forEach((book) => {
@@ -113,10 +135,14 @@ async function fetchBooks() {
       const author = document
         .querySelector(`.editable-author[data-id="${id}"]`)
         .innerText.trim();
+      const token = localStorage.getItem("token");
 
       await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ title, author }),
       });
 
@@ -128,7 +154,15 @@ async function fetchBooks() {
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       const id = e.target.dataset.id;
-      await fetch(`${BASE_URL}/api/books/${id}`, { method: "DELETE" });
+      const token = localStorage.getItem("token");
+
+      await fetch(`${BASE_URL}/api/books/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       fetchBooks();
     });
   });
