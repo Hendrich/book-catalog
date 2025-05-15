@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 //app.use(cors());
 app.use(
   cors({
-    origin: "https://book-catalog-app-production.up.railway.app/", // Atau lebih aman: origin: 'https://namafrontend.vercel.app'
+    origin: "*", // Atau lebih aman: origin: 'https://namafrontend.vercel.app'
   })
 );
 app.use(bodyParser.json());
