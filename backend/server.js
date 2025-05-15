@@ -7,7 +7,12 @@ const bookRoutes = require("./routes/bookRoutes.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+//app.use(cors());
+app.use(
+  cors({
+    origin: "https://book-catalog-app-production.up.railway.app/", // Atau lebih aman: origin: 'https://namafrontend.vercel.app'
+  })
+);
 app.use(bodyParser.json());
 
 // === API routes dulu ===
