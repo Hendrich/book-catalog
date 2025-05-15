@@ -31,10 +31,25 @@ router.post("/login", async (req, res) => {
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
+  //console.log("User found:", user); // setelah dapat user dari DB
   const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
     expiresIn: "1h",
   });
-  res.json({ token });
+  res.json({
+    token,
+    user: {
+      id: user.id,
+      username: user.username,
+    },
+  });
+
+  // console.log("Response being sent:", {
+  //   token,
+  //   user: {
+  //     id: user.id,
+  //     username: user.username,
+  //   },
+  // });
 });
 
 module.exports = router;
