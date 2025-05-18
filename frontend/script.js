@@ -5,7 +5,7 @@
 //const BASE_URL = "https://book-catalog-app-production.up.railway.app";
 
 // endpoint Render
-const BASE_URL = "https://book-catalog-app-z8p8.onrender.com/";
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com";
 
 // Dummy image URL
 const DUMMY_IMAGE = "/image/default-book.jpg";
