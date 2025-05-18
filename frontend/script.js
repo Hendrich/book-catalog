@@ -1,7 +1,12 @@
 // Dummy endpoint base
-const BASE_URL = "http://localhost:3000";
+//const BASE_URL = "http://localhost:3000";
+
 // endpoint Railway
 //const BASE_URL = "https://book-catalog-app-production.up.railway.app";
+
+// endpoint Render
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com/";
+
 // Dummy image URL
 const DUMMY_IMAGE = "/image/default-book.jpg";
 
