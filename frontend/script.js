@@ -1,20 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
+// Inisialisasi Supabase Client
 const supabase = createClient(
-  "https://uoumouxnuzwioaolnfmw.supabase.co",
+  "https://uoumouxnuzwioaolnfmw.supabase.co ",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
 );
 
-// Dummy endpoint base
-//const BASE_URL = "http://localhost:3000";
-
-// endpoint Railway
-//const BASE_URL = "https://book-catalog-app-production.up.railway.app";
-
-// endpoint Render
-const BASE_URL = "https://book-catalog-app-z8p8.onrender.com";
-
-// Dummy image URL
+// Base URL aplikasi
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com ";
 const DUMMY_IMAGE = "/image/default-book.jpg";
 
 // Auth state
@@ -27,53 +20,77 @@ const welcomeUser = document.getElementById("welcome-user");
 const logoutBtn = document.getElementById("logoutBtn");
 const booksContainer = document.getElementById("booksContainer");
 
-document.getElementById("registerBtn").addEventListener("click", async () => {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  if (!username || !password) return alert("Please fill all fields");
+// Cek status login saat halaman dimuat
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data } = await supabase.auth.getSession();
+  const session = data.session;
 
-  const res = await fetch(`${BASE_URL}/api/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-
-  const data = await res.json();
-  if (res.ok) {
-    alert("Register success! Please login.");
-  } else {
-    alert(data.message || "Register failed.");
-  }
-});
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
-  if (!username || !password) return alert("Please fill all fields");
-
-  const res = await fetch(`${BASE_URL}/api/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-
-  const data = await res.json();
-  console.log("Login response:", data);
-
-  if (res.ok && data.user && data.token) {
-    currentUser = data.user;
-    localStorage.setItem("token", data.token); // Save token
-    welcomeUser.textContent = `Hello, ${currentUser.username}`;
+  if (session) {
+    currentUser = session.user;
+    welcomeUser.textContent = `Hello, ${currentUser.email}`;
     authSection.classList.add("hidden");
     bookSection.classList.remove("hidden");
     logoutBtn.classList.remove("hidden");
     fetchBooks();
-  } else {
-    alert(data.message || "Login failed.");
   }
 });
 
-logoutBtn.addEventListener("click", () => {
+// Register handler
+document.getElementById("registerBtn").addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!username || !password) return alert("Please fill all fields");
+
+  // Gunakan Supabase Auth
+  const { data, error } = await supabase.auth.signUp({
+    email: username,
+    password: password,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Register success! Please check your email for confirmation.");
+});
+
+// Login handler
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!username || !password) return alert("Please fill all fields");
+
+  // Gunakan Supabase Auth
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: username,
+    password: password,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  const user = data.user;
+  const token = data.session.access_token;
+
+  localStorage.setItem("token", token);
+  currentUser = user;
+
+  welcomeUser.textContent = `Hello, ${user.email}`;
+  authSection.classList.add("hidden");
+  bookSection.classList.remove("hidden");
+  logoutBtn.classList.remove("hidden");
+
+  fetchBooks();
+});
+
+// Logout handler
+logoutBtn.addEventListener("click", async () => {
+  await supabase.auth.signOut();
   currentUser = null;
   localStorage.removeItem("token");
   authSection.classList.remove("hidden");
@@ -82,10 +99,21 @@ logoutBtn.addEventListener("click", () => {
   welcomeUser.textContent = "";
 });
 
+// Tambah buku
 document.getElementById("addBookBtn").addEventListener("click", async () => {
   const title = document.getElementById("title").value.trim();
   const author = document.getElementById("author").value.trim();
+
   if (!title || !author) return alert("Please fill in all fields");
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    alert("You must be logged in to add a book");
+    return;
+  }
 
   const token = localStorage.getItem("token");
 
@@ -108,10 +136,22 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
   }
 });
 
+// Ambil semua buku milik pengguna
 async function fetchBooks() {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    alert("You must be logged in to view books");
+    return;
+  }
+
   const token = localStorage.getItem("token");
+
   const res = await fetch(`${BASE_URL}/api/books`, {
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -148,6 +188,7 @@ async function fetchBooks() {
       const author = document
         .querySelector(`.editable-author[data-id="${id}"]`)
         .innerText.trim();
+
       const token = localStorage.getItem("token");
 
       await fetch(`${BASE_URL}/api/books/${id}`, {
