@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
     const userId = req.user.id;
     const { rows } = await pool.query(
       "SELECT * FROM books WHERE user_id = $1",
-      [userId]
+      [req.user.id]
     );
     res.json(rows);
   } catch (err) {
@@ -42,11 +42,12 @@ router.get("/", async (req, res) => {
 
 // Tambah buku baru
 router.post("/", async (req, res) => {
-  const { title, author } = req.body;
-  const user_id = req.user.id;
+  const { title, author, user_id } = req.body;
 
-  if (!title || !author) {
-    return res.status(400).json({ message: "Title and author are required" });
+  if (!title || !author || !!user_id) {
+    return res
+      .status(400)
+      .json({ message: "Title ,author, and user_id are required" });
   }
 
   try {
@@ -56,6 +57,7 @@ router.post("/", async (req, res) => {
     );
     res.status(201).json(rows[0]);
   } catch (err) {
+    console.error("Error adding book:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

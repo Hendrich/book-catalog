@@ -1,3 +1,10 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://uoumouxnuzwioaolnfmw.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
+);
+
 // Dummy endpoint base
 //const BASE_URL = "http://localhost:3000";
 
@@ -88,7 +95,7 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, author }),
+    body: JSON.stringify({ title, author, user_id: user.id }),
   });
 
   if (res.ok) {
