@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
     const userId = req.user.id;
     const { rows } = await pool.query(
       "SELECT * FROM books WHERE user_id = $1",
-      [req.user.id]
+      [userId]
     );
     res.json(rows);
   } catch (err) {
@@ -44,10 +44,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { title, author, user_id } = req.body;
 
-  if (!title || !author || !!user_id) {
+  if (!title || !author || !user_id) {
     return res
       .status(400)
-      .json({ message: "Title ,author, and user_id are required" });
+      .json({ message: "Title, author, and user_id are required" });
   }
 
   try {
