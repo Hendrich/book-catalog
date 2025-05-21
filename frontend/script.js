@@ -1,13 +1,13 @@
-//import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 // Inisialisasi Supabase Client
-const supabase = supabase.createClient(
+const supabase = createClient(
   "https://uoumouxnuzwioaolnfmw.supabase.co ",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
 );
 
 // Base URL aplikasi
-const BASE_URL = "https://book-catalog-app-z8p8.onrender.com ";
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com "; // Hapus spasi berlebih
 const DUMMY_IMAGE = "/image/default-book.jpg";
 
 // Auth state
@@ -42,7 +42,6 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
 
   if (!username || !password) return alert("Please fill all fields");
 
-  // Gunakan Supabase Auth
   const { data, error } = await supabase.auth.signUp({
     email: username,
     password: password,
@@ -63,7 +62,6 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
   if (!username || !password) return alert("Please fill all fields");
 
-  // Gunakan Supabase Auth
   const { data, error } = await supabase.auth.signInWithPassword({
     email: username,
     password: password,
@@ -106,15 +104,13 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
 
   if (!title || !author) return alert("Please fill in all fields");
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData?.user) {
     alert("You must be logged in to add a book");
     return;
   }
 
+  const user = authData.user;
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${BASE_URL}/api/books`, {
@@ -138,15 +134,13 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
 
 // Ambil semua buku milik pengguna
 async function fetchBooks() {
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-  if (authError || !user) {
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+  if (authError || !authData?.user) {
     alert("You must be logged in to view books");
     return;
   }
 
+  const user = authData.user;
   const token = localStorage.getItem("token");
 
   const res = await fetch(`${BASE_URL}/api/books`, {
@@ -191,7 +185,7 @@ async function fetchBooks() {
 
       const token = localStorage.getItem("token");
 
-      await fetch(`${BASE_URL}/api/books/${id}`, {
+      const res = await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -200,7 +194,13 @@ async function fetchBooks() {
         body: JSON.stringify({ title, author }),
       });
 
-      fetchBooks();
+      if (res.ok) {
+        alert("Book updated!");
+        fetchBooks();
+      } else {
+        const data = await res.json();
+        alert(data.message || "Failed to update book");
+      }
     });
   });
 
@@ -210,14 +210,20 @@ async function fetchBooks() {
       const id = e.target.dataset.id;
       const token = localStorage.getItem("token");
 
-      await fetch(`${BASE_URL}/api/books/${id}`, {
+      const res = await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      fetchBooks();
+      if (res.ok) {
+        alert("Book deleted!");
+        fetchBooks();
+      } else {
+        const data = await res.json();
+        alert(data.message || "Failed to delete book");
+      }
     });
   });
 }
