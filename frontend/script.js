@@ -1,16 +1,18 @@
-// Cek apakah CDN sudah dimuat
 if (!window.supabase) {
   console.error("Supabase CDN is not loaded yet.");
-  return; // Ini harus dalam fungsi atau async block
+  alert(
+    "Supabase failed to load. Please refresh or check internet connection."
+  );
+  throw new Error("Supabase tidak tersedia");
 }
 
 const supabase = window.supabase.createClient(
-  "https://uoumouxnuzwioaolnfmw.supabase.co ",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx"
+  "https://uoumouxnuzwioaolnfmw.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
 );
 
 // Base URL aplikasi
-const BASE_URL = "https://book-catalog-app-z8p8.onrender.com "; // Hapus spasi berlebih
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com";
 const DUMMY_IMAGE = "/image/default-book.jpg";
 
 // Auth state
