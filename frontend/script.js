@@ -1,4 +1,10 @@
-// Gunakan CDN dari window.supabase
+// Cek apakah CDN sudah dimuat
+if (!window.supabase) {
+  console.error("Supabase CDN is not loaded yet.");
+  return;
+}
+
+// Inisialisasi Supabase Client
 const supabase = window.supabase.createClient(
   "https://uoumouxnuzwioaolnfmw.supabase.co ",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx"
