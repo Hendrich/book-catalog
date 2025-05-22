@@ -1,35 +1,27 @@
 // routes/bookRoutes.js
 const express = require("express");
 const pool = require("../db");
-const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-// Gunakan middleware autentikasi
-router.use(authMiddleware);
-
-// Ambil semua buku milik pengguna
+// Ambil semua buku milik user
 router.get("/", async (req, res) => {
   try {
-    const userId = req.user.id;
-
-    const { rows } = await pool.query(
-      "SELECT * FROM books WHERE user_id = $1",
-      [userId]
-    );
-
+    const { rows } = await pool.query("SELECT * FROM books");
     res.json(rows);
   } catch (err) {
+    console.error("Error fetching books:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
 // Tambah buku baru
 router.post("/", async (req, res) => {
-  const { title, author } = req.body;
-  const user_id = req.user.id;
+  const { title, author, user_id } = req.body;
 
-  if (!title || !author) {
-    return res.status(400).json({ message: "Title and author are required" });
+  if (!title || !author || !user_id) {
+    return res.status(400).json({
+      message: "Title, author, and user_id are required",
+    });
   }
 
   try {
@@ -49,16 +41,15 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
   const { title, author } = req.body;
-  const user_id = req.user.id;
 
   if (!title || !author) {
-    return res.status(400).json({ message: "Title and author are required" });
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     const { rows } = await pool.query(
-      "UPDATE books SET title = $1, author = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
-      [title, author, bookId, user_id]
+      "UPDATE books SET title = $1, author = $2 WHERE id = $3 RETURNING *",
+      [title, author, bookId]
     );
 
     if (rows.length === 0) {
@@ -69,6 +60,7 @@ router.put("/:id", async (req, res) => {
 
     res.json(rows[0]);
   } catch (err) {
+    console.error("Error updating book:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -76,12 +68,11 @@ router.put("/:id", async (req, res) => {
 // Hapus buku
 router.delete("/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
-  const user_id = req.user.id;
 
   try {
     const { rows } = await pool.query(
-      "DELETE FROM books WHERE id = $1 AND user_id = $2 RETURNING *",
-      [bookId, user_id]
+      "DELETE FROM books WHERE id = $1 RETURNING *",
+      [bookId]
     );
 
     if (rows.length === 0) {
@@ -92,6 +83,7 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ message: "Book deleted successfully" });
   } catch (err) {
+    console.error("Error deleting book:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
