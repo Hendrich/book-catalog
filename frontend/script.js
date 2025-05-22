@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Inisialisasi Supabase Client
     const supabase = window.supabase.createClient(
-      "https://uoumouxnuzwioaolnfmw.supabase.co ",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxx"
+      "https://uoumouxnuzwioaolnfmw.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
     );
 
     console.log("Supabase client berhasil dibuat");
