@@ -1,27 +1,33 @@
+// server.js
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-const authRoutes = require("./routes/authRoutes.js");
-const bookRoutes = require("./routes/bookRoutes.js");
+const bookRoutes = require("./routes/bookRoutes");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//app.use(cors());
-app.use(
-  cors({
-    origin: "*", // Atau lebih aman: origin: 'https://namafrontend.vercel.app'
-  })
-);
+// Middleware
 app.use(bodyParser.json());
 
-// === API routes dulu ===
-app.use("/api", authRoutes);
-app.use("/api/books", bookRoutes);
+// CORS policy - Lebih aman jika restrict ke domain tertentu
+app.use(
+  cors({
+    origin: "https://book-catalog-app-z8p8.onrender.com", // Sesuaikan dengan URL frontend
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-// === Static files terakhir ===
+// Routes (tanpa middleware duplikat)
+app.use("/api/books", bookRoutes); // bookRoutes sudah pakai authMiddleware internal
+
+// Serve static files (frontend)
 app.use(express.static(path.join(__dirname, "../frontend")));
 
+// Jalankan server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
