@@ -253,5 +253,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       });
     }
-  }, 2000); // ⏳ Tunggu 2 detik agar Supabase siap
+  }, 5000); // ⏳ Tunggu 2 detik agar Supabase siap
 });
