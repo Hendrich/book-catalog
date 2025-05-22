@@ -1,39 +1,22 @@
 // routes/bookRoutes.js
 const express = require("express");
 const pool = require("../db");
-const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
-
-// Middleware otentikasi
-function authMiddleware(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "No token provided" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Harus mengandung `id`
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
-  }
-}
-
+// Gunakan middleware autentikasi
 router.use(authMiddleware);
 
-// Ambil semua buku milik user yang sedang login
+// Ambil semua buku milik pengguna
 router.get("/", async (req, res) => {
   try {
     const userId = req.user.id;
+
     const { rows } = await pool.query(
       "SELECT * FROM books WHERE user_id = $1",
       [userId]
     );
+
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,12 +25,11 @@ router.get("/", async (req, res) => {
 
 // Tambah buku baru
 router.post("/", async (req, res) => {
-  const { title, author, user_id } = req.body;
+  const { title, author } = req.body;
+  const user_id = req.user.id;
 
-  if (!title || !author || !user_id) {
-    return res
-      .status(400)
-      .json({ message: "Title, author, and user_id are required" });
+  if (!title || !author) {
+    return res.status(400).json({ message: "Title and author are required" });
   }
 
   try {
@@ -55,6 +37,7 @@ router.post("/", async (req, res) => {
       "INSERT INTO books (title, author, user_id) VALUES ($1, $2, $3) RETURNING *",
       [title, author, user_id]
     );
+
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error("Error adding book:", err.message);
@@ -67,6 +50,10 @@ router.put("/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
   const { title, author } = req.body;
   const user_id = req.user.id;
+
+  if (!title || !author) {
+    return res.status(400).json({ message: "Title and author are required" });
+  }
 
   try {
     const { rows } = await pool.query(
