@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const checkSupabase = async () => {
     return new Promise((resolve) => {
       let attempts = 0;
-      const maxAttempts = 20;
+      const maxAttempts = 40; // Meningkatkan maksimal 20 detik
 
       const interval = setInterval(() => {
         if (window.supabase) {
