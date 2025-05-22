@@ -1,8 +1,10 @@
-// script.js - Inisialisasi Supabase dengan pengecekan timeout
+// script.js - Menggunakan Supabase Auth via CDN
 
-if (!window.supabase) {
-  alert("Supabase gagal dimuat. Silakan refresh halaman.");
-}
+let currentUser = null;
+
+// Base URL aplikasi
+const BASE_URL = "https://book-catalog-app-z8p8.onrender.com";
+const DUMMY_IMAGE = "/image/default-book.jpg";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Inisialisasi elemen DOM
@@ -24,234 +26,242 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Gunakan setTimeout untuk memastikan Supabase benar-benar dimuat
-  setTimeout(async () => {
-    if (!window.supabase) {
-      alert("Supabase masih gagal dimuat. Coba lagi nanti.");
+  // Tunggu Supabase dimuat sepenuhnya
+  const checkSupabase = async () => {
+    return new Promise((resolve) => {
+      let attempts = 0;
+      const maxAttempts = 20;
+
+      const interval = setInterval(() => {
+        if (window.supabase) {
+          clearInterval(interval);
+          resolve(window.supabase);
+        } else if (attempts >= maxAttempts) {
+          clearInterval(interval);
+          resolve(null);
+        }
+        attempts++;
+      }, 500);
+    });
+  };
+
+  const supabase = await checkSupabase();
+
+  if (!supabase) {
+    alert("Supabase gagal dimuat. Silakan refresh halaman.");
+    return;
+  }
+
+  console.log("Supabase client berhasil dibuat");
+
+  // Cek session saat halaman dimuat
+  const { data } = await supabase.auth.getSession();
+  const session = data?.session;
+
+  if (session) {
+    currentUser = session.user;
+    welcomeUser.textContent = `Hello, ${currentUser.email}`;
+    authSection.classList.add("hidden");
+    bookSection.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+    fetchBooks();
+  }
+
+  // Register handler
+  document.getElementById("registerBtn").addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!username || !password) return alert("Please fill all fields");
+
+    const { data, error } = await supabase.auth.signUp({
+      email: username,
+      password: password,
+    });
+
+    if (error) {
+      alert(error.message);
       return;
     }
 
-    // Inisialisasi Supabase Client
-    const supabase = window.supabase.createClient(
-      "https://uoumouxnuzwioaolnfmw.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
-    );
+    alert("Register success! Please check your email for confirmation.");
+  });
 
-    console.log("Supabase client berhasil dibuat");
+  // Login handler
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    // Cek session saat halaman dimuat
-    const { data } = await supabase.auth.getSession();
-    const session = data?.session;
+    if (!username || !password) return alert("Please fill all fields");
 
-    if (session) {
-      const user = session.user;
-      welcomeUser.textContent = `Hello, ${user.email}`;
-      authSection.classList.add("hidden");
-      bookSection.classList.remove("hidden");
-      logoutBtn.classList.remove("hidden");
-      fetchBooks();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: username,
+      password: password,
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
     }
 
-    // Event listener untuk tombol register
-    document
-      .getElementById("registerBtn")
-      .addEventListener("click", async () => {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value.trim();
+    const user = data.user;
+    const token = data.session.access_token;
 
-        if (!username || !password) return alert("Please fill all fields");
+    localStorage.setItem("token", token);
+    currentUser = user;
 
-        const { data, error } = await supabase.auth.signUp({
-          email: username,
-          password: password,
-        });
+    welcomeUser.textContent = `Hello, ${user.email}`;
+    authSection.classList.add("hidden");
+    bookSection.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
 
-        if (error) {
-          alert(error.message);
-          return;
-        }
+    fetchBooks();
+  });
 
-        alert("Register success! Please check your email for confirmation.");
-      });
+  // Logout handler
+  logoutBtn.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert("Logout failed");
+      return;
+    }
 
-    // Event listener untuk tombol login
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
+    currentUser = null;
+    localStorage.removeItem("token");
+    welcomeUser.textContent = "";
+    authSection.classList.remove("hidden");
+    bookSection.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+  });
 
-      if (!username || !password) return alert("Please fill all fields");
+  // Tambah buku
+  document.getElementById("addBookBtn").addEventListener("click", async () => {
+    const title = document.getElementById("title").value.trim();
+    const author = document.getElementById("author").value.trim();
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: username,
-        password: password,
-      });
+    if (!title || !author) return alert("Please fill in all fields");
 
-      if (error) {
-        alert(error.message);
-        return;
-      }
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData?.user) {
+      alert("You must be logged in to add a book");
+      return;
+    }
 
-      const user = data.user;
-      const token = data.session.access_token;
+    const user = authData.user;
+    const token = localStorage.getItem("token");
 
-      localStorage.setItem("token", token);
-      welcomeUser.textContent = `Hello, ${user.email}`;
-      authSection.classList.add("hidden");
-      bookSection.classList.remove("hidden");
-      logoutBtn.classList.remove("hidden");
+    const res = await fetch(`${BASE_URL}/api/books`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title, author, user_id: user.id }),
+    });
 
+    if (res.ok) {
+      document.getElementById("title").value = "";
+      document.getElementById("author").value = "";
       fetchBooks();
+    } else {
+      const data = await res.json();
+      alert(data.message || "Failed to add book");
+    }
+  });
+
+  // Ambil semua buku milik pengguna
+  async function fetchBooks() {
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData?.user) {
+      alert("You must be logged in to view books");
+      return;
+    }
+
+    const user = authData.user;
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${BASE_URL}/api/books`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    // Logout handler
-    logoutBtn.addEventListener("click", async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        alert("Logout failed");
-        return;
-      }
+    const books = await res.json();
 
-      currentUser = null;
-      localStorage.removeItem("token");
-      authSection.classList.remove("hidden");
-      bookSection.classList.add("hidden");
-      logoutBtn.classList.add("hidden");
-      welcomeUser.textContent = "";
+    if (!Array.isArray(books)) {
+      console.error("Unexpected response:", books);
+      alert(books.message || "Failed to fetch books.");
+      return;
+    }
+
+    booksContainer.innerHTML = "";
+    books.forEach((book) => {
+      const card = document.createElement("div");
+      card.className = "book-card";
+      card.innerHTML = `
+        <img src="${DUMMY_IMAGE}" alt="cover" />
+        <h3 contenteditable="true" data-id="${book.id}" class="editable-title">${book.title}</h3>
+        <p contenteditable="true" data-id="${book.id}" class="editable-author">${book.author}</p>
+        <button class="btn secondary save-btn" data-id="${book.id}">Save</button>
+        <button class="btn danger delete-btn" data-id="${book.id}">Delete</button>
+      `;
+      booksContainer.appendChild(card);
     });
 
-    // Tambah buku
-    document
-      .getElementById("addBookBtn")
-      .addEventListener("click", async () => {
-        const title = document.getElementById("title").value.trim();
-        const author = document.getElementById("author").value.trim();
+    // Save handlers
+    document.querySelectorAll(".save-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        const title = document
+          .querySelector(`.editable-title[data-id="${id}"]`)
+          .innerText.trim();
+        const author = document
+          .querySelector(`.editable-author[data-id="${id}"]`)
+          .innerText.trim();
 
-        if (!title || !author) return alert("Please fill in all fields");
-
-        const { data: authData, error: authError } =
-          await supabase.auth.getUser();
-        if (authError || !authData?.user) {
-          alert("You must be logged in to add a book");
-          return;
-        }
-
-        const user = authData.user;
         const token = localStorage.getItem("token");
 
-        const res = await fetch(`${BASE_URL}/api/books`, {
-          method: "POST",
+        const res = await fetch(`${BASE_URL}/api/books/${id}`, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ title, author, user_id: user.id }),
+          body: JSON.stringify({ title, author }),
         });
 
         if (res.ok) {
-          document.getElementById("title").value = "";
-          document.getElementById("author").value = "";
+          alert("Book updated!");
           fetchBooks();
         } else {
-          const dataRes = await res.json();
-          alert(dataRes.message || "Failed to add book");
+          const data = await res.json();
+          alert(data.message || "Failed to update book");
         }
       });
+    });
 
-    // Ambil semua buku milik pengguna
-    async function fetchBooks() {
-      const { data: authData, error: authError } =
-        await supabase.auth.getUser();
-      if (authError || !authData?.user) {
-        alert("You must be logged in to view books");
-        return;
-      }
+    // Delete handlers
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        const token = localStorage.getItem("token");
 
-      const user = authData.user;
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(`${BASE_URL}/api/books`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const books = await res.json();
-
-      if (!Array.isArray(books)) {
-        console.error("Unexpected response:", books);
-        alert(books.message || "Failed to fetch books.");
-        return;
-      }
-
-      booksContainer.innerHTML = "";
-      books.forEach((book) => {
-        const card = document.createElement("div");
-        card.className = "book-card";
-        card.innerHTML = `
-          <img src="${DUMMY_IMAGE}" alt="cover" />
-          <h3 contenteditable="true" data-id="${book.id}" class="editable-title">${book.title}</h3>
-          <p contenteditable="true" data-id="${book.id}" class="editable-author">${book.author}</p>
-          <button class="btn secondary save-btn" data-id="${book.id}">Save</button>
-          <button class="btn danger delete-btn" data-id="${book.id}">Delete</button>
-        `;
-        booksContainer.appendChild(card);
-      });
-
-      // Save handlers
-      document.querySelectorAll(".save-btn").forEach((btn) => {
-        btn.addEventListener("click", async (e) => {
-          const id = e.target.dataset.id;
-          const title = document
-            .querySelector(`.editable-title[data-id="${id}"]`)
-            .innerText.trim();
-          const author = document
-            .querySelector(`.editable-author[data-id="${id}"]`)
-            .innerText.trim();
-
-          const token = localStorage.getItem("token");
-
-          const res = await fetch(`${BASE_URL}/api/books/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ title, author }),
-          });
-
-          if (res.ok) {
-            alert("Book updated!");
-            fetchBooks();
-          } else {
-            const data = await res.json();
-            alert(data.message || "Failed to update book");
-          }
+        const res = await fetch(`${BASE_URL}/api/books/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+
+        if (res.ok) {
+          alert("Book deleted!");
+          fetchBooks();
+        } else {
+          const data = await res.json();
+          alert(data.message || "Failed to delete book");
+        }
       });
-
-      // Delete handlers
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", async (e) => {
-          const id = e.target.dataset.id;
-          const token = localStorage.getItem("token");
-
-          const res = await fetch(`${BASE_URL}/api/books/${id}`, {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (res.ok) {
-            alert("Book deleted!");
-            fetchBooks();
-          } else {
-            const data = await res.json();
-            alert(data.message || "Failed to delete book");
-          }
-        });
-      });
-    }
-  }, 10000); // ⏳ Tunggu 2 detik agar Supabase siap
+    });
+  }
 });
