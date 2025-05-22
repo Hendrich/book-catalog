@@ -1,9 +1,5 @@
-// routes/authRoutes.js
-const jwt = require("jsonwebtoken");
+// authMiddleware.js
 
-const JWT_SECRET = process.env.JWT_SECRET || "mysecretpostgres";
-
-// Middleware untuk memverifikasi token JWT dari Supabase
 function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"];
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,14 +8,12 @@ function authMiddleware(req, res, next) {
 
   const token = authHeader.split(" ")[1];
 
-  try {
-    // Verifikasi token JWT (pastikan sesuai dengan secret di frontend/backend)
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Simpan data user dari token
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: "Invalid or expired token" });
-  }
+  // JANGAN verify token dengan jwt.verify()
+  // Cukup setel req.user_id dari token (contoh sederhana)
+  // Atau hapus middleware ini sepenuhnya → biarkan RLS di Postgre yang kontrol
+
+  req.token = token;
+  next();
 }
 
 module.exports = authMiddleware;
