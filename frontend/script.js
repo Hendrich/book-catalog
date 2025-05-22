@@ -1,13 +1,10 @@
-// script.js - Menggunakan Supabase Auth via CDN
-
+// script.js - Supabase Auth via CDN
 let currentUser = null;
 
-// Base URL aplikasi
 const BASE_URL = "https://book-catalog-app-z8p8.onrender.com";
 const DUMMY_IMAGE = "/image/default-book.jpg";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Inisialisasi elemen DOM
   const authSection = document.getElementById("authSection");
   const bookSection = document.querySelector(".book-section");
   const welcomeUser = document.getElementById("welcome-user");
@@ -21,40 +18,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     !logoutBtn ||
     !booksContainer
   ) {
-    console.error("Beberapa elemen tidak ditemukan di DOM");
     alert("DOM gagal dimuat. Silakan refresh halaman.");
     return;
   }
 
-  // Tunggu Supabase dimuat sepenuhnya
+  // Tunggu sampai supabase global tersedia
   const checkSupabase = async () => {
     return new Promise((resolve) => {
-      let attempts = 0;
-      const maxAttempts = 40; // Meningkatkan maksimal 20 detik
-
+      let tries = 0;
       const interval = setInterval(() => {
-        if (window.supabase) {
+        if (window.supabase && window.supabase.createClient) {
           clearInterval(interval);
           resolve(window.supabase);
-        } else if (attempts >= maxAttempts) {
+        }
+        if (tries++ > 40) {
           clearInterval(interval);
           resolve(null);
         }
-        attempts++;
       }, 500);
     });
   };
 
-  const supabase = await checkSupabase();
+  const supabaseLib = await checkSupabase();
 
-  if (!supabase) {
-    alert("Supabase gagal dimuat. Silakan refresh halaman.");
+  if (!supabaseLib) {
+    alert("Supabase gagal dimuat.");
     return;
   }
 
-  console.log("Supabase client berhasil dibuat");
+  const supabase = supabaseLib.createClient(
+    "https://uoumouxnuzwioaolnfmw.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
+  );
 
-  // Cek session saat halaman dimuat
+  // Cek session
   const { data } = await supabase.auth.getSession();
   const session = data?.session;
 
@@ -67,50 +64,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchBooks();
   }
 
-  // Register handler
   document.getElementById("registerBtn").addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
+    if (!username || !password) return alert("Isi semua field.");
 
-    if (!username || !password) return alert("Please fill all fields");
+    const { error } = await supabase.auth.signUp({ email: username, password });
+    if (error) return alert(error.message);
 
-    const { data, error } = await supabase.auth.signUp({
-      email: username,
-      password: password,
-    });
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    alert("Register success! Please check your email for confirmation.");
+    alert("Register berhasil. Silakan cek email untuk konfirmasi.");
   });
 
-  // Login handler
   document.getElementById("loginBtn").addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
-
-    if (!username || !password) return alert("Please fill all fields");
+    if (!username || !password) return alert("Isi semua field.");
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email: username,
-      password: password,
+      password,
     });
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    if (error) return alert(error.message);
 
-    const user = data.user;
+    currentUser = data.user;
     const token = data.session.access_token;
-
     localStorage.setItem("token", token);
-    currentUser = user;
 
-    welcomeUser.textContent = `Hello, ${user.email}`;
+    welcomeUser.textContent = `Hello, ${currentUser.email}`;
     authSection.classList.add("hidden");
     bookSection.classList.remove("hidden");
     logoutBtn.classList.remove("hidden");
@@ -118,13 +99,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     fetchBooks();
   });
 
-  // Logout handler
   logoutBtn.addEventListener("click", async () => {
     const { error } = await supabase.auth.signOut();
-    if (error) {
-      alert("Logout failed");
-      return;
-    }
+    if (error) return alert("Logout gagal");
 
     currentUser = null;
     localStorage.removeItem("token");
@@ -134,20 +111,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     logoutBtn.classList.add("hidden");
   });
 
-  // Tambah buku
   document.getElementById("addBookBtn").addEventListener("click", async () => {
     const title = document.getElementById("title").value.trim();
     const author = document.getElementById("author").value.trim();
 
-    if (!title || !author) return alert("Please fill in all fields");
+    if (!title || !author) return alert("Isi semua field");
 
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError || !authData?.user) {
-      alert("You must be logged in to add a book");
-      return;
-    }
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data?.user) return alert("Harus login dulu");
 
-    const user = authData.user;
     const token = localStorage.getItem("token");
 
     const res = await fetch(`${BASE_URL}/api/books`, {
@@ -156,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, author, user_id: user.id }),
+      body: JSON.stringify({ title, author, user_id: data.user.id }),
     });
 
     if (res.ok) {
@@ -164,36 +136,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("author").value = "";
       fetchBooks();
     } else {
-      const data = await res.json();
-      alert(data.message || "Failed to add book");
+      const errData = await res.json();
+      alert(errData.message || "Gagal menambah buku");
     }
   });
 
-  // Ambil semua buku milik pengguna
   async function fetchBooks() {
-    const { data: authData, error: authError } = await supabase.auth.getUser();
-    if (authError || !authData?.user) {
-      alert("You must be logged in to view books");
-      return;
-    }
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError || !userData?.user) return alert("Harus login dulu");
 
-    const user = authData.user;
     const token = localStorage.getItem("token");
-
     const res = await fetch(`${BASE_URL}/api/books`, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
 
     const books = await res.json();
-
-    if (!Array.isArray(books)) {
-      console.error("Unexpected response:", books);
-      alert(books.message || "Failed to fetch books.");
-      return;
-    }
+    if (!Array.isArray(books))
+      return alert(books.message || "Gagal ambil buku");
 
     booksContainer.innerHTML = "";
     books.forEach((book) => {
@@ -209,7 +170,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       booksContainer.appendChild(card);
     });
 
-    // Save handlers
     document.querySelectorAll(".save-btn").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         const id = e.target.dataset.id;
@@ -219,7 +179,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const author = document
           .querySelector(`.editable-author[data-id="${id}"]`)
           .innerText.trim();
-
         const token = localStorage.getItem("token");
 
         const res = await fetch(`${BASE_URL}/api/books/${id}`, {
@@ -232,16 +191,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (res.ok) {
-          alert("Book updated!");
+          alert("Buku berhasil diubah");
           fetchBooks();
         } else {
-          const data = await res.json();
-          alert(data.message || "Failed to update book");
+          const err = await res.json();
+          alert(err.message || "Gagal update");
         }
       });
     });
 
-    // Delete handlers
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         const id = e.target.dataset.id;
@@ -255,11 +213,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (res.ok) {
-          alert("Book deleted!");
+          alert("Buku dihapus");
           fetchBooks();
         } else {
-          const data = await res.json();
-          alert(data.message || "Failed to delete book");
+          const err = await res.json();
+          alert(err.message || "Gagal hapus buku");
         }
       });
     });
