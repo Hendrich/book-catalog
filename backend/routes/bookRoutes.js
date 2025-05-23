@@ -1,16 +1,19 @@
-// routes/bookRoutes.js
 const express = require("express");
 const pool = require("../db");
+const authMiddleware = require("../middlewares/authMiddleware"); // pastikan path benar
 const router = express.Router();
 
-// Regex validasi UUID (user_id)
-const uuidRegex =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Semua route di bawahnya akan memakai autentikasi
+router.use(authMiddleware);
 
-// Ambil semua buku
+// Ambil semua buku milik user yang sedang login
 router.get("/", async (req, res) => {
   try {
-    const { rows } = await pool.query("SELECT * FROM books");
+    const userId = req.user_id; // Didapat dari JWT via middleware
+    const { rows } = await pool.query(
+      "SELECT * FROM books WHERE user_id = $1",
+      [userId]
+    );
     res.json(rows);
   } catch (err) {
     console.error("❌ Error fetching books:", err.message);
@@ -18,22 +21,22 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Tambah buku baru
+// Tambah buku baru, user_id diambil dari sesi, bukan dari body!
 router.post("/", async (req, res) => {
-  const { title, author, user_id } = req.body;
+  const { title, author } = req.body;
+  const userId = req.user_id;
 
-  if (!title || !author || !user_id || !uuidRegex.test(user_id)) {
+  if (!title || !author) {
     return res.status(400).json({
-      message: "Title, author, and valid user_id are required",
+      message: "Title and author are required",
     });
   }
 
   try {
     const { rows } = await pool.query(
       "INSERT INTO books (title, author, user_id) VALUES ($1, $2, $3) RETURNING *",
-      [title, author, user_id]
+      [title, author, userId]
     );
-
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error(
@@ -46,19 +49,21 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Edit buku
+// Edit buku (hanya milik sendiri)
 router.put("/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
   const { title, author } = req.body;
+  const userId = req.user_id;
 
   if (!title || !author) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
+    // Pastikan hanya buku milik user yang bisa diedit
     const { rows } = await pool.query(
-      "UPDATE books SET title = $1, author = $2 WHERE id = $3 RETURNING *",
-      [title, author, bookId]
+      "UPDATE books SET title = $1, author = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
+      [title, author, bookId, userId]
     );
 
     if (rows.length === 0) {
@@ -74,14 +79,16 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Hapus buku
+// Hapus buku (hanya milik sendiri)
 router.delete("/:id", async (req, res) => {
   const bookId = parseInt(req.params.id);
+  const userId = req.user_id;
 
   try {
+    // Pastikan hanya buku milik user yang bisa dihapus
     const { rows } = await pool.query(
-      "DELETE FROM books WHERE id = $1 RETURNING *",
-      [bookId]
+      "DELETE FROM books WHERE id = $1 AND user_id = $2 RETURNING *",
+      [bookId, userId]
     );
 
     if (rows.length === 0) {
