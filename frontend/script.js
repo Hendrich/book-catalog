@@ -17,14 +17,13 @@ const booksContainer = document.getElementById("booksContainer");
 
 let currentUser = null;
 
-// Saat halaman dimuat: cek session & update token di localStorage
+// Saat halaman dimuat: cek session & update UI
 window.addEventListener("DOMContentLoaded", async () => {
   const { data } = await supabase.auth.getSession();
   const session = data?.session;
 
   if (session) {
     currentUser = session.user;
-    localStorage.setItem("token", session.access_token); // Pastikan token update
     welcomeUser.textContent = `Hello, ${currentUser.email}`;
     authSection.classList.add("hidden");
     bookSection.classList.remove("hidden");
@@ -32,7 +31,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     fetchBooks();
   } else {
     // Bersihkan state jika tidak login
-    localStorage.removeItem("token");
     welcomeUser.textContent = "";
     authSection.classList.remove("hidden");
     bookSection.classList.add("hidden");
@@ -64,8 +62,6 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   if (error) return alert(error.message);
 
   currentUser = data.user;
-  const token = data.session.access_token;
-  localStorage.setItem("token", token);
 
   welcomeUser.textContent = `Hello, ${currentUser.email}`;
   authSection.classList.add("hidden");
@@ -80,7 +76,6 @@ logoutBtn.addEventListener("click", async () => {
   if (error) return alert("Logout gagal");
 
   currentUser = null;
-  localStorage.removeItem("token");
   welcomeUser.textContent = "";
   authSection.classList.remove("hidden");
   bookSection.classList.add("hidden");
@@ -94,8 +89,9 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
 
   if (!title || !author) return alert("Isi semua field");
 
-  const token = localStorage.getItem("token");
-  if (!token) return alert("Token tidak ditemukan, silakan login ulang.");
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData.session?.access_token;
+  if (!token) return handleUnauthorized();
 
   const res = await fetch(`${BASE_URL}/api/books`, {
     method: "POST",
@@ -103,7 +99,7 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, author }), // user_id tidak dikirim!
+    body: JSON.stringify({ title, author }),
   });
 
   if (res.ok) {
@@ -119,8 +115,9 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
 
 // AMBIL BUKU
 async function fetchBooks() {
-  const token = localStorage.getItem("token");
-  if (!token) return alert("Token tidak ditemukan, silakan login ulang.");
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData.session?.access_token;
+  if (!token) return handleUnauthorized();
 
   const res = await fetch(`${BASE_URL}/api/books`, {
     headers: {
@@ -156,7 +153,10 @@ async function fetchBooks() {
       const author = document
         .querySelector(`.editable-author[data-id="${id}"]`)
         .innerText.trim();
-      const token = localStorage.getItem("token");
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) return handleUnauthorized();
 
       const res = await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "PUT",
@@ -181,7 +181,10 @@ async function fetchBooks() {
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       const id = e.target.dataset.id;
-      const token = localStorage.getItem("token");
+
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) return handleUnauthorized();
 
       const res = await fetch(`${BASE_URL}/api/books/${id}`, {
         method: "DELETE",
@@ -205,7 +208,6 @@ async function fetchBooks() {
 // Jika 401, paksa logout
 function handleUnauthorized() {
   alert("Session expired, silakan login ulang.");
-  localStorage.removeItem("token");
   supabase.auth.signOut();
   window.location.reload();
 }
