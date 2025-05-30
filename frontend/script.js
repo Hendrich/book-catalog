@@ -7,7 +7,7 @@ const SUPABASE_ANON_KEY =
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const BASE_URL = "https://book-catalog-app-z8p8.onrender.com"; // Biarkan kosong jika frontend & backend satu domain (Render.com)
-const DUMMY_IMAGE = "https://fakeimg.pl/120x160/?text=Book";
+const DUMMY_IMAGE = "/image/default-book.jpg";
 
 const authSection = document.getElementById("authSection");
 const bookSection = document.querySelector(".book-section");
