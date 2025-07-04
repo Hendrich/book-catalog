@@ -1,390 +1,943 @@
 {
-	"info": {
-		"_postman_id": "aa17ec78-f53a-4227-8170-cb7180d7c14f",
-		"name": "book-catalog-auth Render",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "9541602",
-		"_collection_link": "https://afteroffice.postman.co/workspace/AfterOffice~aa2a4179-760e-4941-acc9-6a1a60db5d97/collection/9541602-aa17ec78-f53a-4227-8170-cb7180d7c14f?action=share&source=collection_link&creator=9541602"
-	},
-	"item": [
-		{
-			"name": "Get token supabase",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"hendri.christianto24@gmail.com\",\n  \"password\": \"OQS4iqyWkAdBXgsS\"\n}"
-				},
-				"url": {
-					"raw": "https://uoumouxnuzwioaolnfmw.supabase.co/auth/v1/token?grant_type=password&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA",
-					"protocol": "https",
-					"host": [
-						"uoumouxnuzwioaolnfmw",
-						"supabase",
-						"co"
-					],
-					"path": [
-						"auth",
-						"v1",
-						"token"
-					],
-					"query": [
-						{
-							"key": "grant_type",
-							"value": "password"
-						},
-						{
-							"key": "apikey",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Register supabase",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"edelweis.sakura24@gmail.com\",\n  \"password\": \"123456\"\n}"
-				},
-				"url": {
-					"raw": "https://uoumouxnuzwioaolnfmw.supabase.co/auth/v1/signup?grant_type=password&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA",
-					"protocol": "https",
-					"host": [
-						"uoumouxnuzwioaolnfmw",
-						"supabase",
-						"co"
-					],
-					"path": [
-						"auth",
-						"v1",
-						"signup"
-					],
-					"query": [
-						{
-							"key": "grant_type",
-							"value": "password"
-						},
-						{
-							"key": "apikey",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get book menggunakan supabase",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6ImMrdEZjL3BOM3ZtTDdqOEYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3VvdW1vdXhudXp3aW9hb2xuZm13LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJjZDAwNDk5ZC03ZDRiLTQxNjctYTlhZi0wZjE1NzgzY2FlZTUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ3ODg1NDY5LCJpYXQiOjE3NDc4ODE4NjksImVtYWlsIjoiaGVuZHJpLmNocmlzdGlhbnRvMjRAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NDc4ODE4Njl9XSwic2Vzc2lvbl9pZCI6IjhhOWM4MWQ4LWYyZWItNDM4ZS04MjExLWNmYjM4MDdhOGU5NyIsImlzX2Fub255bW91cyI6ZmFsc2V9.W07PvRF0FllNxODXtai_Ce7Sld_SQ68DJEcqCEo4EwA",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://book-catalog-app-z8p8.onrender.com/api/books",
-					"protocol": "https",
-					"host": [
-						"book-catalog-app-z8p8",
-						"onrender",
-						"com"
-					],
-					"path": [
-						"api",
-						"books"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login User Copy 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// const responseBodyJSON = pm.response.json();\r",
-							"// //console.log(responseBodyJSON.token)\r",
-							"// pm.globals.set(\"token\", responseBodyJSON.token);\r",
-							"\r",
-							"\r",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6ImMrdEZjL3BOM3ZtTDdqOEYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3VvdW1vdXhudXp3aW9hb2xuZm13LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIxZWYwMGZiNi01ODNiLTQzOTUtYjE2My1kZjlmZTkzMTAwM2UiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ4NjE0MTA1LCJpYXQiOjE3NDg2MTA1MDUsImVtYWlsIjoiaGVuZHJpLmNocmlzdGlhbnRvMjRAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6ImhlbmRyaS5jaHJpc3RpYW50bzI0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjFlZjAwZmI2LTU4M2ItNDM5NS1iMTYzLWRmOWZlOTMxMDAzZSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzQ4NjEwNTA1fV0sInNlc3Npb25faWQiOiI1MjgxYzQ3Ny05Mzg4LTQ5MGYtYmQwOC04ZWYwOGVhMGFkMGEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.xfpLzrcJhZquxFj0scD8IeyfI4CfdPHan3fcJOLZF1U",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"email\": \"hendri.christianto24@gmail.com\",\n  \"password\": \"OQS4iqyWkAdBXgsS\"\n}"
-				},
-				"url": {
-					"raw": "{{BASE_URL_RENDER}}/auth/login",
-					"host": [
-						"{{BASE_URL_RENDER}}"
-					],
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Register User Copy",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"jojon\",\n    \"password\": \"123456\"\n}"
-				},
-				"url": {
-					"raw": "{{BASE_URL_RENDER}}/api/register",
-					"host": [
-						"{{BASE_URL_RENDER}}"
-					],
-					"path": [
-						"api",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List Buku Copy",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJoZW5kcmkiLCJpYXQiOjE3NDcyOTUwOTAsImV4cCI6MTc0NzI5ODY5MH0.LF26YiQFrt1WM2pEsyktXb7zxI2ZImtVHB4WZ3mu-Xo",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://book-catalog-app-z8p8.onrender.com/api/books",
-					"protocol": "https",
-					"host": [
-						"book-catalog-app-z8p8",
-						"onrender",
-						"com"
-					],
-					"path": [
-						"api",
-						"books"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Buku Copy",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXNlcm5hbWUiOiJoZW5kcmkiLCJpYXQiOjE3NDcyOTUwOTAsImV4cCI6MTc0NzI5ODY5MH0.LF26YiQFrt1WM2pEsyktXb7zxI2ZImtVHB4WZ3mu-Xo",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"title\": \"Buku test\",\n  \"author\": \"Pakih\",\n  \"user_id\": \"a43dd9d2-4c19-452d-a07c-f2006bc4844e\"\n}"
-				},
-				"url": {
-					"raw": "https://book-catalog-app-z8p8.onrender.com/api/books/21",
-					"protocol": "https",
-					"host": [
-						"book-catalog-app-z8p8",
-						"onrender",
-						"com"
-					],
-					"path": [
-						"api",
-						"books",
-						"21"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Buku Copy",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6ImMrdEZjL3BOM3ZtTDdqOEYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3VvdW1vdXhudXp3aW9hb2xuZm13LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJjZDAwNDk5ZC03ZDRiLTQxNjctYTlhZi0wZjE1NzgzY2FlZTUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ3ODkwNDQwLCJpYXQiOjE3NDc4ODY4NDAsImVtYWlsIjoiaGVuZHJpLmNocmlzdGlhbnRvMjRAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NDc4ODY4NDB9XSwic2Vzc2lvbl9pZCI6Ijg1Yzk1ZjI3LWVjYTgtNGI4Ny04NWJkLWMyZTU1MWVmMDJkNiIsImlzX2Fub255bW91cyI6ZmFsc2V9.5gA8jwj6qf2V-K-NpKLnrHA6V0ESLWEaSKBnwJHYGck",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"title\": \"Buku gambar\",\n  \"author\": \"Budi\",\n  \"user_id\": \"a43dd9d2-4c19-452d-a07c-f2006bc4844e\"\n}"
-				},
-				"url": {
-					"raw": "https://book-catalog-app-z8p8.onrender.com/api/books",
-					"protocol": "https",
-					"host": [
-						"book-catalog-app-z8p8",
-						"onrender",
-						"com"
-					],
-					"path": [
-						"api",
-						"books"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Buku Copy",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6ImMrdEZjL3BOM3ZtTDdqOEYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3VvdW1vdXhudXp3aW9hb2xuZm13LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJjZDAwNDk5ZC03ZDRiLTQxNjctYTlhZi0wZjE1NzgzY2FlZTUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzQ3ODg1NDY5LCJpYXQiOjE3NDc4ODE4NjksImVtYWlsIjoiaGVuZHJpLmNocmlzdGlhbnRvMjRAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NDc4ODE4Njl9XSwic2Vzc2lvbl9pZCI6IjhhOWM4MWQ4LWYyZWItNDM4ZS04MjExLWNmYjM4MDdhOGU5NyIsImlzX2Fub255bW91cyI6ZmFsc2V9.W07PvRF0FllNxODXtai_Ce7Sld_SQ68DJEcqCEo4EwA",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://book-catalog-app-z8p8.onrender.com/api/books/22",
-					"protocol": "https",
-					"host": [
-						"book-catalog-app-z8p8",
-						"onrender",
-						"com"
-					],
-					"path": [
-						"api",
-						"books",
-						"22"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "aa17ec78-f53a-4227-8170-cb7180d7c14f",
+    "name": "📚 Book Catalog API - Complete Collection",
+    "description": "Complete API collection for Book Catalog application with Supabase authentication and CRUD operations. This collection includes proper test scripts, environment variables, and organized folder structure.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9541602",
+    "_collection_link": "https://afteroffice.postman.co/workspace/AfterOffice~aa2a4179-760e-4941-acc9-6a1a60db5d97/collection/9541602-aa17ec78-f53a-4227-8170-cb7180d7c14f?action=share&source=collection_link&creator=9541602"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default variables if not already set",
+          "if (!pm.environment.get('BASE_URL')) {",
+          "    pm.environment.set('BASE_URL', 'https://book-catalog-app-z8p8.onrender.com');",
+          "}",
+          "if (!pm.environment.get('SUPABASE_URL')) {",
+          "    pm.environment.set('SUPABASE_URL', 'https://uoumouxnuzwioaolnfmw.supabase.co');",
+          "}",
+          "if (!pm.environment.get('SUPABASE_ANON_KEY')) {",
+          "    pm.environment.set('SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://book-catalog-app-z8p8.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "SUPABASE_URL",
+      "value": "https://uoumouxnuzwioaolnfmw.supabase.co",
+      "type": "string"
+    },
+    {
+      "key": "SUPABASE_ANON_KEY",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register User (Supabase)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains user data', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('user');",
+                  "    pm.expect(responseJson.user).to.have.property('email');",
+                  "});",
+                  "",
+                  "// Auto-set access token if provided",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.access_token) {",
+                  "        pm.collectionVariables.set('access_token', responseJson.access_token);",
+                  "        console.log('✅ Access token saved');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{SUPABASE_ANON_KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/signup?grant_type=password&apikey={{SUPABASE_ANON_KEY}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "signup"],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "apikey",
+                  "value": "{{SUPABASE_ANON_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User (Supabase)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains access token', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('access_token');",
+                  "});",
+                  "",
+                  "// Auto-save access token",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', responseJson.access_token);",
+                  "    console.log('✅ Access token saved: ' + responseJson.access_token.substring(0, 20) + '...');",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{SUPABASE_ANON_KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"hendri.christianto24@gmail.com\",\n  \"password\": \"OQS4iqyWkAdBXgsS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/token?grant_type=password&apikey={{SUPABASE_ANON_KEY}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "apikey",
+                  "value": "{{SUPABASE_ANON_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token (Supabase)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.access_token) {",
+                  "        pm.collectionVariables.set('access_token', responseJson.access_token);",
+                  "        console.log('✅ Access token refreshed');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{SUPABASE_ANON_KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/token?grant_type=refresh_token&apikey={{SUPABASE_ANON_KEY}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "refresh_token"
+                },
+                {
+                  "key": "apikey",
+                  "value": "{{SUPABASE_ANON_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Books Management",
+      "item": [
+        {
+          "name": "Get All Books",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Books have required properties', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.length > 0) {",
+                  "        pm.expect(responseJson[0]).to.have.property('id');",
+                  "        pm.expect(responseJson[0]).to.have.property('title');",
+                  "        pm.expect(responseJson[0]).to.have.property('author');",
+                  "        pm.expect(responseJson[0]).to.have.property('user_id');",
+                  "    }",
+                  "});",
+                  "",
+                  "// Save first book ID for use in other requests",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.length > 0) {",
+                  "        pm.collectionVariables.set('book_id', responseJson[0].id);",
+                  "        console.log('📖 First book ID saved: ' + responseJson[0].id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add New Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response contains book data', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson).to.have.property('title');",
+                  "    pm.expect(responseJson).to.have.property('author');",
+                  "});",
+                  "",
+                  "// Save created book ID",
+                  "if (pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('new_book_id', responseJson.id);",
+                  "    console.log('📘 New book created with ID: ' + responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains updated book data', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson).to.have.property('title');",
+                  "    pm.expect(responseJson).to.have.property('author');",
+                  "});",
+                  "",
+                  "pm.test('Book title was updated', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.title).to.include('Updated');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits Updated\",\n  \"author\": \"J. Clear\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books/{{book_id}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books", "{{book_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains success message', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('message');",
+                  "    pm.expect(responseJson.message).to.include('deleted');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/books/{{new_book_id}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books", "{{new_book_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Test Scenarios",
+      "item": [
+        {
+          "name": "Test Unauthorized Access",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 401 Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test('Response contains error message', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Invalid Book Creation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Response contains validation error', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('message');",
+                  "    pm.expect(responseJson.message).to.include('required');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test Update Non-existent Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Response status is 404 Not Found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test('Response contains not found message', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('message');",
+                  "    pm.expect(responseJson.message).to.include('not found');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Non-existent Book\",\n  \"author\": \"Unknown Author\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books/99999",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books", "99999"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔄 Complete Workflow",
+      "item": [
+        {
+          "name": "1. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', responseJson.access_token);",
+                  "    console.log('✅ Step 1: Login successful');",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{SUPABASE_ANON_KEY}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"hendri.christianto24@gmail.com\",\n  \"password\": \"OQS4iqyWkAdBXgsS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{SUPABASE_URL}}/auth/v1/token?grant_type=password&apikey={{SUPABASE_ANON_KEY}}",
+              "host": ["{{SUPABASE_URL}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "apikey",
+                  "value": "{{SUPABASE_ANON_KEY}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get Books List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Get books successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "console.log('✅ Step 2: Books retrieved successfully');"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create New Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Create book successful', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 201) {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.collectionVariables.set('workflow_book_id', responseJson.id);",
+                  "    console.log('✅ Step 3: Book created with ID ' + responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The 7 Habits of Highly Effective People\",\n  \"author\": \"Stephen R. Covey\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Update Created Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Update book successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "console.log('✅ Step 4: Book updated successfully');"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"The 7 Habits of Highly Effective People (Revised Edition)\",\n  \"author\": \"Stephen R. Covey\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/books/{{workflow_book_id}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books", "{{workflow_book_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Delete Created Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Delete book successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "console.log('✅ Step 5: Book deleted successfully');",
+                  "console.log('🎉 Complete workflow finished!');"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/books/{{workflow_book_id}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "books", "{{workflow_book_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

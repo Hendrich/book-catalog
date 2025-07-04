@@ -1,107 +1,257 @@
 const express = require("express");
 const pool = require("../db");
-const authMiddleware = require("../middlewares/authMiddleware"); // pastikan path benar
+const authMiddleware = require("../middlewares/authMiddleware");
+const {
+  validateBook,
+  validateId,
+  validateBookUpdate,
+} = require("../middlewares/validation");
+const { authLimiter } = require("../middlewares/rateLimiter");
+const { securityLogger } = require("../middlewares/logger");
+const { AppError } = require("../middlewares/errorHandler");
+
 const router = express.Router();
 
-// Semua route di bawahnya akan memakai autentikasi
+// Apply authentication middleware to all routes
 router.use(authMiddleware);
 
-// Ambil semua buku milik user yang sedang login
-router.get("/", async (req, res) => {
+// Apply rate limiting to sensitive operations
+router.use(authLimiter);
+
+// =============================================================================
+// BOOK ROUTES
+// =============================================================================
+
+/**
+ * @route   GET /api/books
+ * @desc    Get all books for the authenticated user
+ * @access  Private
+ */
+router.get("/", async (req, res, next) => {
   try {
-    const userId = req.user_id; // Didapat dari JWT via middleware
-    const { rows } = await pool.query(
-      "SELECT * FROM books WHERE user_id = $1",
-      [userId]
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error("❌ Error fetching books:", err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
+    const userId = req.user_id;
 
-// Tambah buku baru, user_id diambil dari sesi, bukan dari body!
-router.post("/", async (req, res) => {
-  const { title, author } = req.body;
-  const userId = req.user_id;
+    // Add basic query parameters support (future enhancement)
+    const { page = 1, limit = 50, search } = req.query;
+    const offset = (page - 1) * limit;
 
-  if (!title || !author) {
-    return res.status(400).json({
-      message: "Title and author are required",
-    });
-  }
+    let query = "SELECT * FROM books WHERE user_id = $1";
+    let queryParams = [userId];
 
-  try {
-    const { rows } = await pool.query(
-      "INSERT INTO books (title, author, user_id) VALUES ($1, $2, $3) RETURNING *",
-      [title, author, userId]
-    );
-    res.status(201).json(rows[0]);
-  } catch (err) {
-    console.error(
-      "❌ Error adding book:",
-      err.message,
-      "\nRequest body:",
-      req.body
-    );
-    res.status(500).json({ message: "Server error saat menambah buku" });
-  }
-});
-
-// Edit buku (hanya milik sendiri)
-router.put("/:id", async (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const { title, author } = req.body;
-  const userId = req.user_id;
-
-  if (!title || !author) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
-  try {
-    // Pastikan hanya buku milik user yang bisa diedit
-    const { rows } = await pool.query(
-      "UPDATE books SET title = $1, author = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
-      [title, author, bookId, userId]
-    );
-
-    if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Book not found or unauthorized" });
+    // Add search functionality if search parameter is provided
+    if (search) {
+      query += " AND (title ILIKE $2 OR author ILIKE $2)";
+      queryParams.push(`%${search}%`);
     }
 
-    res.json(rows[0]);
+    // Add ordering and pagination
+    query +=
+      " ORDER BY created_at DESC LIMIT $" +
+      (queryParams.length + 1) +
+      " OFFSET $" +
+      (queryParams.length + 2);
+    queryParams.push(limit, offset);
+
+    const { rows } = await pool.query(query, queryParams);
+
+    // Get total count for pagination
+    let countQuery = "SELECT COUNT(*) FROM books WHERE user_id = $1";
+    let countParams = [userId];
+
+    if (search) {
+      countQuery += " AND (title ILIKE $2 OR author ILIKE $2)";
+      countParams.push(`%${search}%`);
+    }
+
+    const { rows: countRows } = await pool.query(countQuery, countParams);
+    const totalBooks = parseInt(countRows[0].count);
+
+    res.json({
+      success: true,
+      data: rows,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total: totalBooks,
+        totalPages: Math.ceil(totalBooks / limit),
+      },
+      timestamp: new Date().toISOString(),
+    });
   } catch (err) {
-    console.error("❌ Error updating book:", err.message);
-    res.status(500).json({ error: err.message });
+    console.error("❌ Error fetching books:", err.message);
+    next(new AppError("Failed to fetch books", 500));
   }
 });
 
-// Hapus buku (hanya milik sendiri)
-router.delete("/:id", async (req, res) => {
-  const bookId = parseInt(req.params.id);
-  const userId = req.user_id;
-
+/**
+ * @route   GET /api/books/:id
+ * @desc    Get a specific book by ID
+ * @access  Private
+ */
+router.get("/:id", validateId, async (req, res, next) => {
   try {
-    // Pastikan hanya buku milik user yang bisa dihapus
+    const bookId = req.params.id;
+    const userId = req.user_id;
+
     const { rows } = await pool.query(
-      "DELETE FROM books WHERE id = $1 AND user_id = $2 RETURNING *",
+      "SELECT * FROM books WHERE id = $1 AND user_id = $2",
       [bookId, userId]
     );
 
     if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Book not found or unauthorized" });
+      return next(new AppError("Book not found", 404));
     }
 
-    res.json({ message: "Book deleted successfully" });
+    res.json({
+      success: true,
+      data: rows[0],
+      timestamp: new Date().toISOString(),
+    });
   } catch (err) {
-    console.error("❌ Error deleting book:", err.message);
-    res.status(500).json({ error: err.message });
+    console.error("❌ Error fetching book:", err.message);
+    next(new AppError("Failed to fetch book", 500));
   }
 });
+
+/**
+ * @route   POST /api/books
+ * @desc    Add a new book
+ * @access  Private
+ */
+router.post(
+  "/",
+  validateBook,
+  securityLogger("CREATE_BOOK"),
+  async (req, res, next) => {
+    try {
+      const { title, author } = req.body;
+      const userId = req.user_id;
+
+      // Check for duplicate books (same title and author for the same user)
+      const { rows: existingBooks } = await pool.query(
+        "SELECT id FROM books WHERE title = $1 AND author = $2 AND user_id = $3",
+        [title, author, userId]
+      );
+
+      if (existingBooks.length > 0) {
+        return next(
+          new AppError("Book with this title and author already exists", 409)
+        );
+      }
+
+      const { rows } = await pool.query(
+        "INSERT INTO books (title, author, user_id, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
+        [title, author, userId]
+      );
+
+      res.status(201).json({
+        success: true,
+        data: rows[0],
+        message: "Book added successfully",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("❌ Error adding book:", err.message);
+      next(new AppError("Failed to add book", 500));
+    }
+  }
+);
+
+/**
+ * @route   PUT /api/books/:id
+ * @desc    Update a book
+ * @access  Private
+ */
+router.put(
+  "/:id",
+  validateId,
+  validateBookUpdate,
+  securityLogger("UPDATE_BOOK"),
+  async (req, res, next) => {
+    try {
+      const bookId = req.params.id;
+      const userId = req.user_id;
+      const updateFields = req.body;
+
+      // Build dynamic update query
+      const setClauses = [];
+      const values = [];
+      let paramCount = 1;
+
+      Object.keys(updateFields).forEach((key) => {
+        setClauses.push(`${key} = $${paramCount}`);
+        values.push(updateFields[key]);
+        paramCount++;
+      });
+
+      // Add updated_at timestamp
+      setClauses.push(`updated_at = $${paramCount}`);
+      values.push(new Date());
+      paramCount++;
+
+      // Add WHERE conditions
+      values.push(bookId, userId);
+
+      const query = `
+      UPDATE books 
+      SET ${setClauses.join(", ")} 
+      WHERE id = $${paramCount - 1} AND user_id = $${paramCount}
+      RETURNING *
+    `;
+
+      const { rows } = await pool.query(query, values);
+
+      if (rows.length === 0) {
+        return next(new AppError("Book not found or unauthorized", 404));
+      }
+
+      res.json({
+        success: true,
+        data: rows[0],
+        message: "Book updated successfully",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("❌ Error updating book:", err.message);
+      next(new AppError("Failed to update book", 500));
+    }
+  }
+);
+
+/**
+ * @route   DELETE /api/books/:id
+ * @desc    Delete a book
+ * @access  Private
+ */
+router.delete(
+  "/:id",
+  validateId,
+  securityLogger("DELETE_BOOK"),
+  async (req, res, next) => {
+    try {
+      const bookId = req.params.id;
+      const userId = req.user_id;
+
+      const { rows } = await pool.query(
+        "DELETE FROM books WHERE id = $1 AND user_id = $2 RETURNING *",
+        [bookId, userId]
+      );
+
+      if (rows.length === 0) {
+        return next(new AppError("Book not found or unauthorized", 404));
+      }
+
+      res.json({
+        success: true,
+        data: { id: bookId },
+        message: "Book deleted successfully",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("❌ Error deleting book:", err.message);
+      next(new AppError("Failed to delete book", 500));
+    }
+  }
+);
 
 module.exports = router;
