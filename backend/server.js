@@ -1,33 +1,162 @@
-// server.js
+// server.js - Enhanced with security and middleware improvements
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
 const path = require("path");
+
+// Import configuration and middleware
+const config = require("./config/config");
+const { errorHandler } = require("./middlewares/errorHandler");
+const { requestLogger, statsLogger } = require("./middlewares/logger");
+const { apiLimiter } = require("./middlewares/rateLimiter");
+const { sanitize } = require("./middlewares/validation");
+
+// Import routes
 const bookRoutes = require("./routes/bookRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
-// Middleware
-app.use(bodyParser.json());
+// =============================================================================
+// SECURITY MIDDLEWARE
+// =============================================================================
 
-// CORS policy - Lebih aman jika restrict ke domain tertentu
+// Helmet for security headers
 app.use(
-  cors({
-    origin: "https://book-catalog-app-z8p8.onrender.com", // Sesuaikan dengan URL frontend
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https:"],
+        connectSrc: ["'self'", "https://*.supabase.co"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
   })
 );
 
-// Routes (tanpa middleware duplikat)
-app.use("/api/books", bookRoutes); // bookRoutes sudah pakai authMiddleware internal
+// =============================================================================
+// GENERAL MIDDLEWARE
+// =============================================================================
+
+// Request logging (only in development and production, not in test)
+if (config.nodeEnv !== "test") {
+  app.use(requestLogger);
+  app.use(statsLogger);
+}
+
+// Rate limiting
+if (config.nodeEnv === "production") {
+  app.use(apiLimiter);
+}
+
+// Body parsing
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+
+// Input sanitization
+app.use(sanitize);
+
+// CORS configuration
+app.use(cors(config.cors));
+
+// =============================================================================
+// API ROUTES
+// =============================================================================
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is healthy",
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version || "1.0.0",
+    nodeEnv: config.nodeEnv,
+  });
+});
+
+// API routes
+app.use("/api/auth", authRoutes);
+app.use("/api/books", bookRoutes);
+
+// API stats endpoint (only in development)
+if (config.nodeEnv === "development") {
+  const { getApiStats } = require("./middlewares/logger");
+  app.get("/api/stats", (req, res) => {
+    res.json({
+      success: true,
+      data: getApiStats(),
+      timestamp: new Date().toISOString(),
+    });
+  });
+}
+
+// =============================================================================
+// STATIC FILES & FRONTEND
+// =============================================================================
 
 // Serve static files (frontend)
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Jalankan server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// Catch-all handler for frontend routes (SPA support)
+app.get("*", (req, res) => {
+  // Only serve index.html for non-API routes
+  if (!req.path.startsWith("/api/")) {
+    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  } else {
+    res.status(404).json({
+      success: false,
+      error: {
+        message: "API endpoint not found",
+        code: "ENDPOINT_NOT_FOUND",
+      },
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
+
+// =============================================================================
+// ERROR HANDLING
+// =============================================================================
+
+// Global error handling middleware (must be last)
+app.use(errorHandler);
+
+// =============================================================================
+// SERVER STARTUP
+// =============================================================================
+
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📍 Environment: ${config.nodeEnv}`);
+  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+
+  if (config.nodeEnv === "development") {
+    console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);
+    console.log(`📚 Frontend: http://localhost:${PORT}`);
+  }
+});
+
+// Graceful shutdown handling
+process.on("SIGTERM", () => {
+  console.log("🔄 SIGTERM signal received: closing HTTP server");
+  server.close(() => {
+    console.log("✅ HTTP server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("🔄 SIGINT signal received: closing HTTP server");
+  server.close(() => {
+    console.log("✅ HTTP server closed");
+    process.exit(0);
+  });
+});
+
+module.exports = app;
