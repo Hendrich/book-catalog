@@ -56,7 +56,7 @@ const apiLimiter = createRateLimiter(
 // Stricter rate limiter for authentication endpoints
 const authLimiter = createRateLimiter(
   config.rateLimit.windowMs, // 15 minutes
-  config.rateLimit.maxAuthRequests, // 5 requests per windowMs
+  config.nodeEnv === "development" ? 50 : config.rateLimit.maxAuthRequests, // More permissive in dev
   "Too many authentication attempts from this IP, please try again later",
   false // Count all requests, including failed ones
 );
@@ -64,7 +64,7 @@ const authLimiter = createRateLimiter(
 // Very strict rate limiter for password reset/sensitive operations
 const strictLimiter = createRateLimiter(
   60 * 60 * 1000, // 1 hour
-  3, // 3 requests per hour
+  config.nodeEnv === "development" ? 20 : 3, // More permissive in dev
   "Too many sensitive operation attempts from this IP, please try again later"
 );
 

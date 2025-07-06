@@ -192,6 +192,102 @@ npm run test:watch # Watch mode
 - **JWT Authentication**: Secure token-based auth
 - **Input Sanitization**: XSS protection
 
+## 🚨 Troubleshooting
+
+### Common Issues & Solutions
+
+#### **429 Too Many Requests Error**
+```json
+{
+  "success": false,
+  "error": {
+    "message": "Too many operation attempts from this IP",
+    "code": "RATE_LIMIT_EXCEEDED"
+  }
+}
+```
+
+**Solutions:**
+1. **Wait**: Rate limits reset after the window expires
+2. **Development**: Rate limits are more permissive in development mode
+3. **Check Requests**: Ensure frontend doesn't send duplicate requests
+4. **Network**: Clear browser cache and restart development server
+
+#### **Validation Error (Email & Password Required)**
+```json
+{
+  "success": false,
+  "error": {
+    "message": "Validation Error: Email is required, Password is required"
+  }
+}
+```
+
+**Solutions:**
+1. **Check Frontend**: Ensure form sends `email` and `password` fields
+2. **Content-Type**: Verify `Content-Type: application/json` header
+3. **Data Format**: Ensure JSON data is properly formatted
+4. **Network**: Check browser dev tools for request payload
+
+#### **CORS Issues**
+- **Local Development**: Ensure server runs on `http://localhost:3000`
+- **Production**: Update CORS configuration in `backend/config/config.js`
+- **Mixed Content**: Don't mix HTTP and HTTPS requests
+
+#### **Connection Issues**
+1. **Local Server**: Ensure `npm run dev` is running
+2. **Port**: Verify server runs on correct port (3000)
+3. **Firewall**: Check Windows Firewall settings
+4. **Network**: Try accessing `http://localhost:3000/health` directly
+
+### **Debug Tools**
+
+#### **Test API Script**
+```bash
+# Test both local and production
+node test-api.js
+
+# Test local only
+node test-api.js local
+
+# Test production only  
+node test-api.js production
+```
+
+#### **Swagger UI Testing**
+1. Open `http://localhost:3000/api-docs`
+2. Test individual endpoints interactively
+3. Use "Authorize" button for authentication
+4. Check request/response in browser dev tools
+
+#### **Manual Testing with curl**
+```bash
+# Health check
+curl http://localhost:3000/health
+
+# Register
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
+
+# Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
+```
+
+### **Environment Check**
+```bash
+# Check if server is running
+curl http://localhost:3000/health
+
+# Check API stats (development only)
+curl http://localhost:3000/api/stats
+
+# View server logs
+npm run dev
+```
+
 ## 📋 TODO & Roadmap
 
 - [ ] User roles and permissions
