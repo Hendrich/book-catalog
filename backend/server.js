@@ -4,6 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
 
 // Import configuration and middleware
 const config = require("./config/config");
@@ -15,6 +17,11 @@ const { sanitize } = require("./middlewares/validation");
 // Import routes
 const bookRoutes = require("./routes/bookRoutes");
 const authRoutes = require("./routes/authRoutes");
+
+// Load OpenAPI specification
+const openApiSpec = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "../openapi-spec.json"), "utf8")
+);
 
 const app = express();
 const PORT = config.port;
@@ -30,9 +37,12 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
         connectSrc: ["'self'", "https://*.supabase.co"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        objectSrc: ["'none'"],
+        frameSrc: ["'none'"],
       },
     },
     crossOriginEmbedderPolicy: false,
@@ -67,6 +77,23 @@ app.use(cors(config.cors));
 // =============================================================================
 // API ROUTES
 // =============================================================================
+
+// Swagger UI Documentation
+const swaggerOptions = {
+  customCss: `
+    .swagger-ui .topbar { display: none; }
+    .swagger-ui .info { margin: 50px 0; }
+    .swagger-ui .info .title { color: #3b82f6; }
+  `,
+  customSiteTitle: "Book Catalog API Documentation",
+  customfavIcon: "/favicon.ico",
+};
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openApiSpec, swaggerOptions)
+);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -135,6 +162,7 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📍 Environment: ${config.nodeEnv}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+  console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
 
   if (config.nodeEnv === "development") {
     console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);

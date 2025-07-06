@@ -277,31 +277,11 @@
         }
       }
     },
-    "/auth/v1/signup": {
+    "/api/auth/register": {
       "post": {
         "summary": "Register new user",
-        "description": "Register a new user account via Supabase authentication",
+        "description": "Register a new user account via backend API (using Supabase server-side)",
         "tags": ["Authentication"],
-        "parameters": [
-          {
-            "name": "grant_type",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["password"]
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "required": true,
-            "description": "Supabase anon key",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -310,19 +290,54 @@
                 "$ref": "#/components/schemas/AuthCredentials"
               },
               "example": {
-                "email": "user@example.com",
-                "password": "yourpassword"
+                "email": "hendri.christianto24@gmail.com",
+                "password": "OQS4iqyWkAdBXgsS"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "User registered successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User registered successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "email": {
+                              "type": "string",
+                              "format": "email"
+                            }
+                          }
+                        },
+                        "requiresConfirmation": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
                 }
               }
             }
@@ -340,31 +355,11 @@
         }
       }
     },
-    "/auth/v1/token": {
+    "/api/auth/login": {
       "post": {
         "summary": "Login user",
-        "description": "Authenticate user and receive JWT token via Supabase",
+        "description": "Authenticate user and receive JWT token via backend API (using Supabase server-side)",
         "tags": ["Authentication"],
-        "parameters": [
-          {
-            "name": "grant_type",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["password"]
-            }
-          },
-          {
-            "name": "apikey",
-            "in": "query",
-            "required": true,
-            "description": "Supabase anon key",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -373,8 +368,8 @@
                 "$ref": "#/components/schemas/AuthCredentials"
               },
               "example": {
-                "email": "user@example.com",
-                "password": "yourpassword"
+                "email": "hendri.christianto24@gmail.com",
+                "password": "OQS4iqyWkAdBXgsS"
               }
             }
           }
@@ -385,27 +380,206 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
-                },
-                "example": {
-                  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                  "token_type": "bearer",
-                  "expires_in": 3600,
-                  "refresh_token": "refresh_token_here",
-                  "user": {
-                    "id": "cd004999d-7d4b-4167-a9af-0f15783caee5",
-                    "email": "user@example.com"
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "description": "JWT access token",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "email": {
+                              "type": "string",
+                              "format": "email"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
                   }
                 }
               }
             }
           },
-          "400": {
+          "401": {
             "description": "Invalid credentials",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Get current user info",
+        "description": "Get current authenticated user information",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "authenticated": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/api/auth/verify-token": {
+      "post": {
+        "summary": "Verify JWT token",
+        "description": "Verify if a JWT token is valid",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token verification successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "valid": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "expires_at": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Token is valid"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "description": "Check if the server is running and healthy",
+        "tags": ["System"],
+        "responses": {
+          "200": {
+            "description": "Server is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Server is healthy"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    },
+                    "nodeEnv": {
+                      "type": "string",
+                      "example": "production"
+                    }
+                  }
                 }
               }
             }
@@ -592,8 +766,12 @@
   },
   "tags": [
     {
+      "name": "System",
+      "description": "System health and monitoring endpoints"
+    },
+    {
       "name": "Authentication",
-      "description": "Authentication endpoints using Supabase"
+      "description": "Authentication endpoints using backend API with Supabase"
     },
     {
       "name": "Books",

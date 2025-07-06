@@ -98,13 +98,13 @@ router.post(
 
       // Generate our own JWT token for backend authentication
       const token = jwt.sign(
-        { 
-          userId: data.user.id, 
-          email: data.user.email 
+        {
+          userId: data.user.id,
+          email: data.user.email,
         },
         config.jwt.secret,
-        { 
-          expiresIn: config.jwt.expiresIn 
+        {
+          expiresIn: config.jwt.expiresIn,
         }
       );
 
