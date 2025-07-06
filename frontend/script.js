@@ -1,13 +1,10 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import appConfig from './js/config.js';
+import apiService from './js/services/apiService.js';
+import notificationManager from './js/components/notifications.js';
 
-// Ganti dengan URL dan anon key Supabase Anda
-const SUPABASE_URL = "https://uoumouxnuzwioaolnfmw.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvdW1vdXhudXp3aW9hb2xuZm13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NTQxMzUsImV4cCI6MjA2MzEzMDEzNX0.YbL_R0L7HInsvemamaJ_7BXPvwW5zyYvULiqFhXtJdA";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const BASE_URL = "https://book-catalog-app-z8p8.onrender.com"; // Biarkan kosong jika frontend & backend satu domain (Render.com)
-const DUMMY_IMAGE = "/image/default-book.jpg";
+// Use configuration instead of hard-coded values
+const supabase = createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey);
 
 const authSection = document.getElementById("authSection");
 const bookSection = document.querySelector(".book-section");
@@ -17,197 +14,336 @@ const booksContainer = document.getElementById("booksContainer");
 
 let currentUser = null;
 
+// Show loading state
+function showLoading(element, show = true) {
+  if (show) {
+    element.style.opacity = '0.6';
+    element.style.pointerEvents = 'none';
+  } else {
+    element.style.opacity = '1';
+    element.style.pointerEvents = 'auto';
+  }
+}
+
 // Saat halaman dimuat: cek session & update UI
 window.addEventListener("DOMContentLoaded", async () => {
-  const { data } = await supabase.auth.getSession();
-  const session = data?.session;
+  try {
+    // Check for stored auth token and user data
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
 
-  if (session) {
-    currentUser = session.user;
-    welcomeUser.textContent = `Hello, ${currentUser.email}`;
-    authSection.classList.add("hidden");
-    bookSection.classList.remove("hidden");
-    logoutBtn.classList.remove("hidden");
-    fetchBooks();
-  } else {
-    // Bersihkan state jika tidak login
-    welcomeUser.textContent = "";
-    authSection.classList.remove("hidden");
-    bookSection.classList.add("hidden");
-    logoutBtn.classList.add("hidden");
+    if (token && userData) {
+      currentUser = JSON.parse(userData);
+      welcomeUser.textContent = `Hello, ${currentUser.email}`;
+      authSection.classList.add("hidden");
+      bookSection.classList.remove("hidden");
+      logoutBtn.classList.remove("hidden");
+      await fetchBooks();
+    } else {
+      // Bersihkan state jika tidak login
+      welcomeUser.textContent = "";
+      authSection.classList.remove("hidden");
+      bookSection.classList.add("hidden");
+      logoutBtn.classList.add("hidden");
+    }
+  } catch (error) {
+    console.error('Error checking session:', error);
+    notificationManager.error('Error checking authentication status');
   }
 });
 
 document.getElementById("registerBtn").addEventListener("click", async () => {
+  const registerBtn = document.getElementById("registerBtn");
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !password) return alert("Isi semua field.");
+  
+  if (!username || !password) {
+    notificationManager.warning(appConfig.messages.validation.emailRequired);
+    return;
+  }
 
-  const { error } = await supabase.auth.signUp({ email: username, password });
-  if (error) return alert(error.message);
+  // Basic email validation
+  if (!appConfig.validation.email.test(username)) {
+    notificationManager.error(appConfig.messages.validation.emailInvalid);
+    return;
+  }
 
-  alert("Register berhasil. Silakan cek email untuk konfirmasi.");
+  if (password.length < appConfig.validation.minPasswordLength) {
+    notificationManager.error(appConfig.messages.validation.passwordTooShort);
+    return;
+  }
+
+  showLoading(registerBtn);
+  
+  try {
+    // Use backend API for registration instead of Supabase direct
+    const result = await apiService.post('/api/auth/register', {
+      email: username,
+      password: password
+    });
+    
+    if (!result.success) {
+      notificationManager.error(`Registration failed: ${result.error?.message || 'Registration failed'}`);
+    } else {
+      notificationManager.success(appConfig.messages.success.registrationSuccess);
+      // Clear form
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    notificationManager.error(appConfig.messages.error.registrationFailed);
+  } finally {
+    showLoading(registerBtn, false);
+  }
 });
 
 document.getElementById("loginBtn").addEventListener("click", async () => {
+  const loginBtn = document.getElementById("loginBtn");
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  if (!username || !password) return alert("Isi semua field.");
+  
+  if (!username || !password) {
+    notificationManager.warning(appConfig.messages.validation.emailRequired);
+    return;
+  }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: username,
-    password,
-  });
+  showLoading(loginBtn);
 
-  if (error) return alert(error.message);
+  try {
+    // Use backend API for login instead of Supabase direct
+    const result = await apiService.post('/api/auth/login', {
+      email: username,
+      password: password
+    });
 
-  currentUser = data.user;
+    if (!result.success) {
+      notificationManager.error(`Login failed: ${result.error?.message || 'Invalid credentials'}`);
+      return;
+    }
 
-  welcomeUser.textContent = `Hello, ${currentUser.email}`;
-  authSection.classList.add("hidden");
-  bookSection.classList.remove("hidden");
-  logoutBtn.classList.remove("hidden");
+    // Store token and user data
+    currentUser = result.data.user;
+    localStorage.setItem('authToken', result.data.token);
+    localStorage.setItem('userData', JSON.stringify(currentUser));
+    
+    notificationManager.success(appConfig.messages.success.loginSuccess);
 
-  fetchBooks();
+    welcomeUser.textContent = `Hello, ${currentUser.email}`;
+    authSection.classList.add("hidden");
+    bookSection.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+
+    // Clear form
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+
+    await fetchBooks();
+  } catch (error) {
+    console.error('Login error:', error);
+    notificationManager.error(appConfig.messages.error.loginFailed);
+  } finally {
+    showLoading(loginBtn, false);
+  }
 });
 
 logoutBtn.addEventListener("click", async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) return alert("Logout gagal");
-
-  currentUser = null;
-  welcomeUser.textContent = "";
-  authSection.classList.remove("hidden");
-  bookSection.classList.add("hidden");
-  logoutBtn.classList.add("hidden");
+  showLoading(logoutBtn);
+  
+  try {
+    // Clear local storage and user state
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    
+    currentUser = null;
+    welcomeUser.textContent = "";
+    authSection.classList.remove("hidden");
+    bookSection.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+    booksContainer.innerHTML = "";
+    
+    notificationManager.success(appConfig.messages.success.logoutSuccess);
+  } catch (error) {
+    console.error('Logout error:', error);
+    notificationManager.error("Logout failed");
+  } finally {
+    showLoading(logoutBtn, false);
+  }
 });
 
 // TAMBAH BUKU
 document.getElementById("addBookBtn").addEventListener("click", async () => {
+  const addBtn = document.getElementById("addBookBtn");
   const title = document.getElementById("title").value.trim();
   const author = document.getElementById("author").value.trim();
 
-  if (!title || !author) return alert("Isi semua field");
+  if (!title || !author) {
+    notificationManager.warning(appConfig.messages.validation.titleRequired);
+    return;
+  }
 
-  const { data: sessionData } = await supabase.auth.getSession();
-  const token = sessionData.session?.access_token;
-  if (!token) return handleUnauthorized();
+  showLoading(addBtn);
 
-  const res = await fetch(`${BASE_URL}/api/books`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ title, author }),
-  });
+  try {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) return handleUnauthorized();
 
-  if (res.ok) {
-    document.getElementById("title").value = "";
-    document.getElementById("author").value = "";
-    fetchBooks();
-  } else {
-    if (res.status === 401) handleUnauthorized();
-    const errData = await res.json();
-    alert(errData.message || "Gagal menambah buku");
+    const result = await apiService.post('/api/books', { title, author }, token);
+    
+    if (result.success) {
+      notificationManager.success(appConfig.messages.success.bookAdded);
+      document.getElementById("title").value = "";
+      document.getElementById("author").value = "";
+      await fetchBooks();
+    } else {
+      notificationManager.error(result.error?.message || 'Failed to add book');
+    }
+  } catch (error) {
+    console.error('Add book error:', error);
+    if (error.status === 401) {
+      handleUnauthorized();
+    } else {
+      notificationManager.error('Failed to add book');
+    }
+  } finally {
+    showLoading(addBtn, false);
   }
 });
 
 // AMBIL BUKU
 async function fetchBooks() {
-  const { data: sessionData } = await supabase.auth.getSession();
-  const token = sessionData.session?.access_token;
-  if (!token) return handleUnauthorized();
+  try {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) return handleUnauthorized();
 
-  const res = await fetch(`${BASE_URL}/api/books`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const result = await apiService.get('/api/books', token);
 
-  if (res.status === 401) return handleUnauthorized();
+    if (!result.success) {
+      notificationManager.error(result.error?.message || 'Failed to fetch books');
+      return;
+    }
 
-  const books = await res.json();
-  if (!Array.isArray(books)) return alert(books.message || "Gagal ambil buku");
+    const books = result.data || [];
+    booksContainer.innerHTML = "";
+    
+    if (books.length === 0) {
+      booksContainer.innerHTML = '<p class="text-center">No books found. Add your first book!</p>';
+      return;
+    }
 
-  booksContainer.innerHTML = "";
-  books.forEach((book) => {
-    const card = document.createElement("div");
-    card.className = "book-card";
-    card.innerHTML = `
-      <img src="${DUMMY_IMAGE}" alt="cover" />
-      <h3 contenteditable="true" data-id="${book.id}" class="editable-title">${book.title}</h3>
-      <p contenteditable="true" data-id="${book.id}" class="editable-author">${book.author}</p>
-      <button class="btn secondary save-btn" data-id="${book.id}">Save</button>
-      <button class="btn danger delete-btn" data-id="${book.id}">Delete</button>
-    `;
-    booksContainer.appendChild(card);
-  });
-
-  document.querySelectorAll(".save-btn").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      const id = e.target.dataset.id;
-      const title = document
-        .querySelector(`.editable-title[data-id="${id}"]`)
-        .innerText.trim();
-      const author = document
-        .querySelector(`.editable-author[data-id="${id}"]`)
-        .innerText.trim();
-
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) return handleUnauthorized();
-
-      const res = await fetch(`${BASE_URL}/api/books/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, author }),
-      });
-
-      if (res.ok) {
-        alert("Buku berhasil diubah");
-        fetchBooks();
-      } else {
-        if (res.status === 401) handleUnauthorized();
-        const err = await res.json();
-        alert(err.message || "Gagal update");
-      }
+    books.forEach((book) => {
+      const card = document.createElement("div");
+      card.className = "book-card";
+      card.innerHTML = `
+        <img src="${appConfig.constants.DEFAULT_BOOK_IMAGE}" alt="cover" />
+        <h3 contenteditable="true" data-id="${book.id}" class="editable-title">${book.title}</h3>
+        <p contenteditable="true" data-id="${book.id}" class="editable-author">${book.author}</p>
+        <button class="btn secondary save-btn" data-id="${book.id}">Save</button>
+        <button class="btn danger delete-btn" data-id="${book.id}">Delete</button>
+      `;
+      booksContainer.appendChild(card);
     });
-  });
 
-  document.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
-      const id = e.target.dataset.id;
+    // Add event listeners for save buttons
+    document.querySelectorAll(".save-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const saveBtn = e.target;
+        const id = e.target.dataset.id;
+        const title = document
+          .querySelector(`.editable-title[data-id="${id}"]`)
+          .innerText.trim();
+        const author = document
+          .querySelector(`.editable-author[data-id="${id}"]`)
+          .innerText.trim();
 
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) return handleUnauthorized();
+        if (!title || !author) {
+          notificationManager.warning('Title and author are required');
+          return;
+        }
 
-      const res = await fetch(`${BASE_URL}/api/books/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        showLoading(saveBtn);
+
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          const token = sessionData.session?.access_token;
+          if (!token) return handleUnauthorized();
+
+          const result = await apiService.put(`/api/books/${id}`, { title, author }, token);
+
+          if (result.success) {
+            notificationManager.success(appConfig.messages.success.bookUpdated);
+            await fetchBooks();
+          } else {
+            notificationManager.error(result.error?.message || 'Failed to update book');
+          }
+        } catch (error) {
+          console.error('Update book error:', error);
+          if (error.status === 401) {
+            handleUnauthorized();
+          } else {
+            notificationManager.error('Failed to update book');
+          }
+        } finally {
+          showLoading(saveBtn, false);
+        }
       });
-
-      if (res.ok) {
-        alert("Buku dihapus");
-        fetchBooks();
-      } else {
-        if (res.status === 401) handleUnauthorized();
-        const err = await res.json();
-        alert(err.message || "Gagal hapus buku");
-      }
     });
-  });
+
+    // Add event listeners for delete buttons
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const deleteBtn = e.target;
+        const id = e.target.dataset.id;
+
+        // Confirmation dialog
+        if (!confirm('Are you sure you want to delete this book?')) {
+          return;
+        }
+
+        showLoading(deleteBtn);
+
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          const token = sessionData.session?.access_token;
+          if (!token) return handleUnauthorized();
+
+          const result = await apiService.delete(`/api/books/${id}`, token);
+
+          if (result.success) {
+            notificationManager.success(appConfig.messages.success.bookDeleted);
+            await fetchBooks();
+          } else {
+            notificationManager.error(result.error?.message || 'Failed to delete book');
+          }
+        } catch (error) {
+          console.error('Delete book error:', error);
+          if (error.status === 401) {
+            handleUnauthorized();
+          } else {
+            notificationManager.error('Failed to delete book');
+          }
+        } finally {
+          showLoading(deleteBtn, false);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Fetch books error:', error);
+    if (error.status === 401) {
+      handleUnauthorized();
+    } else {
+      notificationManager.error('Failed to fetch books');
+    }
+  }
 }
 
 // Jika 401, paksa logout
 function handleUnauthorized() {
-  alert("Session expired, silakan login ulang.");
+  notificationManager.error(appConfig.messages.error.unauthorized);
   supabase.auth.signOut();
-  window.location.reload();
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
 }
