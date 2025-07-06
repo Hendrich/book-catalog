@@ -3,6 +3,7 @@
 ## ⚡ **Immediate Solutions**
 
 ### **Issue 1: 429 Rate Limit Error**
+
 ```bash
 # Stop server
 Ctrl+C
@@ -16,12 +17,14 @@ npm run dev
 ### **Issue 2: Frontend not sending data correctly**
 
 #### **Check Browser Console:**
+
 1. Open browser Dev Tools (F12)
 2. Go to Network tab
 3. Try login again
 4. Check request payload:
 
 **✅ Correct Payload:**
+
 ```json
 {
   "email": "user@example.com",
@@ -30,9 +33,10 @@ npm run dev
 ```
 
 **❌ Incorrect Payload:**
+
 ```json
 {
-  "username": "user@example.com",  // Wrong field name
+  "username": "user@example.com", // Wrong field name
   "password": "password123"
 }
 ```
@@ -40,23 +44,29 @@ npm run dev
 ### **Issue 3: Mixed URL Problems**
 
 #### **For Local Testing:**
+
 1. **Frontend Config**: Update `frontend/js/config.js`
+
 ```javascript
-const API_BASE_URL = 'http://localhost:3000';  // Local
+const API_BASE_URL = "http://localhost:3000"; // Local
 ```
 
 2. **Postman Collection**: Use `BASE_URL_LOCAL`
+
 ```
 http://localhost:3000
 ```
 
 #### **For Production Testing:**
+
 1. **Frontend Config**: Update `frontend/js/config.js`
+
 ```javascript
-const API_BASE_URL = 'https://book-catalog-app-z8p8.onrender.com';  // Production
+const API_BASE_URL = "https://book-catalog-app-z8p8.onrender.com"; // Production
 ```
 
 2. **Postman Collection**: Use `BASE_URL_PRODUCTION`
+
 ```
 https://book-catalog-app-z8p8.onrender.com
 ```
@@ -66,6 +76,7 @@ https://book-catalog-app-z8p8.onrender.com
 ## 🔧 **Step-by-Step Debug Process**
 
 ### **Step 1: Verify Server Status**
+
 ```bash
 # Health check
 curl http://localhost:3000/health
@@ -81,6 +92,7 @@ curl http://localhost:3000/health
 ```
 
 ### **Step 2: Test Registration (New User)**
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
@@ -88,6 +100,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 ```
 
 ### **Step 3: Test Login**
+
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -95,6 +108,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 ### **Step 4: Test with Token**
+
 ```bash
 # Copy token from login response, then:
 curl http://localhost:3000/api/auth/me \
@@ -106,6 +120,7 @@ curl http://localhost:3000/api/auth/me \
 ## 🎯 **Common Fixes**
 
 ### **Fix 1: Rate Limit Reset**
+
 ```bash
 # Method 1: Restart server
 npm run dev
@@ -116,17 +131,19 @@ npm run dev
 ```
 
 ### **Fix 2: Clear Browser Cache**
+
 ```bash
 # Chrome/Edge
 Ctrl+Shift+R
 
-# Firefox  
+# Firefox
 Ctrl+F5
 
 # Or manually clear cache in Dev Tools
 ```
 
 ### **Fix 3: Check Environment Variables**
+
 ```bash
 # Verify .env file exists
 ls -la .env
@@ -139,16 +156,17 @@ echo $JWT_SECRET
 ### **Fix 4: Frontend Form Debugging**
 
 **Add to `frontend/script.js` temporarily:**
+
 ```javascript
 // Before API call, add logging:
-console.log('Login data being sent:', {
+console.log("Login data being sent:", {
   email: username,
-  password: password
+  password: password,
 });
 
 // Check if values are correct
-console.log('Username field value:', document.getElementById("username").value);
-console.log('Password field value:', document.getElementById("password").value);
+console.log("Username field value:", document.getElementById("username").value);
+console.log("Password field value:", document.getElementById("password").value);
 ```
 
 ---
@@ -156,6 +174,7 @@ console.log('Password field value:', document.getElementById("password").value);
 ## 📋 **Verification Checklist**
 
 ### **Backend Checklist:**
+
 - [ ] Server running on port 3000
 - [ ] Health endpoint responds: `http://localhost:3000/health`
 - [ ] Database connection working
@@ -163,6 +182,7 @@ console.log('Password field value:', document.getElementById("password").value);
 - [ ] Rate limits not exceeded
 
 ### **Frontend Checklist:**
+
 - [ ] Form fields have correct values
 - [ ] API base URL points to correct server
 - [ ] Content-Type header is `application/json`
@@ -170,6 +190,7 @@ console.log('Password field value:', document.getElementById("password").value);
 - [ ] No JavaScript errors in console
 
 ### **Network Checklist:**
+
 - [ ] No CORS errors
 - [ ] Request reaches server (check server logs)
 - [ ] Response received by frontend
@@ -203,6 +224,7 @@ npm run dev
 ## 📞 **Still Having Issues?**
 
 ### **Collect Debug Information:**
+
 1. Server logs output
 2. Browser console errors
 3. Network tab request/response
@@ -210,6 +232,7 @@ npm run dev
 5. Node.js and npm versions
 
 ### **Test with Provided Script:**
+
 ```bash
 node test-api.js local
 ```
