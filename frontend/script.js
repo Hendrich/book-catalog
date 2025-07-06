@@ -1,7 +1,7 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-import appConfig from './js/config.js';
-import apiService from './js/services/apiService.js';
-import notificationManager from './js/components/notifications.js';
+import appConfig from "./js/config.js";
+import apiService from "./js/services/apiService.js";
+import notificationManager from "./js/components/notifications.js";
 
 // Use configuration instead of hard-coded values
 const supabase = createClient(appConfig.supabaseUrl, appConfig.supabaseAnonKey);
@@ -17,11 +17,11 @@ let currentUser = null;
 // Show loading state
 function showLoading(element, show = true) {
   if (show) {
-    element.style.opacity = '0.6';
-    element.style.pointerEvents = 'none';
+    element.style.opacity = "0.6";
+    element.style.pointerEvents = "none";
   } else {
-    element.style.opacity = '1';
-    element.style.pointerEvents = 'auto';
+    element.style.opacity = "1";
+    element.style.pointerEvents = "auto";
   }
 }
 
@@ -29,8 +29,8 @@ function showLoading(element, show = true) {
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     // Check for stored auth token and user data
-    const token = localStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData');
+    const token = localStorage.getItem("authToken");
+    const userData = localStorage.getItem("userData");
 
     if (token && userData) {
       currentUser = JSON.parse(userData);
@@ -47,8 +47,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       logoutBtn.classList.add("hidden");
     }
   } catch (error) {
-    console.error('Error checking session:', error);
-    notificationManager.error('Error checking authentication status');
+    console.error("Error checking session:", error);
+    notificationManager.error("Error checking authentication status");
   }
 });
 
@@ -56,7 +56,7 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
   const registerBtn = document.getElementById("registerBtn");
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  
+
   if (!username || !password) {
     notificationManager.warning(appConfig.messages.validation.emailRequired);
     return;
@@ -74,24 +74,28 @@ document.getElementById("registerBtn").addEventListener("click", async () => {
   }
 
   showLoading(registerBtn);
-  
+
   try {
     // Use backend API for registration instead of Supabase direct
-    const result = await apiService.post('/api/auth/register', {
+    const result = await apiService.post("/api/auth/register", {
       email: username,
-      password: password
+      password: password,
     });
-    
+
     if (!result.success) {
-      notificationManager.error(`Registration failed: ${result.error?.message || 'Registration failed'}`);
+      notificationManager.error(
+        `Registration failed: ${result.error?.message || "Registration failed"}`
+      );
     } else {
-      notificationManager.success(appConfig.messages.success.registrationSuccess);
+      notificationManager.success(
+        appConfig.messages.success.registrationSuccess
+      );
       // Clear form
       document.getElementById("username").value = "";
       document.getElementById("password").value = "";
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     notificationManager.error(appConfig.messages.error.registrationFailed);
   } finally {
     showLoading(registerBtn, false);
@@ -102,7 +106,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   const loginBtn = document.getElementById("loginBtn");
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value.trim();
-  
+
   if (!username || !password) {
     notificationManager.warning(appConfig.messages.validation.emailRequired);
     return;
@@ -112,21 +116,23 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
   try {
     // Use backend API for login instead of Supabase direct
-    const result = await apiService.post('/api/auth/login', {
+    const result = await apiService.post("/api/auth/login", {
       email: username,
-      password: password
+      password: password,
     });
 
     if (!result.success) {
-      notificationManager.error(`Login failed: ${result.error?.message || 'Invalid credentials'}`);
+      notificationManager.error(
+        `Login failed: ${result.error?.message || "Invalid credentials"}`
+      );
       return;
     }
 
     // Store token and user data
     currentUser = result.data.user;
-    localStorage.setItem('authToken', result.data.token);
-    localStorage.setItem('userData', JSON.stringify(currentUser));
-    
+    localStorage.setItem("authToken", result.data.token);
+    localStorage.setItem("userData", JSON.stringify(currentUser));
+
     notificationManager.success(appConfig.messages.success.loginSuccess);
 
     welcomeUser.textContent = `Hello, ${currentUser.email}`;
@@ -140,7 +146,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
     await fetchBooks();
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     notificationManager.error(appConfig.messages.error.loginFailed);
   } finally {
     showLoading(loginBtn, false);
@@ -149,22 +155,22 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 logoutBtn.addEventListener("click", async () => {
   showLoading(logoutBtn);
-  
+
   try {
     // Clear local storage and user state
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
+
     currentUser = null;
     welcomeUser.textContent = "";
     authSection.classList.remove("hidden");
     bookSection.classList.add("hidden");
     logoutBtn.classList.add("hidden");
     booksContainer.innerHTML = "";
-    
+
     notificationManager.success(appConfig.messages.success.logoutSuccess);
   } catch (error) {
-    console.error('Logout error:', error);
+    console.error("Logout error:", error);
     notificationManager.error("Logout failed");
   } finally {
     showLoading(logoutBtn, false);
@@ -189,22 +195,26 @@ document.getElementById("addBookBtn").addEventListener("click", async () => {
     const token = sessionData.session?.access_token;
     if (!token) return handleUnauthorized();
 
-    const result = await apiService.post('/api/books', { title, author }, token);
-    
+    const result = await apiService.post(
+      "/api/books",
+      { title, author },
+      token
+    );
+
     if (result.success) {
       notificationManager.success(appConfig.messages.success.bookAdded);
       document.getElementById("title").value = "";
       document.getElementById("author").value = "";
       await fetchBooks();
     } else {
-      notificationManager.error(result.error?.message || 'Failed to add book');
+      notificationManager.error(result.error?.message || "Failed to add book");
     }
   } catch (error) {
-    console.error('Add book error:', error);
+    console.error("Add book error:", error);
     if (error.status === 401) {
       handleUnauthorized();
     } else {
-      notificationManager.error('Failed to add book');
+      notificationManager.error("Failed to add book");
     }
   } finally {
     showLoading(addBtn, false);
@@ -218,18 +228,21 @@ async function fetchBooks() {
     const token = sessionData.session?.access_token;
     if (!token) return handleUnauthorized();
 
-    const result = await apiService.get('/api/books', token);
+    const result = await apiService.get("/api/books", token);
 
     if (!result.success) {
-      notificationManager.error(result.error?.message || 'Failed to fetch books');
+      notificationManager.error(
+        result.error?.message || "Failed to fetch books"
+      );
       return;
     }
 
     const books = result.data || [];
     booksContainer.innerHTML = "";
-    
+
     if (books.length === 0) {
-      booksContainer.innerHTML = '<p class="text-center">No books found. Add your first book!</p>';
+      booksContainer.innerHTML =
+        '<p class="text-center">No books found. Add your first book!</p>';
       return;
     }
 
@@ -259,7 +272,7 @@ async function fetchBooks() {
           .innerText.trim();
 
         if (!title || !author) {
-          notificationManager.warning('Title and author are required');
+          notificationManager.warning("Title and author are required");
           return;
         }
 
@@ -270,20 +283,26 @@ async function fetchBooks() {
           const token = sessionData.session?.access_token;
           if (!token) return handleUnauthorized();
 
-          const result = await apiService.put(`/api/books/${id}`, { title, author }, token);
+          const result = await apiService.put(
+            `/api/books/${id}`,
+            { title, author },
+            token
+          );
 
           if (result.success) {
             notificationManager.success(appConfig.messages.success.bookUpdated);
             await fetchBooks();
           } else {
-            notificationManager.error(result.error?.message || 'Failed to update book');
+            notificationManager.error(
+              result.error?.message || "Failed to update book"
+            );
           }
         } catch (error) {
-          console.error('Update book error:', error);
+          console.error("Update book error:", error);
           if (error.status === 401) {
             handleUnauthorized();
           } else {
-            notificationManager.error('Failed to update book');
+            notificationManager.error("Failed to update book");
           }
         } finally {
           showLoading(saveBtn, false);
@@ -298,7 +317,7 @@ async function fetchBooks() {
         const id = e.target.dataset.id;
 
         // Confirmation dialog
-        if (!confirm('Are you sure you want to delete this book?')) {
+        if (!confirm("Are you sure you want to delete this book?")) {
           return;
         }
 
@@ -315,14 +334,16 @@ async function fetchBooks() {
             notificationManager.success(appConfig.messages.success.bookDeleted);
             await fetchBooks();
           } else {
-            notificationManager.error(result.error?.message || 'Failed to delete book');
+            notificationManager.error(
+              result.error?.message || "Failed to delete book"
+            );
           }
         } catch (error) {
-          console.error('Delete book error:', error);
+          console.error("Delete book error:", error);
           if (error.status === 401) {
             handleUnauthorized();
           } else {
-            notificationManager.error('Failed to delete book');
+            notificationManager.error("Failed to delete book");
           }
         } finally {
           showLoading(deleteBtn, false);
@@ -330,11 +351,11 @@ async function fetchBooks() {
       });
     });
   } catch (error) {
-    console.error('Fetch books error:', error);
+    console.error("Fetch books error:", error);
     if (error.status === 401) {
       handleUnauthorized();
     } else {
-      notificationManager.error('Failed to fetch books');
+      notificationManager.error("Failed to fetch books");
     }
   }
 }

@@ -158,7 +158,7 @@ class ApiService {
    * Get auth token from localStorage
    */
   getAuthToken() {
-    return localStorage.getItem('authToken');
+    return localStorage.getItem("authToken");
   }
 
   /**
