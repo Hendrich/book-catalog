@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://book-catalog-app-z8p8.onrender.com",
+      "value": "http://localhost:3000",
       "type": "string"
     },
     {
