@@ -155,12 +155,20 @@ class ApiService {
   }
 
   /**
+   * Get auth token from localStorage
+   */
+  getAuthToken() {
+    return localStorage.getItem('authToken');
+  }
+
+  /**
    * GET request
    */
   async get(endpoint, token = null) {
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    const authToken = token || this.getAuthToken();
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
     }
 
     return this.request(endpoint, {
@@ -174,8 +182,9 @@ class ApiService {
    */
   async post(endpoint, data = null, token = null) {
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    const authToken = token || this.getAuthToken();
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
     }
 
     return this.request(endpoint, {
@@ -190,8 +199,9 @@ class ApiService {
    */
   async put(endpoint, data = null, token = null) {
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    const authToken = token || this.getAuthToken();
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
     }
 
     return this.request(endpoint, {
@@ -206,8 +216,9 @@ class ApiService {
    */
   async delete(endpoint, token = null) {
     const headers = {};
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
+    const authToken = token || this.getAuthToken();
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
     }
 
     return this.request(endpoint, {

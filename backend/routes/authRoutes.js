@@ -1,4 +1,7 @@
 const express = require("express");
+const { createClient } = require("@supabase/supabase-js");
+const jwt = require("jsonwebtoken");
+const config = require("../config/config");
 const { validateAuth } = require("../middlewares/validation");
 const { authLimiter, strictLimiter } = require("../middlewares/rateLimiter");
 const { securityLogger } = require("../middlewares/logger");
@@ -6,15 +9,16 @@ const { AppError } = require("../middlewares/errorHandler");
 
 const router = express.Router();
 
+// Initialize Supabase client
+const supabase = createClient(config.supabase.url, config.supabase.anonKey);
+
 // Apply strict rate limiting to auth endpoints
 router.use(strictLimiter);
 
 /**
  * @route   POST /api/auth/register
- * @desc    Register a new user (handled by Supabase)
+ * @desc    Register a new user via Supabase
  * @access  Public
- * @note    This endpoint is primarily for documentation purposes
- *          as registration is handled client-side via Supabase
  */
 router.post(
   "/register",
@@ -22,16 +26,35 @@ router.post(
   securityLogger("USER_REGISTRATION"),
   async (req, res, next) => {
     try {
-      // Since we're using Supabase for authentication,
-      // this endpoint mainly serves as documentation
-      // and for any future server-side registration logic
+      const { email, password } = req.body;
 
-      res.status(200).json({
+      // Register user with Supabase
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("❌ Registration error:", error.message);
+        return res.status(400).json({
+          success: false,
+          error: {
+            message: error.message,
+            code: "REGISTRATION_FAILED",
+          },
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      res.status(201).json({
         success: true,
-        message: "Registration should be handled via Supabase client-side",
+        message: "User registered successfully",
         data: {
-          note: "Use Supabase auth.signUp() method on the frontend",
-          requiredFields: ["email", "password"],
+          user: {
+            id: data.user?.id,
+            email: data.user?.email,
+          },
+          requiresConfirmation: !data.session,
         },
         timestamp: new Date().toISOString(),
       });
@@ -44,10 +67,8 @@ router.post(
 
 /**
  * @route   POST /api/auth/login
- * @desc    Login user (handled by Supabase)
+ * @desc    Login user via Supabase
  * @access  Public
- * @note    This endpoint is primarily for documentation purposes
- *          as login is handled client-side via Supabase
  */
 router.post(
   "/login",
@@ -55,18 +76,47 @@ router.post(
   securityLogger("USER_LOGIN"),
   async (req, res, next) => {
     try {
-      // Since we're using Supabase for authentication,
-      // this endpoint mainly serves as documentation
-      // and for any future server-side login logic
+      const { email, password } = req.body;
+
+      // Login user with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("❌ Login error:", error.message);
+        return res.status(401).json({
+          success: false,
+          error: {
+            message: error.message,
+            code: "LOGIN_FAILED",
+          },
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      // Generate our own JWT token for backend authentication
+      const token = jwt.sign(
+        { 
+          userId: data.user.id, 
+          email: data.user.email 
+        },
+        config.jwt.secret,
+        { 
+          expiresIn: config.jwt.expiresIn 
+        }
+      );
 
       res.status(200).json({
         success: true,
-        message: "Login should be handled via Supabase client-side",
+        message: "Login successful",
         data: {
-          note: "Use Supabase auth.signInWithPassword() method on the frontend",
-          requiredFields: ["email", "password"],
-          tokenUsage:
-            "Include the access_token from Supabase session in Authorization header as 'Bearer <token>'",
+          token,
+          user: {
+            id: data.user.id,
+            email: data.user.email,
+          },
         },
         timestamp: new Date().toISOString(),
       });
