@@ -208,6 +208,25 @@
             "description": "Logout user (documentation endpoint)"
           },
           "response": []
+        },
+        {
+          "name": "How to Get Auth Token (JWT)",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"email_yang_terdaftar@domain.com\",\n  \"password\": \"password_yang_benar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Use this endpoint to login and get JWT token from backend. Do NOT use Supabase Auth API directly for this app."
+          },
+          "response": []
         }
       ]
     },

@@ -26,6 +26,7 @@ router.post(
   securityLogger("USER_REGISTRATION"),
   async (req, res, next) => {
     try {
+      console.log("[DEBUG] Register body:", req.body);
       const { email, password } = req.body;
 
       // Register user with Supabase
@@ -76,6 +77,7 @@ router.post(
   securityLogger("USER_LOGIN"),
   async (req, res, next) => {
     try {
+      console.log("[DEBUG] Login body:", req.body);
       const { email, password } = req.body;
 
       // Login user with Supabase

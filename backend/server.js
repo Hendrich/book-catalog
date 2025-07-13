@@ -68,6 +68,14 @@ if (config.nodeEnv === "production") {
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
+// Debug log untuk semua request body
+app.use((req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT") {
+    console.log(`[DEBUG] ${req.method} ${req.url} body:`, req.body);
+  }
+  next();
+});
+
 // Input sanitization
 app.use(sanitize);
 

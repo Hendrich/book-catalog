@@ -185,9 +185,7 @@ router.put(
       });
 
       // Add updated_at timestamp
-      setClauses.push(`updated_at = $${paramCount}`);
-      values.push(new Date());
-      paramCount++;
+      setClauses.push(`updated_at = NOW()`);
 
       // Add WHERE conditions
       values.push(bookId, userId);
@@ -195,7 +193,7 @@ router.put(
       const query = `
       UPDATE books 
       SET ${setClauses.join(", ")} 
-      WHERE id = $${paramCount - 1} AND user_id = $${paramCount}
+      WHERE id = $${values.length - 1} AND user_id = $${values.length}
       RETURNING *
     `;
 
