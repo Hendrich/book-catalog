@@ -76,6 +76,19 @@ if (config.nodeEnv !== "test") {
   app.use(statsLogger);
 }
 
+// Logging setiap request ke semua API
+app.use((req, res, next) => {
+  // Log hanya untuk endpoint API
+  if (req.path.startsWith("/api/")) {
+    console.log(
+      `[API REQUEST] ${req.method} ${req.path} - IP: ${
+        req.headers["x-forwarded-for"] || req.ip
+      } - ${new Date().toISOString()}`
+    );
+  }
+  next();
+});
+
 // Rate limiting
 // Rate limiting hanya untuk endpoint sensitif, dengan limit sangat longgar
 const { createRateLimiter } = require("./middlewares/rateLimiter");
