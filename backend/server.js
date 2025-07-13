@@ -24,7 +24,24 @@ const openApiSpec = JSON.parse(
 );
 
 const app = express();
+const session = require("express-session");
 const PORT = config.port;
+
+// =============================================================================
+// SESSION MIDDLEWARE
+// =============================================================================
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "bookcatalogsecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 10 * 60 * 1000, // 10 menit
+      httpOnly: true,
+      secure: config.nodeEnv === "production", // hanya https di production
+    },
+  })
+);
 
 // =============================================================================
 // SECURITY MIDDLEWARE
@@ -60,21 +77,19 @@ if (config.nodeEnv !== "test") {
 }
 
 // Rate limiting
-if (config.nodeEnv === "production") {
-  // Custom rate limiting: exclude /health, and set higher limits for /api/auth and /api/books
-  const relaxedLimiter = (req, res, next) => {
-    // Allow unlimited /health
-    if (req.path === "/health") return next();
-    // Allow higher limit for /api/auth and /api/books
-    if (req.path.startsWith("/api/auth") || req.path.startsWith("/api/books")) {
-      // Use a custom limiter with higher limits
-      require("./middlewares/rateLimiter").getRelaxedLimiter()(req, res, next);
-    } else {
-      apiLimiter(req, res, next);
-    }
-  };
-  app.use(relaxedLimiter);
-}
+// Rate limiting hanya untuk endpoint sensitif, dengan limit sangat longgar
+const { createRateLimiter } = require("./middlewares/rateLimiter");
+
+// Limit longgar: 1000 request per 10 menit (600000 ms)
+const relaxedLimiter = createRateLimiter(
+  600000,
+  1000,
+  "Too many requests from this IP, please try again later"
+);
+
+// Terapkan hanya di endpoint auth dan books
+app.use("/api/auth", relaxedLimiter);
+app.use("/api/books", relaxedLimiter);
 
 // Body parsing
 app.use(bodyParser.json({ limit: "10mb" }));
