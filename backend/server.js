@@ -61,7 +61,13 @@ if (config.nodeEnv !== "test") {
 
 // Rate limiting
 if (config.nodeEnv === "production") {
-  app.use(apiLimiter);
+  // Exclude /health endpoint from rate limiting
+  app.use((req, res, next) => {
+    if (req.path === "/health") {
+      return next();
+    }
+    apiLimiter(req, res, next);
+  });
 }
 
 // Body parsing
