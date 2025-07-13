@@ -39,6 +39,17 @@ const createRateLimiter = (
       // Logging setiap kali rate limit tercapai
       const forwarded = req.headers["x-forwarded-for"];
       const ip = forwarded ? forwarded.split(",")[0].trim() : req.ip;
+      if (ip === "::1") {
+        // Bypass rate limit untuk localhost
+        console.warn(
+          `[RATE LIMIT BYPASS] IP: ::1 (localhost), Path: ${
+            req.path
+          }, Time: ${new Date().toISOString()}`
+        );
+        return res
+          .status(200)
+          .json({ success: true, message: "Bypass rate limit for localhost" });
+      }
       console.warn(
         `[RATE LIMIT] IP: ${ip}, Path: ${
           req.path
