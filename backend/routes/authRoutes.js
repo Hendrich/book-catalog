@@ -12,8 +12,7 @@ const router = express.Router();
 // Initialize Supabase client
 const supabase = createClient(config.supabase.url, config.supabase.anonKey);
 
-// Apply strict rate limiting to auth endpoints
-router.use(strictLimiter);
+// Remove global strict rate limiting; will apply only to register and login endpoints
 
 /**
  * @route   POST /api/auth/register

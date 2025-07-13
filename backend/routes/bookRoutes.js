@@ -12,11 +12,11 @@ const { AppError } = require("../middlewares/errorHandler");
 
 const router = express.Router();
 
-// Apply authentication middleware to all routes
 router.use(authMiddleware);
 
 // Apply rate limiting to sensitive operations
-router.use(authLimiter);
+// Apply rate limiting to sensitive operations
+// Removed rate limiter from book routes
 
 // =============================================================================
 // BOOK ROUTES
