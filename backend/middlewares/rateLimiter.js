@@ -27,7 +27,12 @@ const createRateLimiter = (
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     skipSuccessfulRequests, // Don't count successful requests
     keyGenerator: (req) => {
-      // Use IP address as the key, could be enhanced with user ID for authenticated routes
+      // Gunakan IP asli dari header x-forwarded-for jika ada, fallback ke req.ip
+      const forwarded = req.headers["x-forwarded-for"];
+      if (forwarded) {
+        // Ambil IP pertama dari daftar (jika ada beberapa IP)
+        return forwarded.split(",")[0].trim();
+      }
       return req.ip;
     },
     handler: (req, res) => {
