@@ -148,7 +148,13 @@ app.use((req, res, next) => {
       timestamp: new Date().toISOString(),
     });
   } else {
-    next(); // Let non-API requests fall through (handled by Vercel frontend)
+    // Return a simple text response for non-API routes to avoid frontend misinterpreting HTML as JSON
+    res
+      .status(404)
+      .type("text")
+      .send(
+        "The page cannot be found on backend. Frontend is served from Vercel."
+      );
   }
 });
 
