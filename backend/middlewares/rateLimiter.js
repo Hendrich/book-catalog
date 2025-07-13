@@ -81,4 +81,11 @@ module.exports = {
   strictLimiter,
   publicLimiter,
   createRateLimiter,
+  // Relaxed limiter for /api/auth and /api/books endpoints
+  getRelaxedLimiter: () =>
+    createRateLimiter(
+      config.rateLimit.windowMs,
+      config.nodeEnv === "development" ? 200 : 50, // 200 in dev, 50 in prod
+      "Too many requests from this IP, please try again later"
+    ),
 };
