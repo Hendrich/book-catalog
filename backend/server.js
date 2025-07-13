@@ -79,17 +79,23 @@ if (config.nodeEnv !== "test") {
 // Rate limiting
 // Rate limiting hanya untuk endpoint sensitif, dengan limit sangat longgar
 const { createRateLimiter } = require("./middlewares/rateLimiter");
-
-// Limit longgar: 1000 request per 10 menit (600000 ms)
-const relaxedLimiter = createRateLimiter(
-  600000,
-  1000,
-  "Too many requests from this IP, please try again later"
+// Terapkan rate limiter longgar langsung di endpoint
+app.use(
+  "/api/auth",
+  createRateLimiter(
+    600000,
+    1000,
+    "Too many requests from this IP, please try again later"
+  )
 );
-
-// Terapkan hanya di endpoint auth dan books
-app.use("/api/auth", relaxedLimiter);
-app.use("/api/books", relaxedLimiter);
+app.use(
+  "/api/books",
+  createRateLimiter(
+    600000,
+    1000,
+    "Too many requests from this IP, please try again later"
+  )
+);
 
 // Body parsing
 app.use(bodyParser.json({ limit: "10mb" }));

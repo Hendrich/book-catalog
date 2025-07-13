@@ -31,6 +31,12 @@ const createRateLimiter = (
       return req.ip;
     },
     handler: (req, res) => {
+      // Logging setiap kali rate limit tercapai
+      console.warn(
+        `[RATE LIMIT] IP: ${req.ip}, Path: ${
+          req.path
+        }, Time: ${new Date().toISOString()}`
+      );
       res.status(429).json({
         success: false,
         error: {
