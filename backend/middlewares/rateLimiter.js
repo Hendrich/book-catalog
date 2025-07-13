@@ -85,7 +85,7 @@ module.exports = {
   getRelaxedLimiter: () =>
     createRateLimiter(
       config.rateLimit.windowMs,
-      config.nodeEnv === "development" ? 200 : 50, // 200 in dev, 50 in prod
+      config.nodeEnv === "development" ? 500 : 100, // 500 in dev, 100 in prod
       "Too many requests from this IP, please try again later"
     ),
 };
