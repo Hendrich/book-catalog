@@ -134,15 +134,11 @@ if (config.nodeEnv === "development") {
 // STATIC FILES & FRONTEND
 // =============================================================================
 
-// Serve static files (frontend)
-app.use(express.static(path.join(__dirname, "../frontend")));
+// ...frontend static serving removed. Only API endpoints are served.
 
-// Catch-all handler for frontend routes (SPA support)
-app.get("*", (req, res) => {
-  // Only serve index.html for non-API routes
-  if (!req.path.startsWith("/api/")) {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
-  } else {
+// Catch-all handler for non-existent API endpoints
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/")) {
     res.status(404).json({
       success: false,
       error: {
@@ -151,6 +147,8 @@ app.get("*", (req, res) => {
       },
       timestamp: new Date().toISOString(),
     });
+  } else {
+    next(); // Let non-API requests fall through (handled by Vercel frontend)
   }
 });
 
