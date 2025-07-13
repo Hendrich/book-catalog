@@ -8,8 +8,9 @@ module.exports = function (req, res, next) {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
     if (err) return res.status(401).json({ message: "Invalid token" });
-    // Supabase user_id ada di payload.sub
-    req.user_id = payload.sub;
+    // Ambil user_id dari payload.userId (sesuai JWT backend)
+    req.user_id = payload.userId;
+    req.user_email = payload.email;
     next();
   });
 };

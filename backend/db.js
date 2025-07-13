@@ -18,11 +18,8 @@ const { Pool } = require("pg");
 require("dotenv").config();
 
 const pool = new Pool({
-  user: process.env.DB_USER || "postgres",
-  host: process.env.DB_HOST || "localhost",
-  database: process.env.DB_NAME || "book_catalog",
-  password: process.env.DB_PASSWORD || "123456", // sesuaikan dengan setup local
-  port: process.env.DB_PORT || 5432,
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // Supabase biasanya butuh SSL
 });
 
 module.exports = {

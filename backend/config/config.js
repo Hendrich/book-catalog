@@ -26,6 +26,7 @@ const config = {
       const allowedOrigins = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:5173", // <--- tambahkan ini!
         "https://book-catalog-app-z8p8.onrender.com",
         process.env.FRONTEND_URL,
       ].filter(Boolean);
@@ -50,9 +51,10 @@ const config = {
 
   // Rate Limiting Configuration
   rateLimit: {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    maxRequests: 100, // limit each IP to 100 requests per windowMs
-    maxAuthRequests: 5, // limit auth attempts
+    windowMs:
+      process.env.NODE_ENV === "development" ? 60 * 1000 : 15 * 60 * 1000, // 1 minute in dev, 15 min in prod
+    maxRequests: process.env.NODE_ENV === "development" ? 200 : 100, // 200 in dev, 100 in prod
+    maxAuthRequests: process.env.NODE_ENV === "development" ? 50 : 5, // 50 in dev, 5 in prod
   },
 };
 
