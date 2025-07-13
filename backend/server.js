@@ -61,13 +61,19 @@ if (config.nodeEnv !== "test") {
 
 // Rate limiting
 if (config.nodeEnv === "production") {
-  // Exclude /health endpoint from rate limiting
-  app.use((req, res, next) => {
-    if (req.path === "/health") {
-      return next();
+  // Custom rate limiting: exclude /health, and set higher limits for /api/auth and /api/books
+  const relaxedLimiter = (req, res, next) => {
+    // Allow unlimited /health
+    if (req.path === "/health") return next();
+    // Allow higher limit for /api/auth and /api/books
+    if (req.path.startsWith("/api/auth") || req.path.startsWith("/api/books")) {
+      // Use a custom limiter with higher limits
+      require("./middlewares/rateLimiter").getRelaxedLimiter()(req, res, next);
+    } else {
+      apiLimiter(req, res, next);
     }
-    apiLimiter(req, res, next);
-  });
+  };
+  app.use(relaxedLimiter);
 }
 
 // Body parsing
