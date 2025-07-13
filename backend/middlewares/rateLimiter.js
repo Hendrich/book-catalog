@@ -37,8 +37,10 @@ const createRateLimiter = (
     },
     handler: (req, res) => {
       // Logging setiap kali rate limit tercapai
+      const forwarded = req.headers["x-forwarded-for"];
+      const ip = forwarded ? forwarded.split(",")[0].trim() : req.ip;
       console.warn(
-        `[RATE LIMIT] IP: ${req.ip}, Path: ${
+        `[RATE LIMIT] IP: ${ip}, Path: ${
           req.path
         }, Time: ${new Date().toISOString()}`
       );
