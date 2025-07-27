@@ -1,0 +1,52 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - Hendri/CI-CD
+  pull_request:
+    branches:
+      - Hendri/CI-CD
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+
+      - name: Snyk Security Scan
+        uses: snyk/actions/node@v3
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.actor }}/book-catalog:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.actor }}/book-catalog:latest
