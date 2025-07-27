@@ -36,7 +36,7 @@ jobs:
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
       - name: Snyk Security Scan
-        uses: snyk/actions/node@v3
+        uses: snyk/actions@v4
         env:
           SNYK_TOKEN: ${{ secrets.PAT }}
         with:
