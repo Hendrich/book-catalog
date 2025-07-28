@@ -20,7 +20,7 @@ const authRoutes = require("./routes/authRoutes");
 
 // Load OpenAPI specification
 const openApiSpec = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "../openapi-spec.json"), "utf8")
+	fs.readFileSync(path.join(__dirname, "../openapi-spec.json"), "utf8")
 );
 
 const app = express();
@@ -30,17 +30,29 @@ const PORT = config.port;
 // =============================================================================
 // SESSION MIDDLEWARE
 // =============================================================================
+// Suppress express-session warnings in test environment
+if (config.nodeEnv === "test") {
+	const originalWarn = console.warn;
+	console.warn = (message, ...args) => {
+		// Suppress express-session MemoryStore warning
+		if (typeof message === 'string' && message.includes('MemoryStore is not')) {
+			return;
+		}
+		originalWarn(message, ...args);
+	};
+}
+
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "bookcatalogsecret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 10 * 60 * 1000, // 10 menit
-      httpOnly: true,
-      secure: config.nodeEnv === "production", // hanya https di production
-    },
-  })
+	session({
+		secret: process.env.SESSION_SECRET || "bookcatalogsecret",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			maxAge: 10 * 60 * 1000, // 10 menit
+			httpOnly: true,
+			secure: config.nodeEnv === "production", // hanya https di production
+		},
+	})
 );
 
 // =============================================================================
@@ -49,21 +61,21 @@ app.use(
 
 // Helmet for security headers
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", "https://*.supabase.co"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        objectSrc: ["'none'"],
-        frameSrc: ["'none'"],
-      },
-    },
-    crossOriginEmbedderPolicy: false,
-  })
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'self'"],
+				styleSrc: ["'self'", "'unsafe-inline'"],
+				scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+				imgSrc: ["'self'", "data:", "https:"],
+				connectSrc: ["'self'", "https://*.supabase.co"],
+				fontSrc: ["'self'", "https://fonts.gstatic.com"],
+				objectSrc: ["'none'"],
+				frameSrc: ["'none'"],
+			},
+		},
+		crossOriginEmbedderPolicy: false,
+	})
 );
 
 // =============================================================================
@@ -72,21 +84,20 @@ app.use(
 
 // Request logging (only in development and production, not in test)
 if (config.nodeEnv !== "test") {
-  app.use(requestLogger);
-  app.use(statsLogger);
+	app.use(requestLogger);
+	app.use(statsLogger);
 }
 
 // Logging setiap request ke semua API
 app.use((req, res, next) => {
-  // Log hanya untuk endpoint API
-  if (req.path.startsWith("/api/")) {
-    console.log(
-      `[API REQUEST] ${req.method} ${req.path} - IP: ${
-        req.headers["x-forwarded-for"] || req.ip
-      } - ${new Date().toISOString()}`
-    );
-  }
-  next();
+	// Log hanya untuk endpoint API
+	if (req.path.startsWith("/api/")) {
+		console.log(
+			`[API REQUEST] ${req.method} ${req.path} - IP: ${req.headers["x-forwarded-for"] || req.ip
+			} - ${new Date().toISOString()}`
+		);
+	}
+	next();
 });
 
 // Rate limiting
@@ -94,20 +105,20 @@ app.use((req, res, next) => {
 const { createRateLimiter } = require("./middlewares/rateLimiter");
 // Terapkan rate limiter longgar langsung di endpoint
 app.use(
-  "/api/auth",
-  createRateLimiter(
-    600000,
-    1000,
-    "Too many requests from this IP, please try again later"
-  )
+	"/api/auth",
+	createRateLimiter(
+		600000,
+		1000,
+		"Too many requests from this IP, please try again later"
+	)
 );
 app.use(
-  "/api/books",
-  createRateLimiter(
-    600000,
-    1000,
-    "Too many requests from this IP, please try again later"
-  )
+	"/api/books",
+	createRateLimiter(
+		600000,
+		1000,
+		"Too many requests from this IP, please try again later"
+	)
 );
 
 // Body parsing
@@ -116,10 +127,10 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
 // Debug log untuk semua request body
 app.use((req, res, next) => {
-  if (req.method === "POST" || req.method === "PUT") {
-    console.log(`[DEBUG] ${req.method} ${req.url} body:`, req.body);
-  }
-  next();
+	if ((req.method === "POST" || req.method === "PUT") && process.env.NODE_ENV !== "test") {
+		console.log(`[DEBUG] ${req.method} ${req.url} body:`, req.body);
+	}
+	next();
 });
 
 // Input sanitization
@@ -134,30 +145,30 @@ app.use(cors(config.cors));
 
 // Swagger UI Documentation
 const swaggerOptions = {
-  customCss: `
+	customCss: `
     .swagger-ui .topbar { display: none; }
     .swagger-ui .info { margin: 50px 0; }
     .swagger-ui .info .title { color: #3b82f6; }
   `,
-  customSiteTitle: "Book Catalog API Documentation",
-  customfavIcon: "/favicon.ico",
+	customSiteTitle: "Book Catalog API Documentation",
+	customfavIcon: "/favicon.ico",
 };
 
 app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(openApiSpec, swaggerOptions)
+	"/api-docs",
+	swaggerUi.serve,
+	swaggerUi.setup(openApiSpec, swaggerOptions)
 );
 
 // Health check endpoint
 app.get("/health", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Server is healthy",
-    timestamp: new Date().toISOString(),
-    version: process.env.npm_package_version || "1.0.0",
-    nodeEnv: config.nodeEnv,
-  });
+	res.status(200).json({
+		success: true,
+		message: "Server is healthy",
+		timestamp: new Date().toISOString(),
+		version: process.env.npm_package_version || "1.0.0",
+		nodeEnv: config.nodeEnv,
+	});
 });
 
 // API routes
@@ -166,14 +177,14 @@ app.use("/api/books", bookRoutes);
 
 // API stats endpoint (only in development)
 if (config.nodeEnv === "development") {
-  const { getApiStats } = require("./middlewares/logger");
-  app.get("/api/stats", (req, res) => {
-    res.json({
-      success: true,
-      data: getApiStats(),
-      timestamp: new Date().toISOString(),
-    });
-  });
+	const { getApiStats } = require("./middlewares/logger");
+	app.get("/api/stats", (req, res) => {
+		res.json({
+			success: true,
+			data: getApiStats(),
+			timestamp: new Date().toISOString(),
+		});
+	});
 }
 
 // =============================================================================
@@ -184,24 +195,24 @@ if (config.nodeEnv === "development") {
 
 // Catch-all handler for non-existent API endpoints
 app.use((req, res, next) => {
-  if (req.path.startsWith("/api/")) {
-    res.status(404).json({
-      success: false,
-      error: {
-        message: "API endpoint not found",
-        code: "ENDPOINT_NOT_FOUND",
-      },
-      timestamp: new Date().toISOString(),
-    });
-  } else {
-    // Return a simple text response for non-API routes to avoid frontend misinterpreting HTML as JSON
-    res
-      .status(404)
-      .type("text")
-      .send(
-        "The page cannot be found on backend. Frontend is served from Vercel."
-      );
-  }
+	if (req.path.startsWith("/api/")) {
+		res.status(404).json({
+			success: false,
+			error: {
+				message: "API endpoint not found",
+				code: "ENDPOINT_NOT_FOUND",
+			},
+			timestamp: new Date().toISOString(),
+		});
+	} else {
+		// Return a simple text response for non-API routes to avoid frontend misinterpreting HTML as JSON
+		res
+			.status(404)
+			.type("text")
+			.send(
+				"The page cannot be found on backend. Frontend is served from Vercel."
+			);
+	}
 });
 
 // =============================================================================
@@ -215,34 +226,37 @@ app.use(errorHandler);
 // SERVER STARTUP
 // =============================================================================
 
-// Start server
-const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📍 Environment: ${config.nodeEnv}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-  console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
+// Only start server if not being required by tests
+if (require.main === module) {
+	// Start server
+	const server = app.listen(PORT, () => {
+		console.log(`🚀 Server running on port ${PORT}`);
+		console.log(`📍 Environment: ${config.nodeEnv}`);
+		console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+		console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
 
-  if (config.nodeEnv === "development") {
-    console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);
-    console.log(`📚 Frontend: http://localhost:${PORT}`);
-  }
-});
+		if (config.nodeEnv === "development") {
+			console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);
+			console.log(`📚 Frontend: http://localhost:${PORT}`);
+		}
+	});
 
-// Graceful shutdown handling
-process.on("SIGTERM", () => {
-  console.log("🔄 SIGTERM signal received: closing HTTP server");
-  server.close(() => {
-    console.log("✅ HTTP server closed");
-    process.exit(0);
-  });
-});
+	// Graceful shutdown handling
+	process.on("SIGTERM", () => {
+		console.log("🔄 SIGTERM signal received: closing HTTP server");
+		server.close(() => {
+			console.log("✅ HTTP server closed");
+			process.exit(0);
+		});
+	});
 
-process.on("SIGINT", () => {
-  console.log("🔄 SIGINT signal received: closing HTTP server");
-  server.close(() => {
-    console.log("✅ HTTP server closed");
-    process.exit(0);
-  });
-});
+	process.on("SIGINT", () => {
+		console.log("🔄 SIGINT signal received: closing HTTP server");
+		server.close(() => {
+			console.log("✅ HTTP server closed");
+			process.exit(0);
+		});
+	});
+}
 
 module.exports = app;
