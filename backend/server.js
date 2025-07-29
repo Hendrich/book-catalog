@@ -18,10 +18,44 @@ const { sanitize } = require("./middlewares/validation");
 const bookRoutes = require("./routes/bookRoutes");
 const authRoutes = require("./routes/authRoutes");
 
-// Load OpenAPI specification
-const openApiSpec = JSON.parse(
-	fs.readFileSync(path.join(__dirname, "../openapi-spec.json"), "utf8")
-);
+// Load OpenAPI specification with fallback
+let openApiSpec;
+try {
+	// Try multiple possible paths for openapi-spec.json
+	const possiblePaths = [
+		path.join(__dirname, "../openapi-spec.json"),           // ./openapi-spec.json
+		path.join(__dirname, "../../openapi-spec.json"),        // ../openapi-spec.json
+		path.join(process.cwd(), "openapi-spec.json"),          // root/openapi-spec.json
+		path.join(__dirname, "../docs/api/openapi-spec.json")   // docs/api/openapi-spec.json
+	];
+	
+	let specPath = null;
+	for (const tryPath of possiblePaths) {
+		if (fs.existsSync(tryPath)) {
+			specPath = tryPath;
+			break;
+		}
+	}
+	
+	if (specPath) {
+		openApiSpec = JSON.parse(fs.readFileSync(specPath, "utf8"));
+	} else {
+		// Fallback minimal spec for tests
+		openApiSpec = {
+			openapi: "3.0.0",
+			info: { title: "Book Catalog API", version: "2.0.0" },
+			paths: {}
+		};
+	}
+} catch (error) {
+	console.warn("Warning: Could not load OpenAPI spec, using fallback:", error.message);
+	// Minimal fallback spec
+	openApiSpec = {
+		openapi: "3.0.0",
+		info: { title: "Book Catalog API", version: "2.0.0" },
+		paths: {}
+	};
+}
 
 const app = express();
 const session = require("express-session");
