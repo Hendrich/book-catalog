@@ -33,7 +33,8 @@ A secure and production-ready Book Catalog API built with Node.js, Express, Post
 
    ```bash
    # Run the SQL schema in your Supabase SQL editor
-   # File: backend/schema_pg.sql
+   # File: database/schema_pg.sql (for PostgreSQL)
+   # File: database/schema_my.sql (for MySQL)
    ```
 
 4. **Start Development Server**
@@ -107,17 +108,51 @@ npm run lint:fix   # Fix linting issues
 ### Project Structure
 
 ```
-book-catalog-app/
+book-catalog/
 ├── backend/
 │   ├── server.js              # Main server file
 │   ├── config/
 │   │   └── config.js          # Configuration
 │   ├── middlewares/           # Custom middlewares
+│   │   ├── authMiddleware.js
+│   │   ├── errorHandler.js
+│   │   ├── logger.js
+│   │   ├── rateLimiter.js
+│   │   └── validation.js
 │   ├── routes/                # API routes
-│   └── schema_pg.sql          # Database schema
-├── frontend/                  # Frontend files
-├── openapi-spec.json          # API documentation
-└── docs/                      # Additional documentation
+│   │   ├── authRoutes.js
+│   │   └── bookRoutes.js
+│   └── db.js                  # Database connection
+├── database/                  # Database schemas and scripts
+│   ├── schema_pg.sql          # PostgreSQL schema
+│   ├── schema_my.sql          # MySQL schema
+│   ├── query.sql              # Example queries
+│   └── README.md
+├── docs/                      # Documentation
+│   ├── api/                   # API documentation
+│   │   ├── openapi-spec.json
+│   │   ├── OPENAPI_GUIDE.md
+│   │   ├── SWAGGER_INTEGRATION_COMPLETE.md
+│   │   └── SWAGGER_UI_GUIDE.md
+│   ├── assignments/           # Assignment files
+│   ├── deployment/            # Deployment guides
+│   │   ├── DEPLOYMENT_GUIDE.md
+│   │   └── CRITICAL_DEPLOYMENT_FIX.md
+│   └── *.md                   # Other documentation
+├── postman/                   # Postman collections
+│   ├── Book_Catalog_API_v2.postman_collection.json
+│   ├── Book-Catalog-Environment.postman_environment.json
+│   ├── POSTMAN_COLLECTION_GUIDE.md
+│   ├── POSTMAN_COLLECTION_README.md
+│   └── README.md
+├── tests/                     # Test files
+│   ├── test-api.js
+│   └── README.md
+├── scripts/                   # Utility scripts
+├── .env                       # Environment variables
+├── .env.template              # Environment template
+├── package.json
+└── README.md
 ```
 
 ## 🔧 Configuration
@@ -166,7 +201,7 @@ DB_PASSWORD=your_db_password
 - Railway
 - DigitalOcean App Platform
 
-See `DEPLOYMENT_GUIDE.md` for detailed instructions.
+See `docs/deployment/DEPLOYMENT_GUIDE.md` for detailed instructions.
 
 ## 🧪 Testing
 
