@@ -1,4 +1,4 @@
-const { createRateLimiter, authLimiter, apiLimiter } = require('../../backend/middlewares/rateLimiter');
+const { createRateLimiter, authLimiter, apiLimiter, getRelaxedLimiter } = require('../../backend/middlewares/rateLimiter');
 
 describe('Rate Limiter Middleware', () => {
 	let req, res, next;
@@ -258,6 +258,35 @@ describe('Rate Limiter Middleware', () => {
 			// Assert
 			expect(limiter).toBeDefined();
 			expect(typeof limiter).toBe('function');
+		});
+	});
+
+	describe('getRelaxedLimiter', () => {
+		test('should return a rate limiter function', () => {
+			// Act
+			const relaxedLimiter = getRelaxedLimiter();
+
+			// Assert
+			expect(relaxedLimiter).toBeDefined();
+			expect(typeof relaxedLimiter).toBe('function');
+		});
+
+		test('should create different limits for development vs production', () => {
+			// Arrange
+			const originalEnv = process.env.NODE_ENV;
+
+			// Test development
+			process.env.NODE_ENV = 'development';
+			const devLimiter = getRelaxedLimiter();
+			expect(devLimiter).toBeDefined();
+
+			// Test production
+			process.env.NODE_ENV = 'production';
+			const prodLimiter = getRelaxedLimiter();
+			expect(prodLimiter).toBeDefined();
+
+			// Cleanup
+			process.env.NODE_ENV = originalEnv;
 		});
 	});
 });
