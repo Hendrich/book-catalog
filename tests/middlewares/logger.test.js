@@ -1,4 +1,4 @@
-const { requestLogger } = require('../../backend/middlewares/logger');
+const { requestLogger, securityLogger, statsLogger, getApiStats } = require('../../backend/middlewares/logger');
 
 describe('Logger Middleware', () => {
 	let req, res, next, originalConsoleLog, originalConsoleError;
@@ -247,6 +247,167 @@ describe('Logger Middleware', () => {
 
 			// Assert
 			expect(next).toHaveBeenCalled();
+		});
+	});
+
+	describe('Security Logger', () => {
+		test('should create middleware that logs security operations when not in test environment', () => {
+			// Arrange
+			const originalEnv = process.env.NODE_ENV;
+			process.env.NODE_ENV = 'development';
+			
+			const middleware = securityLogger('LOGIN');
+			const req = {
+				ip: '127.0.0.1',
+				get: jest.fn().mockReturnValue('test-user-agent'),
+				user_id: 123
+			};
+			const res = {};
+			const next = jest.fn();
+
+			// Act
+			middleware(req, res, next);
+
+			// Assert
+			expect(console.log).toHaveBeenCalledWith(
+				expect.stringMatching(/🔐.*SECURITY: LOGIN attempt from 127\.0\.0\.1/)
+			);
+			expect(console.log).toHaveBeenCalledWith(
+				expect.stringMatching(/User-Agent: test-user-agent/)
+			);
+			expect(console.log).toHaveBeenCalledWith(
+				expect.stringMatching(/User ID: 123/)
+			);
+			expect(next).toHaveBeenCalled();
+
+			// Cleanup
+			process.env.NODE_ENV = originalEnv;
+		});
+
+		test('should not log in test environment', () => {
+			// Arrange - NODE_ENV is already 'test' by default in Jest
+			const middleware = securityLogger('LOGIN');
+			const req = {
+				ip: '127.0.0.1',
+				get: jest.fn().mockReturnValue('test-user-agent')
+			};
+			const res = {};
+			const next = jest.fn();
+
+			// Act
+			middleware(req, res, next);
+
+			// Assert
+			expect(console.log).not.toHaveBeenCalled();
+			expect(next).toHaveBeenCalled();
+		});
+
+		test('should handle request without user_id', () => {
+			// Arrange
+			const originalEnv = process.env.NODE_ENV;
+			process.env.NODE_ENV = 'development';
+			
+			const middleware = securityLogger('LOGOUT');
+			const req = {
+				ip: '192.168.1.1',
+				get: jest.fn().mockReturnValue('another-user-agent')
+			};
+			const res = {};
+			const next = jest.fn();
+
+			// Act
+			middleware(req, res, next);
+
+			// Assert
+			expect(console.log).toHaveBeenCalledWith(
+				expect.stringMatching(/🔐.*SECURITY: LOGOUT attempt from 192\.168\.1\.1/)
+			);
+			expect(console.log).toHaveBeenCalledWith(
+				expect.stringMatching(/User-Agent: another-user-agent/)
+			);
+			expect(next).toHaveBeenCalled();
+
+			// Cleanup
+			process.env.NODE_ENV = originalEnv;
+		});
+	});
+
+	describe('Stats Logger', () => {
+		test('should track API requests', () => {
+			// Arrange
+			req.route = { path: '/api/test' };
+			res.send = jest.fn();
+
+			// Act
+			statsLogger(req, res, next);
+
+			// Assert
+			expect(next).toHaveBeenCalled();
+		});
+
+		test('should count errors on 4xx status', () => {
+			// Arrange
+			req.route = { path: '/api/test' };
+			res.statusCode = 404;
+			res.send = jest.fn();
+			const originalSend = res.send;
+
+			// Act
+			statsLogger(req, res, next);
+			res.send('not found');
+
+			// Assert
+			expect(next).toHaveBeenCalled();
+		});
+
+		test('should count errors on 5xx status', () => {
+			// Arrange
+			req.route = { path: '/api/test' };
+			res.statusCode = 500;
+			res.send = jest.fn();
+
+			// Act
+			statsLogger(req, res, next);
+			res.send('server error');
+
+			// Assert
+			expect(next).toHaveBeenCalled();
+		});
+	});
+
+	describe('API Stats', () => {
+		test('should return current API statistics', () => {
+			// Act
+			const stats = getApiStats();
+
+			// Assert
+			expect(stats).toHaveProperty('requests');
+			expect(stats).toHaveProperty('errors');
+			expect(stats).toHaveProperty('endpoints');
+			expect(stats).toHaveProperty('uptime');
+			expect(stats).toHaveProperty('requestsPerHour');
+			expect(stats).toHaveProperty('errorRate');
+			expect(typeof stats.requests).toBe('number');
+			expect(typeof stats.errors).toBe('number');
+			expect(typeof stats.endpoints).toBe('object');
+			expect(typeof stats.uptime).toBe('string');
+			expect(typeof stats.errorRate).toBe('string');
+		});
+
+		test('should calculate uptime correctly', () => {
+			// Act
+			const stats = getApiStats();
+
+			// Assert
+			expect(stats.uptime).toMatch(/\d+h \d+m/);
+		});
+
+		test('should calculate error rate as percentage', () => {
+			// Act
+			const stats = getApiStats();
+
+			// Assert
+			expect(stats.errorRate).toMatch(/\d+(\.\d+)?%/);
 		});
 	});
 });
