@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - Hendri/CI-CD
   pull_request:
     branches:
       - main
+      - Hendri/CI-CD
 
 jobs:
   build:
