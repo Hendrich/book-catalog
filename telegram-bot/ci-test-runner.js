@@ -54,7 +54,7 @@ async function runCITests() {
         console.log('Test data:', testData);
         
         if (notifier.enabled) {
-            await notifier.sendTestResults(testData);
+            await notifier.sendNotification(testData);
             console.log('✅ Telegram notification sent!');
         } else {
             console.log('⚠️ Telegram disabled - notification skipped');
@@ -77,7 +77,7 @@ async function runCITests() {
         
         if (notifier.enabled) {
             try {
-                await notifier.sendTestResults(failureData);
+                await notifier.sendNotification(failureData);
             } catch (telegramError) {
                 console.error('❌ Failed to send failure notification:', telegramError);
             }

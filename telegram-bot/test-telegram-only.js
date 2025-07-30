@@ -22,7 +22,7 @@ async function testTelegram() {
     }
     
     try {
-        await notifier.sendTestResults(testData);
+        await notifier.sendNotification(testData);
         console.log('✅ Telegram notification sent successfully');
     } catch (error) {
         console.error('❌ Error sending telegram:', error.message);
