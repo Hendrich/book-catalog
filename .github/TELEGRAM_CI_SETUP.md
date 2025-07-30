@@ -34,12 +34,12 @@ Click "New repository secret" dan tambahkan:
 
 **TELEGRAM_BOT_TOKEN**
 ```
-Value: Bot token dari @BotFather (contoh: 7234567890:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw)
+Value: Bot token dari @BotFather
 ```
 
 **TELEGRAM_CHAT_ID**
 ```
-Value: Chat ID channel/group (contoh: -1001234567890)
+Value: Chat ID channel/group
 ```
 
 ## 📱 How to Get Telegram Credentials
