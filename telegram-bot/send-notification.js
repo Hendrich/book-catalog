@@ -48,8 +48,19 @@ async function sendTestNotification() {
       try {
         const rawTestResults = fs.readFileSync(testResultsPath, 'utf8');
         const testResults = JSON.parse(rawTestResults);
-        testData = testResults;
+        
+        // Jest JSON reporter format
+        if (testResults.numTotalTests !== undefined) {
+          testData = {
+            numTotalTests: testResults.numTotalTests,
+            numPassedTests: testResults.numPassedTests,
+            numFailedTests: testResults.numFailedTests,
+            numPendingTests: testResults.numPendingTests,
+            testExecError: testResults.success === false
+          };
+        }
         console.log('📋 Test results loaded successfully');
+        console.log(`📊 Tests: ${testData.numTotalTests}, Passed: ${testData.numPassedTests}, Failed: ${testData.numFailedTests}`);
         
         // Clean up the temporary file
         fs.unlinkSync(testResultsPath);
