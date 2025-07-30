@@ -12,7 +12,12 @@ module.exports = {
 	// Coverage configuration - ENABLED for 90% requirement
 	collectCoverage: true, // Enabled to meet 90% coverage requirement
 	coverageDirectory: 'coverage',
-	coverageReporters: ['text', 'html', 'lcov', 'json'],
+	coverageReporters: ['text', 'html', 'lcov', 'json', 'json-summary'],
+
+	// Reporters - use default only (Telegram handled separately)
+	reporters: [
+		'default'
+	],
 
 	// Coverage thresholds - adjusted to achievable targets
 	coverageThreshold: {
