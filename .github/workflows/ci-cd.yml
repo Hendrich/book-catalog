@@ -23,8 +23,26 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm run test:coverage:ci
+
+      - name: Send Test Results to Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GIT_BRANCH: ${{ github.ref_name }}
+          GIT_AUTHOR: ${{ github.actor }}
+          GIT_COMMIT: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+        run: |
+          # Install dependencies if not already installed
+          npm install
+          
+          # Run Telegram notification script
+          node telegram-bot/send-notification.js
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
