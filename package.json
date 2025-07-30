@@ -15,7 +15,7 @@
 		"test:coverage:basic": "node telegram-bot/run-tests-with-notification.js",
 		"test:coverage:telegram": "jest --coverage && node telegram-bot/send-coverage.js",
 		"test:coverage:open": "jest --coverage && start coverage/lcov-report/index.html",
-		"test:coverage:ci": "jest --coverage --ci --passWithNoTests --silent && node telegram-bot/send-notification.js",
+		"test:coverage:ci": "node telegram-bot/jest-test-runner.js",
 		"test:silent": "jest --silent",
 		"test:verbose": "jest --verbose",
 		"telegram:test": "node telegram-bot/test-notification.js",
