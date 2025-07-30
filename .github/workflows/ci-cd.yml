@@ -44,6 +44,7 @@ jobs:
 
       - name: Set repo owner lowercase
         run: echo "REPO_OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+        shell: bash
 
       - name: Build Docker image
         run: docker build -t ghcr.io/${REPO_OWNER_LC}/book-catalog:latest .
