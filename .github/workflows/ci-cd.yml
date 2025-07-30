@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - Hendri/CI-CD
   pull_request:
     branches:
       - main
+      - Hendri/CI-CD
 
 jobs:
   build:
@@ -42,8 +44,6 @@ jobs:
           projectBaseDir: .
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
       - name: Snyk Security Scan
         uses: snyk/actions/node@master
