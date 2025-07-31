@@ -21,4 +21,4 @@ EXPOSE 3000
 CMD ["node", "backend/server.js"]
 
 # Link package to repository
-LABEL org.opencontainers.image.source="https://github.com/Hendrich/book-catalog"
+LABEL org.opencontainers.image.source="https://github.com/hendrich/book-catalog"
