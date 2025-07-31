@@ -187,7 +187,6 @@ CREATE TABLE public.password_reset_tokens (
 
 CREATE INDEX idx_password_reset_tokens_token ON public.password_reset_tokens(token);
 CREATE INDEX idx_password_reset_tokens_user_id ON public.password_reset_tokens(user_id);
-
 CREATE INDEX idx_password_reset_tokens_token ON public.password_reset_tokens(token);
 CREATE INDEX idx_password_reset_tokens_user_id ON public.password_reset_tokens(user_id);
 ```
@@ -230,6 +229,27 @@ POST /api/books/bulk
   "data": { "reading_status": "read" }
 }
 ```
+
+```javascript
+// New endpoint on Enhance V2
+// GET /api/books/search
+Query Parameters:
+- q: string (search query for title/author)
+- page: number (pagination, default: 1)
+- limit: number (results per page, default: 10, max: 100)
+
+Response:
+{
+  "success": true,
+  "data": [
+    { "id": 14, "title": "Atomic Habits", "author": "James Clear", "user_id": "..." }
+  ],
+  "pagination": { "page": 1, "limit": 10, "total": 1, "totalPages": 1 },
+  "search_query": "atomic",
+  "timestamp": "2025-07-31T10:00:00.000Z"
+}
+```
+
 
 ### 5.2 Password Reset Endpoints
 
