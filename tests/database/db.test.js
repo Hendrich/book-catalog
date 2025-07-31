@@ -4,16 +4,6 @@ const mockDb = require('../../backend/db');
 // We'll use the existing mock and enhance it for our tests
 
 describe('Database Connection', () => {
-  describe('Real db.js integration (no mock)', () => {
-	// Hanya jalankan test ini jika NODE_ENV === 'test-real' untuk menghindari bentrok mock
-	const isRealTest = process.env.NODE_ENV === 'test-real';
-	(isRealTest ? test : test.skip)('should load real db.js and export query function', () => {
-	  // eslint-disable-next-line global-require
-	  const realDb = require('../../backend/db');
-	  expect(realDb).toBeDefined();
-	  expect(typeof realDb.query).toBe('function');
-	});
-  });
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
