@@ -5,10 +5,8 @@ on:
     branches:
       - main
       - Hendri/CI-CD
-  pull_request:
-    branches:
-      - main
-      - Hendri/CI-CD
+      - dini
+      - feat-unit-test
 
 jobs:
   build:
