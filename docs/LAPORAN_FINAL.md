@@ -27,7 +27,7 @@ Dockerfile untuk aplikasi Book Catalog.
 ci-cd.yml untuk pipeline CI/CD terintegrasi dengan SonarCloud dan Snyk.
 Silakan cek dan sesuaikan secrets di GitHub agar SonarCloud dan Snyk bisa berjalan. Jika ingin push Docker image ke registry, tambahkan perintah login dan push sesuai registry yang digunakan.
 
-# Statistik Kontribusi
+# Statistik Kontribusi Pembagian Tugas
 
 - code quality, testing, refactoring code [Dhandy]
 - ci/cd, docker, sonar, snyk, v1 book catalog [Hendri]
