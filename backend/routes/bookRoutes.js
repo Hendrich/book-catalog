@@ -1,26 +1,80 @@
+
+
 const express = require("express");
 const pool = require("../db");
 const authMiddleware = require("../middlewares/authMiddleware");
 const {
-	validateBook,
-	validateId,
-	validateBookUpdate,
+  validateBook,
+  validateId,
+  validateBookUpdate,
 } = require("../middlewares/validation");
 const { authLimiter } = require("../middlewares/rateLimiter");
 const { securityLogger } = require("../middlewares/logger");
 const { AppError } = require("../middlewares/errorHandler");
 
 const router = express.Router();
-
 router.use(authMiddleware);
 
-// Apply rate limiting to sensitive operations
-// Apply rate limiting to sensitive operations
-// Removed rate limiter from book routes
+/**
+ * @route   GET /api/books/search
+ * @desc    Search books by title or author (no DB/schema change)
+ * @access  Private
+ * @query   {string} q - Search query (title or author)
+ * @query   {number} page - Page number (default: 1)
+ * @query   {number} limit - Items per page (default: 10)
+ */
+router.get("/search", async (req, res, next) => {
+  try {
+	const userId = req.user_id;
+	const { q = "", page = 1, limit = 10 } = req.query;
+	const pageNum = Math.max(1, parseInt(page));
+	const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+	const offset = (pageNum - 1) * limitNum;
 
-// =============================================================================
-// BOOK ROUTES
-// =============================================================================
+	let query = "SELECT * FROM books WHERE user_id = $1";
+	let queryParams = [userId];
+
+	if (q) {
+	  query += " AND (title ILIKE $2 OR author ILIKE $2)";
+	  queryParams.push(`%${q}%`);
+	}
+
+	query +=
+	  " ORDER BY created_at DESC LIMIT $" +
+	  (queryParams.length + 1) +
+	  " OFFSET $" +
+	  (queryParams.length + 2);
+	queryParams.push(limitNum, offset);
+
+	const { rows } = await pool.query(query, queryParams);
+
+	// Get total count for pagination
+	let countQuery = "SELECT COUNT(*) FROM books WHERE user_id = $1";
+	let countParams = [userId];
+	if (q) {
+	  countQuery += " AND (title ILIKE $2 OR author ILIKE $2)";
+	  countParams.push(`%${q}%`);
+	}
+	const { rows: countRows } = await pool.query(countQuery, countParams);
+	const totalBooks = parseInt(countRows[0].count);
+
+	res.json({
+	  success: true,
+	  data: rows,
+	  pagination: {
+		page: pageNum,
+		limit: limitNum,
+		total: totalBooks,
+		totalPages: Math.ceil(totalBooks / limitNum)
+	  },
+	  search_query: q,
+	  timestamp: new Date().toISOString()
+	});
+  } catch (err) {
+	next(err);
+  }
+});
+// ...existing code...
 
 /**
  * @route   GET /api/books
@@ -197,11 +251,11 @@ router.put(
 			values.push(bookId, userId);
 
 			const query = `
-      UPDATE books 
-      SET ${setClauses.join(", ")} 
-      WHERE id = $${values.length - 1} AND user_id = $${values.length}
-      RETURNING *
-    `;
+	  UPDATE books 
+	  SET ${setClauses.join(", ")} 
+	  WHERE id = $${values.length - 1} AND user_id = $${values.length}
+	  RETURNING *
+	`;
 
 			const { rows } = await pool.query(query, values);
 
