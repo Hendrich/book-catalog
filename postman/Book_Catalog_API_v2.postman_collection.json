@@ -258,6 +258,35 @@
           "response": []
         },
         {
+          "name": "Search Books",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/books/search?q=atomic&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "books", "search"],
+              "query": [
+                { "key": "q", "value": "atomic" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            },
+            "description": "Search books by title or author for the authenticated user"
+          },
+          "response": []
+        },
+        {
           "name": "Add New Book",
           "event": [
             {

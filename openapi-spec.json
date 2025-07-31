@@ -25,6 +25,78 @@
     }
   ],
   "paths": {
+            "/api/books/search": {
+      "get": {
+        "summary": "Search books by title or author",
+        "description": "Search books for the authenticated user by title or author. Tidak mengubah database.",
+        "tags": ["Books"],
+        "security": [ { "BearerAuth": [] } ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search query (title or author)",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "required": false,
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (default: 10, max: 100)",
+            "required": false,
+            "schema": { "type": "integer", "default": 10, "maximum": 100 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Book" }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page": { "type": "integer", "example": 1 },
+                        "limit": { "type": "integer", "example": 10 },
+                        "total": { "type": "integer", "example": 2 },
+                        "totalPages": { "type": "integer", "example": 1 }
+                      }
+                    },
+                    "search_query": { "type": "string", "example": "atomic" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    { "id": 14, "title": "Atomic Habits", "author": "James Clear", "user_id": "cd004999d-7d4b-4167-a9af-0f15783caee5" }
+                  ],
+                  "pagination": { "page": 1, "limit": 10, "total": 1, "totalPages": 1 },
+                  "search_query": "atomic",
+                  "timestamp": "2025-07-31T10:00:00.000Z"
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/UnauthorizedError" },
+          "500": { "$ref": "#/components/responses/ServerError" }
+        }
+      }
+    },
     "/api/books": {
       "get": {
         "summary": "Get all books",

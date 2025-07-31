@@ -355,35 +355,41 @@ Authorization: Bearer <token>
 
 ### **6. Bulk Operations**
 
-**Endpoint**: `POST /api/books/bulk`
+**Endpoint**: `GET /api/books/search`
 
-**Description**: Perform bulk operations on multiple books.
+**Description**: Search books by title or author for the authenticated user.
 
 **Headers**:
 ```http
 Authorization: Bearer <token>
-Content-Type: application/json
 ```
 
-**Request Body**:
+**Query Parameters**:
 ```javascript
 {
-  "action": "update_status",           // Action: update_status|delete|update_category
-  "book_ids": ["uuid1", "uuid2", "uuid3"], // Array of book UUIDs
-  "data": {                           // Data for the action
-    "reading_status": "read"
-  }
+  q: string,      // Search query for title/author
+  page: number,   // Page number (default: 1)
+  limit: number   // Items per page (default: 10, max: 100)
 }
 ```
 
-**Available Actions**:
+**Example Request**:
+```
+GET /api/books/search?q=atomic&page=1&limit=10
+```
 
-1. **Update Status**:
+**Response**:
 ```javascript
 {
-  "action": "update_status",
-  "book_ids": ["uuid1", "uuid2"],
-  "data": { "reading_status": "read" }
+  "success": true,
+  "data": [
+    { "id": 14, "title": "Atomic Habits", "author": "James Clear", "user_id": "..." }
+  ],
+  "pagination": { "page": 1, "limit": 10, "total": 1, "totalPages": 1 },
+  "search_query": "atomic",
+  "timestamp": "2025-07-31T10:00:00.000Z"
+}
+```
 }
 ```
 
