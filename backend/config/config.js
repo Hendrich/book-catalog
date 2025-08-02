@@ -1,4 +1,4 @@
-require("dotenv").config();
+﻿require("dotenv").config();
 
 const config = {
 	// Server Configuration
@@ -27,7 +27,7 @@ const config = {
 				"http://localhost:3000",
 				"http://127.0.0.1:3000",
 				"http://localhost:5173", // <--- tambahkan ini!
-				"https://book-catalog-app-z8p8.onrender.com",
+				"https://lab-catalog-app-z8p8.onrender.com",
 				process.env.FRONTEND_URL,
 			].filter(Boolean);
 
@@ -71,7 +71,7 @@ const requiredEnvVars = [
 const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 
 if (missingVars.length > 0) {
-	console.error("❌ Missing required environment variables:");
+	console.error("âŒ Missing required environment variables:");
 	missingVars.forEach((varName) => {
 		console.error(`   - ${varName}`);
 	});
@@ -82,3 +82,5 @@ if (missingVars.length > 0) {
 }
 
 module.exports = config;
+
+

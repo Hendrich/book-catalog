@@ -1,46 +1,34 @@
-# 📋 Rencana Implementasi Book Catalog V2.0
+﻿# ðŸ“‹ Rencana Implementasi lab Catalog V2.0
 
-## 📋 Informasi Dokumen
+## ðŸ“‹ Informasi Dokumen
 
 - **Versi**: 2.0
 - **Tanggal**: 29 Juli 2025
 - **Status**: Rencana Implementasi
-- **Tim**: Book Catalog Development Team
-- **Terkait**: [PRD V2.0](./PRD_Book_Catalog_V2.md), [API Documentation](./API_DOCUMENTATION.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
+- **Tim**: lab Catalog Development Team
+- **Terkait**: [PRD V2.0](./PRD_Script_Labs_V2.md), [API Documentation](./API_DOCUMENTATION.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
+
+Rencana implementasi ini menguraikan langkah-langkah detail untuk mengembangkan lab Catalog App V2.0 dengan fitur-fitur baru: pencarian & filter, sistem forgot password, dan migrasi ke Supabase.
 
 ---
 
-## 🎯 Gambaran Umum Implementasi
-
-Rencana implementasi ini menguraikan langkah-langkah detail untuk mengembangkan Book Catalog App V2.0 dengan fitur-fitur baru: pencarian & filter, sistem forgot password, dan migrasi ke Supabase.
-
-### **Timeline Keseluruhan**: 8 Minggu
-### **Tim**: 3-4 Developer
-### **Metodologi**: Agile dengan Sprint 2 minggu
-
----
-
-## 📅 Timeline dan Fase Implementasi
+## ðŸ“… Timeline dan Fase Implementasi
 
 ```mermaid
 gantt
-    title Book Catalog V2 Implementation Timeline
+supabase init script-labs-v2
     dateFormat  YYYY-MM-DD
     section Foundation
     Setup Supabase       :done, setup, 2025-07-29, 3d
     Schema Migration     :active, schema, after setup, 4d
-    Auth Integration     :auth, after schema, 3d
-    
+
     section Search Features
     Search Backend       :search-be, after auth, 5d
-    Search Frontend      :search-fe, after search-be, 4d
-    Performance Opt      :perf, after search-fe, 3d
-    
     section Password Reset
     Backend API          :pwd-be, after auth, 4d
     Email Service        :email, after pwd-be, 3d
     Frontend UI          :pwd-fe, after email, 3d
-    
+
     section Testing & Deploy
     Unit Testing         :test, after search-fe, 4d
     Integration Testing  :int-test, after test, 3d
@@ -49,93 +37,63 @@ gantt
 
 ---
 
-## 🔄 Fase 1: Foundation Setup (Minggu 1-2)
-
-### 📊 **Task 1.1: Supabase Project Setup**
 **Durasi**: 3 hari | **Prioritas**: Kritis | **Assignee**: Backend Lead
 
-#### **Deskripsi**
-Setup proyek Supabase baru dengan konfigurasi dasar untuk authentication, database, dan environment variables.
-
-#### **Deliverables**
 - [ ] Proyek Supabase aktif dan terkonfigurasi
 - [ ] Environment variables setup
 - [ ] Database connection testing
-- [ ] Documentation setup Supabase
 
 #### **Acceptance Criteria**
+
 - Supabase project dapat diakses melalui dashboard
 - Database connection berhasil dari aplikasi Node.js
 - Authentication flow dasar berfungsi
 - Environment variables terdokumentasi dengan baik
 
 #### **Technical Tasks**
+
 ```bash
 # Commands yang perlu dijalankan
 npm install @supabase/supabase-js
 supabase login
-supabase init book-catalog-v2
+supabase init lab-catalog-v2
 supabase link --project-ref <your-project-ref>
 ```
 
 #### **Checklist Detail**
+
 - [ ] **Setup Supabase CLI**
   - [ ] Install Supabase CLI globally
   - [ ] Login ke Supabase account
   - [ ] Verify access ke Supabase dashboard
-- [ ] **Create Project**
-  - [ ] Create new Supabase project "book-catalog-v2"
-  - [ ] Note down project URL dan anon key
-  - [ ] Setup database password
-  - [ ] Configure project settings
 - [ ] **Environment Configuration**
-  - [ ] Create `.env` file dengan Supabase credentials
   - [ ] Setup environment variables untuk development
   - [ ] Setup environment variables untuk production
   - [ ] Test connection dengan sample query
 - [ ] **Documentation**
+
   - [ ] Document setup process
   - [ ] Create troubleshooting guide
   - [ ] Document environment variables
   - [ ] Create team access guidelines
+        **Durasi**: 4 hari | **Prioritas**: Kritis | **Assignee**: Database Specialist
 
----
-
-### 📊 **Task 1.2: Database Schema Migration**
-**Durasi**: 4 hari | **Prioritas**: Kritis | **Assignee**: Database Specialist
-
-#### **Deskripsi**
-Migrasi skema database dari PostgreSQL lokal ke Supabase dengan peningkatan struktur tabel dan indeks untuk performa optimal.
-
-#### **Deliverables**
 - [ ] Enhanced database schema di Supabase
 - [ ] Row Level Security (RLS) policies
-- [ ] Performance indexes
-- [ ] Migration scripts
-
-#### **Acceptance Criteria**
 - Semua tabel berhasil dibuat dengan struktur yang benar
-- RLS policies aktif dan berfungsi
 - Indexes teroptimasi untuk query yang sering digunakan
 - Migration scripts dapat dijalankan ulang dengan aman
 
 #### **Technical Implementation**
+
 ```sql
 -- Contoh migration file
-CREATE TABLE public.books (
+CREATE TABLE public.labs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title VARCHAR(500) NOT NULL,
   author VARCHAR(300) NOT NULL,
-  category VARCHAR(100),
-  publication_year INTEGER,
-  isbn VARCHAR(20),
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
   reading_status VARCHAR(20) CHECK (reading_status IN ('to_read', 'reading', 'read')),
   notes TEXT,
-  cover_url TEXT,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  search_vector tsvector GENERATED ALWAYS AS (
-    to_tsvector('english', coalesce(title, '') || ' ' || coalesce(author, '') || ' ' || coalesce(notes, ''))
   ) STORED,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -143,13 +101,14 @@ CREATE TABLE public.books (
 ```
 
 #### **Checklist Detail**
+
 - [ ] **Schema Planning**
   - [ ] Review current database structure
   - [ ] Design enhanced schema dengan search capabilities
   - [ ] Plan data migration strategy
   - [ ] Design rollback procedures
 - [ ] **Tables Creation**
-  - [ ] Create enhanced `books` table dengan search vector
+  - [ ] Create enhanced `labs` table dengan search vector
   - [ ] Create `password_reset_tokens` table
   - [ ] Create `user_sessions` table (optional)
   - [ ] Add appropriate constraints dan validations
@@ -162,38 +121,23 @@ CREATE TABLE public.books (
   - [ ] Enable RLS pada semua tables
   - [ ] Create policies untuk user data isolation
   - [ ] Test RLS dengan different user scenarios
-  - [ ] Document security policies
-- [ ] **Migration Scripts**
-  - [ ] Create migration scripts untuk schema changes
-  - [ ] Create data migration scripts
   - [ ] Create rollback scripts
-  - [ ] Test migration process
 
 ---
 
-### 📊 **Task 1.3: Authentication Integration**
+### ðŸ“Š **Task 1.3: Authentication Integration**
+
 **Durasi**: 3 hari | **Prioritas**: Tinggi | **Assignee**: Backend Developer
 
 #### **Deskripsi**
+
 Integrasi sistem authentication Supabase dengan aplikasi existing, termasuk JWT handling dan middleware updates.
 
-#### **Deliverables**
-- [ ] Supabase Auth integration
-- [ ] Enhanced authentication middleware
 - [ ] JWT token handling
 - [ ] User session management
-
-#### **Acceptance Criteria**
-- Login dan register berfungsi dengan Supabase Auth
-- JWT tokens divalidasi dengan benar
 - User sessions dikelola dengan aman
 - Authentication middleware melindungi protected routes
-
-#### **Checklist Detail**
-- [ ] **Supabase Auth Setup**
-  - [ ] Configure Supabase Auth settings
   - [ ] Setup email templates untuk auth
-  - [ ] Configure redirect URLs
   - [ ] Test basic auth flow
 - [ ] **Backend Integration**
   - [ ] Install dan configure Supabase client
@@ -202,73 +146,52 @@ Integrasi sistem authentication Supabase dengan aplikasi existing, termasuk JWT 
   - [ ] Handle token refresh logic
 - [ ] **API Updates**
   - [ ] Update login endpoint untuk Supabase
-  - [ ] Update register endpoint
-  - [ ] Add logout functionality
-  - [ ] Implement session validation
-- [ ] **Testing**
   - [ ] Test login/register flows
   - [ ] Test protected routes
-  - [ ] Test token expiration handling
-  - [ ] Test error scenarios
 
----
-
-## 🔍 Fase 2: Search & Filter Implementation (Minggu 3-4)
-
-### 📊 **Task 2.1: Search Backend Implementation**
-**Durasi**: 5 hari | **Prioritas**: Tinggi | **Assignee**: Backend Developer
+## ðŸ” Fase 2: Search & Filter Implementation (Minggu 3-4)
 
 #### **Deskripsi**
-Implementasi sistem pencarian canggih dengan PostgreSQL full-text search, filtering, dan sorting capabilities.
 
 #### **Deliverables**
+
 - [ ] Advanced search API endpoints
 - [ ] Full-text search implementation
 - [ ] Filter dan sorting logic
 - [ ] Search performance optimization
 
 #### **Acceptance Criteria**
+
 - Search API mengembalikan hasil dalam < 200ms
 - Full-text search berfungsi untuk title, author, dan notes
-- Filtering berfungsi untuk semua fields yang relevan
-- Pagination dan sorting diimplementasikan dengan benar
 
-#### **Technical Implementation**
 ```javascript
 // Contoh search function
-async function searchBooks(userId, searchParams) {
-  const {
-    q, category, reading_status, rating_min, rating_max,
-    year_from, year_to, sort_by, sort_order, page, limit
   } = searchParams;
-  
+
   let query = supabase
-    .from('books')
+    .from('labs')
     .select('*')
     .eq('user_id', userId);
-  
+
   if (q) {
     query = query.textSearch('search_vector', `'${q}'`);
   }
-  
+
   // Apply filters...
-  
+
   return query;
 }
 ```
 
 #### **Checklist Detail**
+
 - [ ] **Search Infrastructure**
   - [ ] Setup full-text search dengan tsvector
   - [ ] Create search ranking functions
   - [ ] Implement search query parsing
   - [ ] Setup search result highlighting
-- [ ] **API Endpoints**
-  - [ ] Create `/api/books/search` endpoint
-  - [ ] Implement advanced query parameters
-  - [ ] Add pagination support
   - [ ] Implement sorting options
-- [ ] **Database Queries**
   - [ ] Optimize search queries dengan indexes
   - [ ] Implement complex filtering logic
   - [ ] Add search performance monitoring
@@ -277,78 +200,54 @@ async function searchBooks(userId, searchParams) {
   - [ ] Implement input validation untuk search queries
   - [ ] Add rate limiting untuk search endpoints
   - [ ] Sanitize search inputs
-  - [ ] Test SQL injection protection
 
----
+### ðŸ“Š **Task 2.2: Search Frontend Implementation**
 
-### 📊 **Task 2.2: Search Frontend Implementation**
 **Durasi**: 4 hari | **Prioritas**: Tinggi | **Assignee**: Frontend Developer
 
-#### **Deskripsi**
-Implementasi antarmuka pencarian yang user-friendly dengan real-time search, filters, dan hasil yang responsive.
-
 #### **Deliverables**
+
 - [ ] Search interface dengan auto-complete
-- [ ] Advanced filter controls
-- [ ] Search results display
-- [ ] Responsive design
 
 #### **Acceptance Criteria**
-- Search interface responsif di semua device sizes
+
 - Auto-complete berfungsi dengan debouncing
 - Filter controls intuitif dan mudah digunakan
 - Search results menampilkan informasi yang relevan
 
 #### **Checklist Detail**
+
 - [ ] **Search UI Components**
   - [ ] Create search input dengan auto-complete
   - [ ] Design filter sidebar/dropdown
-  - [ ] Create search results cards/list
-  - [ ] Implement pagination controls
-- [ ] **JavaScript Functionality**
-  - [ ] Implement debounced search
   - [ ] Add filter state management
   - [ ] Implement search history
-  - [ ] Add search result sorting
-- [ ] **User Experience**
-  - [ ] Add loading states
-  - [ ] Implement empty states
   - [ ] Add search result highlighting
   - [ ] Optimize for mobile devices
-- [ ] **Integration**
-  - [ ] Connect dengan search API
-  - [ ] Handle API errors gracefully
-  - [ ] Implement error retry logic
   - [ ] Test dengan different data scenarios
 
 ---
 
-### 📊 **Task 2.3: Search Performance Optimization**
+### ðŸ“Š **Task 2.3: Search Performance Optimization**
+
 **Durasi**: 3 hari | **Prioritas**: Sedang | **Assignee**: Backend Developer
 
 #### **Deskripsi**
+
 Optimasi performa pencarian untuk memastikan response time yang cepat dan pengalaman pengguna yang smooth.
 
 #### **Deliverables**
+
 - [ ] Performance monitoring
-- [ ] Query optimization
-- [ ] Caching implementation
-- [ ] Load testing results
 
 #### **Acceptance Criteria**
+
 - Search response time < 200ms untuk 95% queries
-- Database query time < 50ms
-- API dapat handle 100 concurrent search requests
-- Memory usage optimal
 
 #### **Checklist Detail**
+
 - [ ] **Performance Analysis**
-  - [ ] Analyze current query performance
-  - [ ] Identify bottlenecks
-  - [ ] Setup performance monitoring
-  - [ ] Create performance benchmarks
 - [ ] **Query Optimization**
-  - [ ] Optimize database indexes
   - [ ] Tune search query complexity
   - [ ] Implement query result caching
   - [ ] Optimize pagination queries
@@ -357,53 +256,30 @@ Optimasi performa pencarian untuk memastikan response time yang cepat dan pengal
   - [ ] Add application-level caching
   - [ ] Cache search metadata
   - [ ] Implement cache invalidation
-- [ ] **Load Testing**
-  - [ ] Create load testing scripts
-  - [ ] Test dengan various data volumes
-  - [ ] Test concurrent user scenarios
   - [ ] Document performance characteristics
 
----
+### ðŸ“Š **Task 3.1: Password Reset Backend API**
 
-## 🔐 Fase 3: Forgot Password System (Minggu 5-6)
-
-### 📊 **Task 3.1: Password Reset Backend API**
 **Durasi**: 4 hari | **Prioritas**: Tinggi | **Assignee**: Backend Developer
 
-#### **Deskripsi**
-Implementasi sistem reset password yang aman dengan token generation, validation, dan email integration.
-
 #### **Deliverables**
-- [ ] Password reset API endpoints
+
 - [ ] Secure token generation
 - [ ] Token validation logic
 - [ ] Rate limiting implementation
 
 #### **Acceptance Criteria**
+
 - Reset tokens secure dan unique
 - Token expiration berfungsi dengan benar
 - Rate limiting melindungi dari abuse
-- API responses aman dari email enumeration
-
-#### **Technical Implementation**
-```javascript
-// Password reset flow
-const crypto = require('crypto');
-
-async function generateResetToken(userId) {
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-  
+  // Password reset flow
+  const crypto = require('crypto');
   await supabase
-    .from('password_reset_tokens')
-    .insert({
-      user_id: userId,
-      token: token,
-      expires_at: expiresAt
-    });
-    
+  expires_at: expiresAt
   return token;
-}
+  }
+
 ```
 
 #### **Checklist Detail**
@@ -425,12 +301,11 @@ async function generateResetToken(userId) {
 - [ ] **Database Integration**
   - [ ] Test password_reset_tokens table
   - [ ] Implement token validation queries
-  - [ ] Add cleanup procedures untuk expired tokens
   - [ ] Test database constraints
 
 ---
 
-### 📊 **Task 3.2: Email Service Integration**
+### ðŸ“Š **Task 3.2: Email Service Integration**
 **Durasi**: 3 hari | **Prioritas**: Tinggi | **Assignee**: Backend Developer
 
 #### **Deskripsi**
@@ -448,7 +323,6 @@ Setup email service untuk mengirim reset password links dengan template yang pro
 - Email delivery status dapat ditrack
 - Fallback mechanism untuk email failures
 
-#### **Checklist Detail**
 - [ ] **Email Service Setup**
   - [ ] Choose email provider (Supabase Email/SendGrid/AWS SES)
   - [ ] Configure SMTP/API credentials
@@ -469,10 +343,9 @@ Setup email service untuk mengirim reset password links dengan template yang pro
   - [ ] Test email template rendering
   - [ ] Test error scenarios (invalid email, service down)
   - [ ] Test email delivery speed
-
 ---
 
-### 📊 **Task 3.3: Password Reset Frontend UI**
+### ðŸ“Š **Task 3.3: Password Reset Frontend UI**
 **Durasi**: 3 hari | **Prioritas**: Tinggi | **Assignee**: Frontend Developer
 
 #### **Deskripsi**
@@ -486,19 +359,13 @@ Implementasi antarmuka reset password yang user-friendly dengan validasi real-ti
 
 #### **Acceptance Criteria**
 - Form validation memberikan feedback real-time
-- User interface intuitive dan accessible
-- Error messages helpful dan actionable
-- Design consistent dengan aplikasi existing
-
 #### **Checklist Detail**
-- [ ] **UI Components**
   - [ ] Create forgot password form
   - [ ] Create reset password form
   - [ ] Design success/error message components
   - [ ] Create loading states
 - [ ] **Form Validation**
   - [ ] Implement email validation
-  - [ ] Add password strength validation
   - [ ] Implement confirm password matching
   - [ ] Add real-time validation feedback
 - [ ] **User Experience**
@@ -514,9 +381,9 @@ Implementasi antarmuka reset password yang user-friendly dengan validasi real-ti
 
 ---
 
-## 🧪 Fase 4: Testing & Quality Assurance (Minggu 7-8)
+## ðŸ§ª Fase 4: Testing & Quality Assurance (Minggu 7-8)
 
-### 📊 **Task 4.1: Unit Testing Implementation**
+### ðŸ“Š **Task 4.1: Unit Testing Implementation**
 **Durasi**: 4 hari | **Prioritas**: Tinggi | **Assignee**: QA Engineer + Developers
 
 #### **Deskripsi**
@@ -558,7 +425,7 @@ Implementasi comprehensive unit tests untuk semua fitur baru dengan coverage tar
 
 ---
 
-### 📊 **Task 4.2: Integration Testing**
+### ðŸ“Š **Task 4.2: Integration Testing**
 **Durasi**: 3 hari | **Prioritas**: Tinggi | **Assignee**: QA Engineer
 
 #### **Deskripsi**
@@ -600,11 +467,11 @@ Testing integrasi end-to-end untuk memastikan semua komponen berfungsi bersama d
 
 ---
 
-### 📊 **Task 4.3: Deployment & Production Setup**
+### ðŸ“Š **Task 4.3: Deployment & Production Setup**
 **Durasi**: 2 hari | **Prioritas**: Kritis | **Assignee**: DevOps Engineer
 
 #### **Deskripsi**
-Setup production environment dan deployment pipeline untuk Book Catalog V2.
+Setup production environment dan deployment pipeline untuk lab Catalog V2.
 
 #### **Deliverables**
 - [ ] Production environment setup
@@ -642,7 +509,7 @@ Setup production environment dan deployment pipeline untuk Book Catalog V2.
 
 ---
 
-## 📊 Resource Planning & Team Allocation
+## ðŸ“Š Resource Planning & Team Allocation
 
 ### **Tim Requirements**
 
@@ -667,7 +534,7 @@ Setup production environment dan deployment pipeline untuk Book Catalog V2.
 
 ---
 
-## 🎯 Success Metrics & KPIs
+## ðŸŽ¯ Success Metrics & KPIs
 
 ### **Technical Metrics**
 
@@ -690,7 +557,7 @@ Setup production environment dan deployment pipeline untuk Book Catalog V2.
 
 ---
 
-## 🚨 Risk Management
+## ðŸš¨ Risk Management
 
 ### **Technical Risks**
 
@@ -711,13 +578,13 @@ Setup production environment dan deployment pipeline untuk Book Catalog V2.
 
 ---
 
-## 📋 Next Steps & Action Items
+## ðŸ“‹ Next Steps & Action Items
 
 ### **Immediate Actions (Week 1)**
-1. ✅ **Kick-off Meeting**: Review implementation plan dengan team
-2. 🔄 **Environment Setup**: Begin Supabase project creation
-3. 📋 **Resource Allocation**: Confirm team member availability
-4. 📋 **Tool Setup**: Setup development tools dan access
+1. âœ… **Kick-off Meeting**: Review implementation plan dengan team
+2. ðŸ”„ **Environment Setup**: Begin Supabase project creation
+3. ðŸ“‹ **Resource Allocation**: Confirm team member availability
+4. ðŸ“‹ **Tool Setup**: Setup development tools dan access
 
 ### **Week 2-3 Priorities**
 1. **Complete Foundation Setup**: Supabase, database, authentication
@@ -733,11 +600,14 @@ Setup production environment dan deployment pipeline untuk Book Catalog V2.
 
 ---
 
-**Status**: 📋 Ready for Implementation  
-**Last Updated**: 29 Juli 2025  
-**Next Review**: Weekly Sprint Reviews  
-**Document Owner**: Book Catalog Development Team
+**Status**: ðŸ“‹ Ready for Implementation
+**Last Updated**: 29 Juli 2025
+**Next Review**: Weekly Sprint Reviews
+**Document Owner**: lab Catalog Development Team
 
 ---
 
 *Dokumen ini akan diperbarui setiap minggu seiring dengan kemajuan implementasi. Semua perubahan akan didokumentasikan dan dikomunikasikan kepada tim.*
+```
+
+

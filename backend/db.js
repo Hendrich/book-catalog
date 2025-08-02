@@ -1,4 +1,4 @@
-/// ****** koneksi MYSQL *******///
+﻿/// ****** koneksi MYSQL *******///
 // const mysql = require("mysql2/promise");
 // require("dotenv").config();
 
@@ -25,3 +25,5 @@ const pool = new Pool({
 module.exports = {
   query: (text, params) => pool.query(text, params),
 };
+
+

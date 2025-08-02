@@ -1,10 +1,10 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Test GitHub environment variables
  */
 
-console.log('🔍 GitHub Environment Variables Check:');
+console.log('ðŸ” GitHub Environment Variables Check:');
 console.log('================================');
 
 const githubVars = {
@@ -21,13 +21,13 @@ const githubVars = {
 };
 
 for (const [key, value] of Object.entries(githubVars)) {
-    const status = value ? '✅' : '❌';
+    const status = value ? 'âœ…' : 'âŒ';
     console.log(`${status} ${key}: ${value || 'not set'}`);
 }
 
-console.log('\n📋 Options that would be sent:');
+console.log('\nðŸ“‹ Options that would be sent:');
 const options = {
-    projectName: 'Book Catalog',
+    projectName: 'lab Catalog',
     branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || 'main',
     author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || 'Automated',
     timestamp: new Date(),
@@ -41,3 +41,5 @@ const options = {
 };
 
 console.log(JSON.stringify(options, null, 2));
+
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Database Basic Tests
  * Simple tests to increase db.js coverage
  */
@@ -68,3 +68,5 @@ describe('Database Basic Tests', () => {
 		}
 	});
 });
+
+

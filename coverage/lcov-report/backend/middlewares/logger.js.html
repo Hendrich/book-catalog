@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -426,7 +426,7 @@ const securityLogger = (operation) =&gt; {
 		const userAgent = req.get("User-Agent");
 &nbsp;
 		if (process.env.NODE_ENV !== "test") {
-			console.log(`🔐 [${timestamp}] SECURITY: ${operation} attempt from ${ip}`);
+			console.log(`ðŸ” [${timestamp}] SECURITY: ${operation} attempt from ${ip}`);
 			console.log(`   User-Agent: ${userAgent}`);
 &nbsp;
 			if (req.user_id) {
@@ -506,3 +506,4 @@ module.exports = {
     </body>
 </html>
     
+

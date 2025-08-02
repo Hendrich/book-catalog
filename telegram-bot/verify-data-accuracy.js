@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Test Data Accuracy - Compare Terminal Output vs Telegram Message
@@ -12,10 +12,10 @@ const fs = require('fs');
 const path = require('path');
 
 async function verifyDataAccuracy() {
-  console.log('🔍 VERIFYING DATA ACCURACY');
+  console.log('ðŸ” VERIFYING DATA ACCURACY');
   console.log('=========================\n');
   
-  console.log('1️⃣ Running Jest and capturing real output...');
+  console.log('1ï¸âƒ£ Running Jest and capturing real output...');
   
   let jestOutput = '';
   let realTestData = {
@@ -34,7 +34,7 @@ async function verifyDataAccuracy() {
       stdio: 'pipe'
     });
     
-    console.log('📊 Jest Output (last 10 lines):');
+    console.log('ðŸ“Š Jest Output (last 10 lines):');
     const lines = jestOutput.split('\n');
     lines.slice(-10).forEach(line => {
       if (line.trim()) console.log(`   ${line}`);
@@ -43,10 +43,10 @@ async function verifyDataAccuracy() {
   } catch (error) {
     jestOutput = error.stdout || error.message;
     realTestData.hasErrors = true;
-    console.log('⚠️ Jest failed, using error output for parsing');
+    console.log('âš ï¸ Jest failed, using error output for parsing');
   }
   
-  console.log('\n2️⃣ Parsing Jest output...');
+  console.log('\n2ï¸âƒ£ Parsing Jest output...');
   
   // Parse test results from Jest output
   const patterns = [
@@ -80,14 +80,14 @@ async function verifyDataAccuracy() {
     realTestData.duration = Math.round(parseFloat(timeMatch[1]) * 1000);
   }
   
-  console.log('📋 Parsed Test Data:');
-  console.log(`   ├─ Total: ${realTestData.total}`);
-  console.log(`   ├─ Passed: ${realTestData.passed}`);
-  console.log(`   ├─ Failed: ${realTestData.failed}`);
-  console.log(`   ├─ Duration: ${realTestData.duration}ms`);
-  console.log(`   └─ Has Errors: ${realTestData.hasErrors}`);
+  console.log('ðŸ“‹ Parsed Test Data:');
+  console.log(`   â”œâ”€ Total: ${realTestData.total}`);
+  console.log(`   â”œâ”€ Passed: ${realTestData.passed}`);
+  console.log(`   â”œâ”€ Failed: ${realTestData.failed}`);
+  console.log(`   â”œâ”€ Duration: ${realTestData.duration}ms`);
+  console.log(`   â””â”€ Has Errors: ${realTestData.hasErrors}`);
   
-  console.log('\n3️⃣ Reading coverage data...');
+  console.log('\n3ï¸âƒ£ Reading coverage data...');
   
   let coverageData = null;
   const coveragePath = path.join(process.cwd(), 'coverage', 'coverage-summary.json');
@@ -97,20 +97,20 @@ async function verifyDataAccuracy() {
     const coverage = JSON.parse(rawCoverage);
     coverageData = coverage.total;
     
-    console.log('📊 Coverage Data:');
-    console.log(`   ├─ Statements: ${coverageData.statements.pct.toFixed(2)}%`);
-    console.log(`   ├─ Branches: ${coverageData.branches.pct.toFixed(2)}%`);
-    console.log(`   ├─ Functions: ${coverageData.functions.pct.toFixed(2)}%`);
-    console.log(`   └─ Lines: ${coverageData.lines.pct.toFixed(2)}%`);
+    console.log('ðŸ“Š Coverage Data:');
+    console.log(`   â”œâ”€ Statements: ${coverageData.statements.pct.toFixed(2)}%`);
+    console.log(`   â”œâ”€ Branches: ${coverageData.branches.pct.toFixed(2)}%`);
+    console.log(`   â”œâ”€ Functions: ${coverageData.functions.pct.toFixed(2)}%`);
+    console.log(`   â””â”€ Lines: ${coverageData.lines.pct.toFixed(2)}%`);
   } else {
-    console.log('⚠️ No coverage data found');
+    console.log('âš ï¸ No coverage data found');
   }
   
-  console.log('\n4️⃣ Generating Telegram message...');
+  console.log('\n4ï¸âƒ£ Generating Telegram message...');
   
   const notifier = new TelegramTestNotifier();
   const options = {
-    projectName: 'Book Catalog App',
+    projectName: 'lab Catalog App',
     branch: process.env.GIT_BRANCH || 'main',
     author: process.env.GIT_AUTHOR || 'Data Verification',
     timestamp: new Date()
@@ -119,12 +119,12 @@ async function verifyDataAccuracy() {
   // Generate message (but don't send yet)
   const telegramMessage = notifier.formatCleanMessage(realTestData, coverageData, options);
   
-  console.log('📱 Generated Telegram Message:');
+  console.log('ðŸ“± Generated Telegram Message:');
   console.log('--- BEGIN MESSAGE ---');
   console.log(telegramMessage);
   console.log('--- END MESSAGE ---');
   
-  console.log('\n5️⃣ Data verification...');
+  console.log('\n5ï¸âƒ£ Data verification...');
   
   // Verify data matches
   const messageLines = telegramMessage.split('\n');
@@ -140,31 +140,33 @@ async function verifyDataAccuracy() {
     durationMatch: durationLine ? durationLine.includes(realTestData.duration.toString()) : false
   };
   
-  console.log('✅ Verification Results:');
-  console.log(`   ├─ Tests count: ${verification.testsMatch ? '✅ Match' : '❌ Mismatch'}`);
-  console.log(`   ├─ Passes count: ${verification.passesMatch ? '✅ Match' : '❌ Mismatch'}`);
-  console.log(`   ├─ Failures count: ${verification.failuresMatch ? '✅ Match' : '❌ Mismatch'}`);
-  console.log(`   └─ Duration: ${verification.durationMatch ? '✅ Match' : '❌ Mismatch'}`);
+  console.log('âœ… Verification Results:');
+  console.log(`   â”œâ”€ Tests count: ${verification.testsMatch ? 'âœ… Match' : 'âŒ Mismatch'}`);
+  console.log(`   â”œâ”€ Passes count: ${verification.passesMatch ? 'âœ… Match' : 'âŒ Mismatch'}`);
+  console.log(`   â”œâ”€ Failures count: ${verification.failuresMatch ? 'âœ… Match' : 'âŒ Mismatch'}`);
+  console.log(`   â””â”€ Duration: ${verification.durationMatch ? 'âœ… Match' : 'âŒ Mismatch'}`);
   
   const allMatch = Object.values(verification).every(v => v === true);
   
   if (allMatch) {
-    console.log('\n🎉 VERIFICATION PASSED!');
-    console.log('✅ Telegram message data matches terminal output perfectly.');
+    console.log('\nðŸŽ‰ VERIFICATION PASSED!');
+    console.log('âœ… Telegram message data matches terminal output perfectly.');
     
     // Ask if user wants to send the verified message
-    console.log('\n6️⃣ Sending verified message to Telegram...');
+    console.log('\n6ï¸âƒ£ Sending verified message to Telegram...');
     if (notifier.enabled) {
       await notifier.sendNotification(realTestData, coverageData, options);
-      console.log('✅ Accurate message sent to Telegram!');
+      console.log('âœ… Accurate message sent to Telegram!');
     } else {
-      console.log('⚠️ Telegram not configured, message not sent');
+      console.log('âš ï¸ Telegram not configured, message not sent');
     }
   } else {
-    console.log('\n❌ VERIFICATION FAILED!');
-    console.log('⚠️ Data mismatch detected. Check parsing logic.');
+    console.log('\nâŒ VERIFICATION FAILED!');
+    console.log('âš ï¸ Data mismatch detected. Check parsing logic.');
   }
 }
 
 // Run verification
 verifyDataAccuracy().catch(console.error);
+
+

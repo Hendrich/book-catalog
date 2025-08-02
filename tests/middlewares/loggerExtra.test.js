@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Logger Extra Tests
  * Additional tests to increase logger.js coverage
  */
@@ -85,3 +85,5 @@ describe('Logger Extra Coverage Tests', () => {
 		expect(next).toHaveBeenCalledTimes(1);
 	});
 });
+
+

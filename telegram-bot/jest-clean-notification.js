@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Jest Test Runner with Clean Telegram Notification Format
@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 async function runTestsWithCleanNotification() {
-  console.log('🧪 Running Jest tests with clean Telegram notification...');
+  console.log('ðŸ§ª Running Jest tests with clean Telegram notification...');
   
   let testData = {
     total: 0,
@@ -26,7 +26,7 @@ async function runTestsWithCleanNotification() {
   const startTime = Date.now();
   
   try {
-    console.log('📊 Executing Jest tests...');
+    console.log('ðŸ“Š Executing Jest tests...');
     
     // Run Jest and capture output
     const jestOutput = execSync('npx jest --coverage --verbose --passWithNoTests', {
@@ -61,14 +61,14 @@ async function runTestsWithCleanNotification() {
           testData.total = parseInt(match[3]);
         }
         parsed = true;
-        console.log(`✅ Parsed: ${testData.passed}/${testData.total} tests passed`);
+        console.log(`âœ… Parsed: ${testData.passed}/${testData.total} tests passed`);
         break;
       }
     }
     
     // If parsing failed, get real count
     if (!parsed) {
-      console.log('📊 Using file analysis for test count...');
+      console.log('ðŸ“Š Using file analysis for test count...');
       try {
         const getRealTestCount = require('./count-tests');
         const realCounts = getRealTestCount();
@@ -83,7 +83,7 @@ async function runTestsWithCleanNotification() {
     }
     
   } catch (error) {
-    console.log('❌ Jest execution failed:', error.message);
+    console.log('âŒ Jest execution failed:', error.message);
     testData.hasErrors = true;
     
     // Try to parse error output for test counts
@@ -103,18 +103,18 @@ async function runTestsWithCleanNotification() {
   
   testData.duration = Date.now() - startTime;
   
-  console.log('📊 Final Test Summary:');
-  console.log(`   ├─ Total: ${testData.total}`);
-  console.log(`   ├─ Passed: ${testData.passed}`);
-  console.log(`   ├─ Failed: ${testData.failed}`);
-  console.log(`   ├─ Skipped: ${testData.skipped}`);
-  console.log(`   └─ Duration: ${testData.duration}ms`);
+  console.log('ðŸ“Š Final Test Summary:');
+  console.log(`   â”œâ”€ Total: ${testData.total}`);
+  console.log(`   â”œâ”€ Passed: ${testData.passed}`);
+  console.log(`   â”œâ”€ Failed: ${testData.failed}`);
+  console.log(`   â”œâ”€ Skipped: ${testData.skipped}`);
+  console.log(`   â””â”€ Duration: ${testData.duration}ms`);
   
   // Send Telegram notification with clean format
   const notifier = new TelegramTestNotifier();
   
   if (!notifier.enabled) {
-    console.log('⚠️ Telegram notifications disabled');
+    console.log('âš ï¸ Telegram notifications disabled');
     return;
   }
   
@@ -127,14 +127,14 @@ async function runTestsWithCleanNotification() {
       const rawCoverage = fs.readFileSync(coveragePath, 'utf8');
       const coverage = JSON.parse(rawCoverage);
       coverageData = coverage.total;
-      console.log('📊 Coverage data loaded');
+      console.log('ðŸ“Š Coverage data loaded');
     } catch (error) {
-      console.warn('⚠️ Failed to read coverage data:', error.message);
+      console.warn('âš ï¸ Failed to read coverage data:', error.message);
     }
   }
   
   const options = {
-    projectName: 'Book Catalog App',
+    projectName: 'lab Catalog App',
     branch: process.env.GIT_BRANCH || 'main',
     author: process.env.GIT_AUTHOR || 'Jest Testing',
     timestamp: new Date()
@@ -142,9 +142,9 @@ async function runTestsWithCleanNotification() {
   
   try {
     await notifier.sendNotification(testData, coverageData, options);
-    console.log('✅ Clean format Telegram notification sent successfully!');
+    console.log('âœ… Clean format Telegram notification sent successfully!');
   } catch (error) {
-    console.error('❌ Failed to send notification:', error.message);
+    console.error('âŒ Failed to send notification:', error.message);
   }
 }
 
@@ -152,12 +152,14 @@ async function runTestsWithCleanNotification() {
 if (require.main === module) {
   runTestsWithCleanNotification()
     .then(() => {
-      console.log('🎉 Test execution and notification complete!');
+      console.log('ðŸŽ‰ Test execution and notification complete!');
     })
     .catch((error) => {
-      console.error('❌ Error:', error.message);
+      console.error('âŒ Error:', error.message);
       process.exit(1);
     });
 }
 
 module.exports = runTestsWithCleanNotification;
+
+

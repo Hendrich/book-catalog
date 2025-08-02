@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
@@ -38,7 +38,7 @@ router.post(
 
 			if (error) {
 				if (process.env.NODE_ENV !== "test") {
-					console.error("❌ Registration error:", error.message);
+					console.error("âŒ Registration error:", error.message);
 				}
 				return res.status(400).json({
 					success: false,
@@ -64,7 +64,7 @@ router.post(
 			});
 		} catch (err) {
 			if (process.env.NODE_ENV !== "test") {
-				console.error("❌ Error in registration endpoint:", err.message);
+				console.error("âŒ Error in registration endpoint:", err.message);
 			}
 			next(new AppError("Registration endpoint error", 500));
 		}
@@ -95,7 +95,7 @@ router.post(
 
 			if (error) {
 				if (process.env.NODE_ENV !== "test") {
-					console.error("❌ Login error:", error.message);
+					console.error("âŒ Login error:", error.message);
 				}
 				return res.status(401).json({
 					success: false,
@@ -133,7 +133,7 @@ router.post(
 			});
 		} catch (err) {
 			if (process.env.NODE_ENV !== "test") {
-				console.error("❌ Error in login endpoint:", err.message);
+				console.error("âŒ Error in login endpoint:", err.message);
 			}
 			next(new AppError("Login endpoint error", 500));
 		}
@@ -162,7 +162,7 @@ router.post(
 			});
 		} catch (err) {
 			if (process.env.NODE_ENV !== "test") {
-				console.error("❌ Error in logout endpoint:", err.message);
+				console.error("âŒ Error in logout endpoint:", err.message);
 			}
 			next(new AppError("Logout endpoint error", 500));
 		}
@@ -191,7 +191,7 @@ router.get(
 			});
 		} catch (err) {
 			if (process.env.NODE_ENV !== "test") {
-				console.error("❌ Error fetching user info:", err.message);
+				console.error("âŒ Error fetching user info:", err.message);
 			}
 			next(new AppError("Failed to fetch user info", 500));
 		}
@@ -221,7 +221,7 @@ router.post(
 			});
 		} catch (err) {
 			if (process.env.NODE_ENV !== "test") {
-				console.error("❌ Error verifying token:", err.message);
+				console.error("âŒ Error verifying token:", err.message);
 			}
 			next(new AppError("Token verification failed", 401));
 		}
@@ -229,3 +229,5 @@ router.post(
 );
 
 module.exports = router;
+
+

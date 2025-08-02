@@ -1,4 +1,4 @@
-const Joi = require("joi");
+﻿const Joi = require("joi");
 const { AppError } = require("./errorHandler");
 
 /**
@@ -7,8 +7,8 @@ const { AppError } = require("./errorHandler");
 
 // Schema definitions
 const schemas = {
-  // Book validation schema
-  book: Joi.object({
+  // lab validation schema
+  lab: Joi.object({
     title: Joi.string().min(1).max(255).trim().required().messages({
       "string.empty": "Title cannot be empty",
       "string.max": "Title cannot exceed 255 characters",
@@ -45,7 +45,7 @@ const schemas = {
   }),
 
   // Query parameters validation
-  bookQuery: Joi.object({
+  labQuery: Joi.object({
     search: Joi.string().max(255).optional(),
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(10),
@@ -82,13 +82,13 @@ const validate = (schema, property = "body") => {
 };
 
 // Specific validation middlewares
-const validateBook = validate(schemas.book, "body");
+const validateLab = validate(schemas.lab, "body");
 const validateAuth = validate(schemas.auth, "body");
 const validateId = validate(schemas.id, "params");
-const validateBookQuery = validate(schemas.bookQuery, "query");
+const validateLabQuery = validate(schemas.labQuery, "query");
 
-// Custom validation for book update (partial updates allowed)
-const validateBookUpdate = (req, res, next) => {
+// Custom validation for lab update (partial updates allowed)
+const validateLabUpdate = (req, res, next) => {
   const updateSchema = Joi.object({
     title: Joi.string().min(1).max(255).trim().optional(),
     author: Joi.string().min(1).max(255).trim().optional(),
@@ -145,11 +145,16 @@ const sanitize = (req, res, next) => {
 
 module.exports = {
   validate,
-  validateBook,
+  validateLab,
+  validateBook: validateLab, // Backward compatibility alias
   validateAuth,
   validateId,
-  validateBookQuery,
-  validateBookUpdate,
+  validateLabQuery,
+  validateBookQuery: validateLabQuery, // Backward compatibility alias
+  validateLabUpdate,
+  validateBookUpdate: validateLabUpdate, // Backward compatibility alias
   sanitize,
   schemas,
 };
+
+

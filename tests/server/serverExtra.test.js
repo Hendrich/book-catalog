@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Server Extra Tests
  * Additional tests to increase server.js coverage
  */
@@ -21,7 +21,7 @@ describe('Server Extra Coverage Tests', () => {
 
 	test('should handle middleware chain correctly', async () => {
 		const response = await request(app)
-			.get('/api/books')
+			.get('/api/labs')
 			.expect(401); // Unauthorized without token
 
 		expect(response.body).toHaveProperty('message');
@@ -59,7 +59,7 @@ describe('Server Extra Coverage Tests', () => {
 		};
 
 		await request(app)
-			.post('/api/books')
+			.post('/api/labs')
 			.send(largeBody)
 			.expect(401); // Unauthorized but body processed
 	});
@@ -90,8 +90,8 @@ describe('Server Extra Coverage Tests', () => {
 
 	test('should handle different API endpoints', async () => {
 		const endpoints = [
-			'/api/books',
-			'/api/books/1',
+			'/api/labs',
+			'/api/labs/1',
 			'/api/auth/login',
 			'/api/auth/register'
 		];
@@ -107,14 +107,14 @@ describe('Server Extra Coverage Tests', () => {
 
 	test('should handle requests with query parameters', async () => {
 		await request(app)
-			.get('/api/books')
+			.get('/api/labs')
 			.query({ page: 1, limit: 10, search: 'test' })
 			.expect(401); // Unauthorized but query processed
 	});
 
 	test('should handle error conditions gracefully', async () => {
 		await request(app)
-			.post('/api/books')
+			.post('/api/labs')
 			.send({ malformed: 'data', invalid: true })
 			.expect(401); // Unauthorized
 	});
@@ -152,7 +152,7 @@ describe('Server Extra Coverage Tests', () => {
 
 	test('should handle OPTIONS requests for CORS', async () => {
 		await request(app)
-			.options('/api/books')
+			.options('/api/labs')
 			.expect(204);
 	});
 
@@ -169,7 +169,7 @@ describe('Server Extra Coverage Tests', () => {
 		
 		// Test 2: Multiple requests should work (session middleware doesn't crash)
 		const apiResponse = await request(app)
-			.get('/api/books');
+			.get('/api/labs');
 		
 		// Should get 401 (unauthorized) but not crash due to session middleware
 		expect(apiResponse.status).toBe(401);
@@ -200,7 +200,7 @@ describe('Server Extra Coverage Tests', () => {
 		console.log = logSpy;
 
 		await request(app)
-			.get('/api/books')
+			.get('/api/labs')
 			.expect(401);
 
 		console.log = originalLog;
@@ -208,3 +208,5 @@ describe('Server Extra Coverage Tests', () => {
 		expect(logSpy).toHaveBeenCalled();
 	});
 });
+
+

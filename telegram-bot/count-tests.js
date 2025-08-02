@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Get Real Test Count from Jest
@@ -12,7 +12,7 @@ const path = require('path');
 
 function getRealTestCount() {
   try {
-    console.log('🔍 Analyzing Jest test files...');
+    console.log('ðŸ” Analyzing Jest test files...');
     
     // Method 1: Use Jest to list tests
     try {
@@ -22,7 +22,7 @@ function getRealTestCount() {
       });
       
       const testFiles = JSON.parse(testOutput);
-      console.log(`📁 Found ${testFiles.length} test files`);
+      console.log(`ðŸ“ Found ${testFiles.length} test files`);
       
       // Count test patterns in the files
       let totalTests = 0;
@@ -38,14 +38,14 @@ function getRealTestCount() {
         }
       });
       
-      console.log(`🧪 Counted ${totalTests} individual tests`);
+      console.log(`ðŸ§ª Counted ${totalTests} individual tests`);
       return {
         testFiles: testFiles.length,
         estimatedTests: totalTests
       };
       
     } catch (jestError) {
-      console.log('⚠️ Jest list failed, using file system scan...');
+      console.log('âš ï¸ Jest list failed, using file system scan...');
     }
     
     // Method 2: Manual file system scan
@@ -74,8 +74,8 @@ function getRealTestCount() {
       }
     });
     
-    console.log(`📁 Found ${testFiles.length} test files via scan`);
-    console.log(`🧪 Estimated ${totalTests} tests`);
+    console.log(`ðŸ“ Found ${testFiles.length} test files via scan`);
+    console.log(`ðŸ§ª Estimated ${totalTests} tests`);
     
     return {
       testFiles: testFiles.length,
@@ -83,7 +83,7 @@ function getRealTestCount() {
     };
     
   } catch (error) {
-    console.error('❌ Error counting tests:', error.message);
+    console.error('âŒ Error counting tests:', error.message);
     return {
       testFiles: 20,
       estimatedTests: 337 // fallback based on known project size
@@ -120,7 +120,9 @@ module.exports = getRealTestCount;
 // Run if called directly
 if (require.main === module) {
   const counts = getRealTestCount();
-  console.log('\n📊 Test Count Summary:');
-  console.log(`├─ Test Files: ${counts.testFiles}`);
-  console.log(`└─ Estimated Tests: ${counts.estimatedTests}`);
+  console.log('\nðŸ“Š Test Count Summary:');
+  console.log(`â”œâ”€ Test Files: ${counts.testFiles}`);
+  console.log(`â””â”€ Estimated Tests: ${counts.estimatedTests}`);
 }
+
+

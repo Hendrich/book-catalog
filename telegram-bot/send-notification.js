@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Send Telegram Notification After Jest Tests
@@ -11,12 +11,12 @@ const fs = require('fs');
 const path = require('path');
 
 async function sendTestNotification() {
-  console.log('📤 Sending test coverage notification to Telegram...');
+  console.log('ðŸ“¤ Sending test coverage notification to Telegram...');
   
   const notifier = new TelegramTestNotifier();
   
   if (!notifier.enabled) {
-    console.log('⚠️ Telegram notifications disabled (missing credentials)');
+    console.log('âš ï¸ Telegram notifications disabled (missing credentials)');
     return;
   }
   
@@ -29,9 +29,9 @@ async function sendTestNotification() {
       const rawCoverage = fs.readFileSync(coveragePath, 'utf8');
       const coverage = JSON.parse(rawCoverage);
       coverageData = coverage.total;
-      console.log('📊 Coverage data loaded successfully');
+      console.log('ðŸ“Š Coverage data loaded successfully');
     } else {
-      console.log('⚠️ No coverage data found, sending basic notification');
+      console.log('âš ï¸ No coverage data found, sending basic notification');
     }
     
     // Read real test results from Jest JSON output
@@ -59,21 +59,21 @@ async function sendTestNotification() {
             testExecError: testResults.success === false
           };
         }
-        console.log('📋 Test results loaded successfully');
-        console.log(`📊 Tests: ${testData.numTotalTests}, Passed: ${testData.numPassedTests}, Failed: ${testData.numFailedTests}`);
+        console.log('ðŸ“‹ Test results loaded successfully');
+        console.log(`ðŸ“Š Tests: ${testData.numTotalTests}, Passed: ${testData.numPassedTests}, Failed: ${testData.numFailedTests}`);
         
         // Clean up the temporary file
         fs.unlinkSync(testResultsPath);
       } catch (error) {
-        console.warn('⚠️ Failed to read test results, using defaults:', error.message);
+        console.warn('âš ï¸ Failed to read test results, using defaults:', error.message);
       }
     } else {
-      console.log('⚠️ No test results found, using default values');
+      console.log('âš ï¸ No test results found, using default values');
     }
     
     // Enhanced options with GitHub Actions context
     const options = {
-      projectName: 'Book Catalog App',
+      projectName: 'lab Catalog App',
       branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || 'main',
       author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || 'Automated',
       timestamp: new Date(),
@@ -88,11 +88,11 @@ async function sendTestNotification() {
     };
     
     await notifier.sendNotification(testData, coverageData, options);
-    console.log('✅ Telegram notification sent successfully!');
+    console.log('âœ… Telegram notification sent successfully!');
     
   } catch (error) {
-    console.error('❌ Failed to send Telegram notification:', error.message);
-    console.error('🔧 Please check your Telegram bot configuration in .env file');
+    console.error('âŒ Failed to send Telegram notification:', error.message);
+    console.error('ðŸ”§ Please check your Telegram bot configuration in .env file');
     process.exit(1);
   }
 }
@@ -103,3 +103,5 @@ if (require.main === module) {
 }
 
 module.exports = sendTestNotification;
+
+

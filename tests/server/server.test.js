@@ -1,4 +1,4 @@
-// Note: server.js contains the Express app setup and startup logic
+﻿// Note: server.js contains the Express app setup and startup logic
 // Since we're testing in an isolated environment, we test the app structure
 
 describe('Server Configuration', () => {
@@ -163,7 +163,7 @@ describe('Server Configuration', () => {
 			// Routes are mounted during app initialization
 		});
 
-		test('should mount book routes', () => {
+		test('should mount lab routes', () => {
 			// Act
 			const app = require('../../backend/server');
 
@@ -182,3 +182,5 @@ describe('Server Configuration', () => {
 		});
 	});
 });
+
+

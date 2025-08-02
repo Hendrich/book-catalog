@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Request Logging Middleware
  * Logs all incoming requests with relevant details
  */
@@ -79,7 +79,7 @@ const securityLogger = (operation) => {
 		const userAgent = req.get("User-Agent");
 
 		if (process.env.NODE_ENV !== "test") {
-			console.log(`🔐 [${timestamp}] SECURITY: ${operation} attempt from ${ip}`);
+			console.log(`ðŸ” [${timestamp}] SECURITY: ${operation} attempt from ${ip}`);
 			console.log(`   User-Agent: ${userAgent}`);
 
 			if (req.user_id) {
@@ -139,3 +139,5 @@ module.exports = {
 	statsLogger,
 	getApiStats,
 };
+
+

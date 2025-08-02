@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Auth Routes Extra Tests
  * Additional tests to increase authRoutes.js coverage
  */
@@ -189,3 +189,5 @@ describe('Auth Routes Extra Coverage Tests', () => {
 		});
 	});
 });
+
+

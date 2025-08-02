@@ -1,19 +1,19 @@
-# 🏗️ Book Catalog App - System Architecture V2.0
+﻿# ðŸ—ï¸ lab Catalog App - System Architecture V2.0
 
-## 📋 Document Information
+## ðŸ“‹ Document Information
 
 - **Version**: 2.0
 - **Date**: July 29, 2025
 - **Status**: Enhanced Architecture
-- **Related**: [PRD V2.0](./PRD_Book_Catalog_V2.md)
+- **Related**: [PRD V2.0](./PRD_Script_Labs_V2.md)
 
 ---
 
-## 🎯 Architecture Overview
+## ðŸŽ¯ Architecture Overview
 
-Book Catalog App V2 implements a modern, scalable architecture with Supabase integration, enhanced search capabilities, and comprehensive security features.
+lab Catalog App V2 implements a modern, scalable architecture with Supabase integration, enhanced search capabilities, and comprehensive security features.
 
-### 🔄 High-Level Architecture
+### ðŸ”„ High-Level Architecture
 
 ```mermaid
 graph TB
@@ -72,65 +72,65 @@ graph TB
 
 ---
 
-## 🏛️ Layered Architecture
+## ðŸ›ï¸ Layered Architecture
 
 ### 1. **Presentation Layer**
 ```
-📱 Frontend (Client)
-├── HTML5/CSS3/JavaScript
-├── Responsive Design
-├── Progressive Web App Features
-└── Real-time Updates (Future)
+ðŸ“± Frontend (Client)
+â”œâ”€â”€ HTML5/CSS3/JavaScript
+â”œâ”€â”€ Responsive Design
+â”œâ”€â”€ Progressive Web App Features
+â””â”€â”€ Real-time Updates (Future)
 ```
 
 ### 2. **API Gateway Layer**
 ```
-🚪 Gateway Services
-├── Load Balancing
-├── CORS Configuration
-├── Authentication Middleware
-├── Rate Limiting
-├── Request Validation
-└── Security Headers
+ðŸšª Gateway Services
+â”œâ”€â”€ Load Balancing
+â”œâ”€â”€ CORS Configuration
+â”œâ”€â”€ Authentication Middleware
+â”œâ”€â”€ Rate Limiting
+â”œâ”€â”€ Request Validation
+â””â”€â”€ Security Headers
 ```
 
 ### 3. **Business Logic Layer**
 ```
-⚙️ Application Services
-├── Book Management Service
-├── Search & Filter Service
-├── Authentication Service
-├── Password Reset Service
-├── Email Service
-├── Telegram Notification Service
-└── Validation Service
+âš™ï¸ Application Services
+â”œâ”€â”€ lab Management Service
+â”œâ”€â”€ Search & Filter Service
+â”œâ”€â”€ Authentication Service
+â”œâ”€â”€ Password Reset Service
+â”œâ”€â”€ Email Service
+â”œâ”€â”€ Telegram Notification Service
+â””â”€â”€ Validation Service
 ```
 
 ### 4. **Data Access Layer**
 ```
-📊 Data Services
-├── Supabase Client
-├── Query Optimization
-├── Connection Pooling
-├── Cache Management
-├── Transaction Handling
-└── Migration Scripts
+ðŸ“Š Data Services
+â”œâ”€â”€ Supabase Client
+â”œâ”€â”€ Query Optimization
+â”œâ”€â”€ Connection Pooling
+â”œâ”€â”€ Cache Management
+â”œâ”€â”€ Transaction Handling
+â””â”€â”€ Migration Scripts
 ```
 
 ### 5. **Infrastructure Layer**
 ```
-🔧 Infrastructure
-├── Supabase Database
-├── Redis Cache
-├── File Storage
-├── CI/CD Pipeline
-├── Monitoring & Logging
-└── Backup Systems
+ðŸ”§ Infrastructure
+â”œâ”€â”€ Supabase Database
+â”œâ”€â”€ Redis Cache
+â”œâ”€â”€ File Storage
+â”œâ”€â”€ CI/CD Pipeline
+â”œâ”€â”€ Monitoring & Logging
+â””â”€â”€ Backup Systems
 ```
 
 ---
 
-## 🔐 Security Architecture
+## ðŸ” Security Architecture
 
 ### Authentication & Authorization Flow
 
@@ -158,37 +158,37 @@ sequenceDiagram
 ### Security Layers
 
 ```
-🛡️ Security Stack
-├── Frontend Security
-│   ├── Input Sanitization
-│   ├── XSS Protection
-│   └── CSRF Tokens
-├── API Security
-│   ├── JWT Validation
-│   ├── Rate Limiting
-│   ├── Request Validation
-│   └── HTTPS Enforcement
-├── Database Security
-│   ├── Row Level Security (RLS)
-│   ├── SQL Injection Prevention
-│   ├── Encrypted Connections
-│   └── Audit Logging
-└── Infrastructure Security
-    ├── Environment Variables
-    ├── Secret Management
-    ├── Network Security
-    └── Access Controls
+ðŸ›¡ï¸ Security Stack
+â”œâ”€â”€ Frontend Security
+â”‚   â”œâ”€â”€ Input Sanitization
+â”‚   â”œâ”€â”€ XSS Protection
+â”‚   â””â”€â”€ CSRF Tokens
+â”œâ”€â”€ API Security
+â”‚   â”œâ”€â”€ JWT Validation
+â”‚   â”œâ”€â”€ Rate Limiting
+â”‚   â”œâ”€â”€ Request Validation
+â”‚   â””â”€â”€ HTTPS Enforcement
+â”œâ”€â”€ Database Security
+â”‚   â”œâ”€â”€ Row Level Security (RLS)
+â”‚   â”œâ”€â”€ SQL Injection Prevention
+â”‚   â”œâ”€â”€ Encrypted Connections
+â”‚   â””â”€â”€ Audit Logging
+â””â”€â”€ Infrastructure Security
+    â”œâ”€â”€ Environment Variables
+    â”œâ”€â”€ Secret Management
+    â”œâ”€â”€ Network Security
+    â””â”€â”€ Access Controls
 ```
 
 ---
 
-## 📊 Data Architecture
+## ðŸ“Š Data Architecture
 
 ### Database Schema Design
 
 ```sql
 -- Core Entities Relationship
-Users (Supabase Auth) 1---* Books
+Users (Supabase Auth) 1---* labs
 Users (Supabase Auth) 1---* PasswordResetTokens
 Users (Supabase Auth) 1---* UserSessions
 ```
@@ -230,17 +230,17 @@ graph LR
 ### Caching Strategy
 
 ```
-📋 Cache Layers
-├── Browser Cache (Static Assets)
-├── CDN Cache (Global Distribution)
-├── Application Cache (API Responses)
-├── Database Cache (Query Results)
-└── Session Cache (User Data)
+ðŸ“‹ Cache Layers
+â”œâ”€â”€ Browser Cache (Static Assets)
+â”œâ”€â”€ CDN Cache (Global Distribution)
+â”œâ”€â”€ Application Cache (API Responses)
+â”œâ”€â”€ Database Cache (Query Results)
+â””â”€â”€ Session Cache (User Data)
 ```
 
 ---
 
-## 🔍 Search Architecture
+## ðŸ” Search Architecture
 
 ### Search System Design
 
@@ -279,27 +279,27 @@ graph TB
 ### Search Performance Optimization
 
 ```
-🚀 Search Optimizations
-├── Database Indexes
-│   ├── Title B-tree Index
-│   ├── Author B-tree Index
-│   ├── Full-text Search Index
-│   └── Composite Indexes
-├── Query Optimization
-│   ├── Query Planning
-│   ├── Result Caching
-│   ├── Pagination Optimization
-│   └── Filter Preprocessing
-└── Performance Monitoring
-    ├── Query Execution Time
-    ├── Index Usage Statistics
-    ├── Cache Hit Ratios
-    └── Resource Utilization
+ðŸš€ Search Optimizations
+â”œâ”€â”€ Database Indexes
+â”‚   â”œâ”€â”€ Title B-tree Index
+â”‚   â”œâ”€â”€ Author B-tree Index
+â”‚   â”œâ”€â”€ Full-text Search Index
+â”‚   â””â”€â”€ Composite Indexes
+â”œâ”€â”€ Query Optimization
+â”‚   â”œâ”€â”€ Query Planning
+â”‚   â”œâ”€â”€ Result Caching
+â”‚   â”œâ”€â”€ Pagination Optimization
+â”‚   â””â”€â”€ Filter Preprocessing
+â””â”€â”€ Performance Monitoring
+    â”œâ”€â”€ Query Execution Time
+    â”œâ”€â”€ Index Usage Statistics
+    â”œâ”€â”€ Cache Hit Ratios
+    â””â”€â”€ Resource Utilization
 ```
 
 ---
 
-## 📧 Email Architecture
+## ðŸ“§ Email Architecture
 
 ### Email Service Integration
 
@@ -338,25 +338,25 @@ graph LR
 ### Email Security & Compliance
 
 ```
-📧 Email Security
-├── Authentication
-│   ├── SPF Records
-│   ├── DKIM Signing
-│   └── DMARC Policy
-├── Content Security
-│   ├── Template Validation
-│   ├── Link Security
-│   └── Attachment Scanning
-└── Delivery Monitoring
-    ├── Bounce Handling
-    ├── Complaint Processing
-    ├── Delivery Tracking
-    └── Analytics
+ðŸ“§ Email Security
+â”œâ”€â”€ Authentication
+â”‚   â”œâ”€â”€ SPF Records
+â”‚   â”œâ”€â”€ DKIM Signing
+â”‚   â””â”€â”€ DMARC Policy
+â”œâ”€â”€ Content Security
+â”‚   â”œâ”€â”€ Template Validation
+â”‚   â”œâ”€â”€ Link Security
+â”‚   â””â”€â”€ Attachment Scanning
+â””â”€â”€ Delivery Monitoring
+    â”œâ”€â”€ Bounce Handling
+    â”œâ”€â”€ Complaint Processing
+    â”œâ”€â”€ Delivery Tracking
+    â””â”€â”€ Analytics
 ```
 
 ---
 
-## 🤖 Telegram Integration Architecture
+## ðŸ¤– Telegram Integration Architecture
 
 ### Bot Architecture
 
@@ -394,7 +394,7 @@ graph TB
 
 ---
 
-## 🔄 Migration Architecture
+## ðŸ”„ Migration Architecture
 
 ### Database Migration Strategy
 
@@ -435,32 +435,32 @@ graph TB
 ### Migration Phases
 
 ```
-🔄 Migration Strategy
-├── Phase 1: Infrastructure Setup
-│   ├── Supabase Project Creation
-│   ├── Authentication Configuration
-│   ├── Database Schema Setup
-│   └── Security Policies
-├── Phase 2: Parallel Development
-│   ├── API Endpoint Updates
-│   ├── Database Client Changes
-│   ├── Feature Flag Implementation
-│   └── Testing Environment
-├── Phase 3: Data Migration
-│   ├── Data Export Scripts
-│   ├── Data Transformation
-│   ├── Data Validation
-│   └── Data Import
-└── Phase 4: Cutover
-    ├── DNS Updates
-    ├── Database Switching
-    ├── Monitoring & Alerts
-    └── Rollback Procedures
+ðŸ”„ Migration Strategy
+â”œâ”€â”€ Phase 1: Infrastructure Setup
+â”‚   â”œâ”€â”€ Supabase Project Creation
+â”‚   â”œâ”€â”€ Authentication Configuration
+â”‚   â”œâ”€â”€ Database Schema Setup
+â”‚   â””â”€â”€ Security Policies
+â”œâ”€â”€ Phase 2: Parallel Development
+â”‚   â”œâ”€â”€ API Endpoint Updates
+â”‚   â”œâ”€â”€ Database Client Changes
+â”‚   â”œâ”€â”€ Feature Flag Implementation
+â”‚   â””â”€â”€ Testing Environment
+â”œâ”€â”€ Phase 3: Data Migration
+â”‚   â”œâ”€â”€ Data Export Scripts
+â”‚   â”œâ”€â”€ Data Transformation
+â”‚   â”œâ”€â”€ Data Validation
+â”‚   â””â”€â”€ Data Import
+â””â”€â”€ Phase 4: Cutover
+    â”œâ”€â”€ DNS Updates
+    â”œâ”€â”€ Database Switching
+    â”œâ”€â”€ Monitoring & Alerts
+    â””â”€â”€ Rollback Procedures
 ```
 
 ---
 
-## 📈 Performance Architecture
+## ðŸ“ˆ Performance Architecture
 
 ### Performance Monitoring
 
@@ -499,27 +499,27 @@ graph TB
 ### Performance Targets
 
 ```
-🎯 Performance Benchmarks
-├── API Response Times
-│   ├── Book CRUD: < 200ms
-│   ├── Search Queries: < 300ms
-│   ├── Authentication: < 100ms
-│   └── File Uploads: < 2s
-├── Database Performance
-│   ├── Query Execution: < 50ms
-│   ├── Connection Pool: 95% efficiency
-│   ├── Index Usage: > 90%
-│   └── Cache Hit Rate: > 80%
-└── System Resources
-    ├── CPU Usage: < 70%
-    ├── Memory Usage: < 80%
-    ├── Disk I/O: < 60%
-    └── Network Latency: < 50ms
+ðŸŽ¯ Performance Benchmarks
+â”œâ”€â”€ API Response Times
+â”‚   â”œâ”€â”€ lab CRUD: < 200ms
+â”‚   â”œâ”€â”€ Search Queries: < 300ms
+â”‚   â”œâ”€â”€ Authentication: < 100ms
+â”‚   â””â”€â”€ File Uploads: < 2s
+â”œâ”€â”€ Database Performance
+â”‚   â”œâ”€â”€ Query Execution: < 50ms
+â”‚   â”œâ”€â”€ Connection Pool: 95% efficiency
+â”‚   â”œâ”€â”€ Index Usage: > 90%
+â”‚   â””â”€â”€ Cache Hit Rate: > 80%
+â””â”€â”€ System Resources
+    â”œâ”€â”€ CPU Usage: < 70%
+    â”œâ”€â”€ Memory Usage: < 80%
+    â”œâ”€â”€ Disk I/O: < 60%
+    â””â”€â”€ Network Latency: < 50ms
 ```
 
 ---
 
-## 🛠️ Deployment Architecture
+## ðŸ› ï¸ Deployment Architecture
 
 ### CI/CD Pipeline
 
@@ -560,128 +560,128 @@ graph LR
 ### Environment Architecture
 
 ```
-🌍 Environment Strategy
-├── Development
-│   ├── Local Database
-│   ├── Mock Services
-│   ├── Development Secrets
-│   └── Debug Logging
-├── Staging
-│   ├── Supabase Staging
-│   ├── Production-like Data
-│   ├── Performance Testing
-│   └── Integration Testing
-└── Production
-    ├── Supabase Production
-    ├── High Availability
-    ├── Monitoring & Alerts
-    └── Backup & Recovery
+ðŸŒ Environment Strategy
+â”œâ”€â”€ Development
+â”‚   â”œâ”€â”€ Local Database
+â”‚   â”œâ”€â”€ Mock Services
+â”‚   â”œâ”€â”€ Development Secrets
+â”‚   â””â”€â”€ Debug Logging
+â”œâ”€â”€ Staging
+â”‚   â”œâ”€â”€ Supabase Staging
+â”‚   â”œâ”€â”€ Production-like Data
+â”‚   â”œâ”€â”€ Performance Testing
+â”‚   â””â”€â”€ Integration Testing
+â””â”€â”€ Production
+    â”œâ”€â”€ Supabase Production
+    â”œâ”€â”€ High Availability
+    â”œâ”€â”€ Monitoring & Alerts
+    â””â”€â”€ Backup & Recovery
 ```
 
 ---
 
-## 📋 Technology Stack
+## ðŸ“‹ Technology Stack
 
 ### Frontend Stack
 ```
-🎨 Frontend Technologies
-├── Core Technologies
-│   ├── HTML5 (Semantic markup)
-│   ├── CSS3 (Modern styling)
-│   └── Vanilla JavaScript (ES6+)
-├── Build Tools
-│   ├── Webpack (Future consideration)
-│   ├── Babel (Future consideration)
-│   └── PostCSS (Future consideration)
-└── Testing
-    ├── Jest (Unit testing)
-    ├── Cypress (E2E testing)
-    └── Testing Library (Component testing)
+ðŸŽ¨ Frontend Technologies
+â”œâ”€â”€ Core Technologies
+â”‚   â”œâ”€â”€ HTML5 (Semantic markup)
+â”‚   â”œâ”€â”€ CSS3 (Modern styling)
+â”‚   â””â”€â”€ Vanilla JavaScript (ES6+)
+â”œâ”€â”€ Build Tools
+â”‚   â”œâ”€â”€ Webpack (Future consideration)
+â”‚   â”œâ”€â”€ Babel (Future consideration)
+â”‚   â””â”€â”€ PostCSS (Future consideration)
+â””â”€â”€ Testing
+    â”œâ”€â”€ Jest (Unit testing)
+    â”œâ”€â”€ Cypress (E2E testing)
+    â””â”€â”€ Testing Library (Component testing)
 ```
 
 ### Backend Stack
 ```
-⚙️ Backend Technologies
-├── Runtime & Framework
-│   ├── Node.js (v18+)
-│   ├── Express.js (Web framework)
-│   └── Middleware Stack
-├── Database & Storage
-│   ├── Supabase PostgreSQL
-│   ├── Redis (Caching)
-│   └── File Storage (Future)
-├── Authentication
-│   ├── Supabase Auth
-│   ├── JWT Tokens
-│   └── bcryptjs (Password hashing)
-└── Communication
-    ├── REST APIs
-    ├── Telegram Bot API
-    └── Email Services
+âš™ï¸ Backend Technologies
+â”œâ”€â”€ Runtime & Framework
+â”‚   â”œâ”€â”€ Node.js (v18+)
+â”‚   â”œâ”€â”€ Express.js (Web framework)
+â”‚   â””â”€â”€ Middleware Stack
+â”œâ”€â”€ Database & Storage
+â”‚   â”œâ”€â”€ Supabase PostgreSQL
+â”‚   â”œâ”€â”€ Redis (Caching)
+â”‚   â””â”€â”€ File Storage (Future)
+â”œâ”€â”€ Authentication
+â”‚   â”œâ”€â”€ Supabase Auth
+â”‚   â”œâ”€â”€ JWT Tokens
+â”‚   â””â”€â”€ bcryptjs (Password hashing)
+â””â”€â”€ Communication
+    â”œâ”€â”€ REST APIs
+    â”œâ”€â”€ Telegram Bot API
+    â””â”€â”€ Email Services
 ```
 
 ### DevOps Stack
 ```
-🔧 DevOps Technologies
-├── Version Control
-│   ├── Git
-│   └── GitHub
-├── CI/CD
-│   ├── GitHub Actions
-│   ├── Docker (Future)
-│   └── Container Registry
-├── Monitoring
-│   ├── Application Monitoring
-│   ├── Database Monitoring
-│   └── Infrastructure Monitoring
-└── Security
-    ├── SonarCloud (Code Quality)
-    ├── Snyk (Security Scanning)
-    └── Environment Secrets
+ðŸ”§ DevOps Technologies
+â”œâ”€â”€ Version Control
+â”‚   â”œâ”€â”€ Git
+â”‚   â””â”€â”€ GitHub
+â”œâ”€â”€ CI/CD
+â”‚   â”œâ”€â”€ GitHub Actions
+â”‚   â”œâ”€â”€ Docker (Future)
+â”‚   â””â”€â”€ Container Registry
+â”œâ”€â”€ Monitoring
+â”‚   â”œâ”€â”€ Application Monitoring
+â”‚   â”œâ”€â”€ Database Monitoring
+â”‚   â””â”€â”€ Infrastructure Monitoring
+â””â”€â”€ Security
+    â”œâ”€â”€ SonarCloud (Code Quality)
+    â”œâ”€â”€ Snyk (Security Scanning)
+    â””â”€â”€ Environment Secrets
 ```
 
 ---
 
-## 🔮 Future Architecture Considerations
+## ðŸ”® Future Architecture Considerations
 
 ### Scalability Enhancements
 ```
-📈 Future Scalability
-├── Microservices Architecture
-│   ├── Book Service
-│   ├── User Service
-│   ├── Search Service
-│   └── Notification Service
-├── Containerization
-│   ├── Docker Containers
-│   ├── Kubernetes Orchestration
-│   └── Service Mesh
-└── Performance Optimization
-    ├── CDN Integration
-    ├── Edge Computing
-    └── Advanced Caching
+ðŸ“ˆ Future Scalability
+â”œâ”€â”€ Microservices Architecture
+â”‚   â”œâ”€â”€ lab Service
+â”‚   â”œâ”€â”€ User Service
+â”‚   â”œâ”€â”€ Search Service
+â”‚   â””â”€â”€ Notification Service
+â”œâ”€â”€ Containerization
+â”‚   â”œâ”€â”€ Docker Containers
+â”‚   â”œâ”€â”€ Kubernetes Orchestration
+â”‚   â””â”€â”€ Service Mesh
+â””â”€â”€ Performance Optimization
+    â”œâ”€â”€ CDN Integration
+    â”œâ”€â”€ Edge Computing
+    â””â”€â”€ Advanced Caching
 ```
 
 ### Advanced Features
 ```
-🚀 Future Features
-├── Real-time Capabilities
-│   ├── WebSocket Integration
-│   ├── Live Updates
-│   └── Collaborative Features
-├── AI/ML Integration
-│   ├── Book Recommendations
-│   ├── Search Enhancement
-│   └── Content Analysis
-└── Mobile Applications
-    ├── React Native
-    ├── Progressive Web App
-    └── Offline Capabilities
+ðŸš€ Future Features
+â”œâ”€â”€ Real-time Capabilities
+â”‚   â”œâ”€â”€ WebSocket Integration
+â”‚   â”œâ”€â”€ Live Updates
+â”‚   â””â”€â”€ Collaborative Features
+â”œâ”€â”€ AI/ML Integration
+â”‚   â”œâ”€â”€ lab Recommendations
+â”‚   â”œâ”€â”€ Search Enhancement
+â”‚   â””â”€â”€ Content Analysis
+â””â”€â”€ Mobile Applications
+    â”œâ”€â”€ React Native
+    â”œâ”€â”€ Progressive Web App
+    â””â”€â”€ Offline Capabilities
 ```
 
 ---
 
-## 📊 Architecture Metrics
+## ðŸ“Š Architecture Metrics
 
 ### Quality Attributes
 
@@ -704,9 +704,9 @@ graph LR
 
 ---
 
-## 🎯 Conclusion
+## ðŸŽ¯ Conclusion
 
-The Book Catalog App V2 architecture provides a solid foundation for:
+The lab Catalog App V2 architecture provides a solid foundation for:
 - **Scalable Growth**: Supabase backend with modern stack
 - **Enhanced Features**: Search, password reset, notifications
 - **Security First**: Comprehensive security layers
@@ -717,6 +717,8 @@ This architecture supports current requirements while providing flexibility for 
 
 ---
 
-**Document Status**: ✅ Complete  
+**Document Status**: âœ… Complete  
 **Last Updated**: July 29, 2025  
 **Next Review**: During implementation milestones
+
+

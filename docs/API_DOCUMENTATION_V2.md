@@ -1,26 +1,27 @@
-# 🚀 Book Catalog App - API Documentation V2.0
+﻿# ðŸš€ Script Labs App - API Documentation V2.0
 
-## 📋 Document Information
+## ðŸ“‹ Document Information
 
 - **Version**: 2.0
 - **Date**: July 29, 2025
 - **Status**: API Specification
-- **Related**: [PRD V2.0](./PRD_Book_Catalog_V2.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
+- **Related**: [PRD V2.0](./PRD_Script_Labs_V2.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
 
 ---
 
-## 🎯 API Overview
+## ðŸŽ¯ API Overview
 
-Book Catalog V2 RESTful API provides comprehensive endpoints for book management, enhanced search capabilities, user authentication, and password recovery with full Supabase integration.
+lab Catalog V2 RESTful API provides comprehensive endpoints for lab management, enhanced search capabilities, user authentication, and password recovery with full Supabase integration.
 
 ### **Base URL**
-- **Production**: `https://book-catalog-app.onrender.com/api`
-- **Staging**: `https://staging-book-catalog.onrender.com/api`
-- **Development**: `http://localhost:3000/api`
+
+**Production**: `https://script-labs-app.onrender.com/api`
+**Staging**: `https://staging-script-labs.onrender.com/api`
 
 ### **API Characteristics**
-- **Architecture**: RESTful API
-- **Data Format**: JSON
+
+**Environment**: `Script-Labs-Environment.postman_environment.json`
+
 - **Authentication**: JWT + Supabase Auth
 - **Rate Limiting**: Implemented per endpoint
 - **Versioning**: Via header or URL path
@@ -28,7 +29,7 @@ Book Catalog V2 RESTful API provides comprehensive endpoints for book management
 
 ---
 
-## 🔐 Authentication
+## ðŸ” Authentication
 
 ### **Authentication Flow**
 
@@ -37,12 +38,12 @@ sequenceDiagram
     participant C as Client
     participant API as API Server
     participant SUPA as Supabase Auth
-    
+
     C->>API: POST /auth/login
     API->>SUPA: Validate credentials
     SUPA->>API: User data + tokens
     API->>C: JWT + Supabase tokens
-    
+
     C->>API: API Request + JWT
     API->>API: Validate JWT
     API->>SUPA: Verify Supabase token
@@ -60,20 +61,22 @@ Content-Type: application/json
 
 ---
 
-## 📚 Book Management Endpoints
+## ðŸ“š lab Management Endpoints
 
-### **1. Get All Books**
+### **1. Get All labs**
 
-**Endpoint**: `GET /api/books`
+**Endpoint**: `GET /api/labs`
 
-**Description**: Retrieve user's books with optional pagination and basic filtering.
+**Description**: Retrieve user's labs with optional pagination and basic filtering.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Query Parameters**:
+
 ```javascript
 {
   page: number,          // Page number (default: 1)
@@ -86,11 +89,12 @@ Authorization: Bearer <token>
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
   "data": {
-    "books": [
+    "labs": [
       {
         "id": "uuid",
         "title": "Clean Code",
@@ -100,7 +104,7 @@ Authorization: Bearer <token>
         "isbn": "9780132350884",
         "rating": 5,
         "reading_status": "read",
-        "notes": "Excellent book about writing maintainable code",
+        "notes": "Excellent lab about writing maintainable code",
         "cover_url": "https://example.com/cover.jpg",
         "created_at": "2025-07-29T10:00:00Z",
         "updated_at": "2025-07-29T10:00:00Z"
@@ -117,6 +121,7 @@ Authorization: Bearer <token>
 ```
 
 **Error Responses**:
+
 ```javascript
 // 401 Unauthorized
 {
@@ -140,18 +145,20 @@ Authorization: Bearer <token>
 
 ---
 
-### **2. Advanced Search Books**
+### **2. Advanced Search labs**
 
-**Endpoint**: `GET /api/books/search`
+**Endpoint**: `GET /api/labs/search`
 
 **Description**: Advanced search with full-text search, filtering, and performance metrics.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Query Parameters**:
+
 ```javascript
 {
   q: string,             // Search query for title/author/notes
@@ -169,16 +176,18 @@ Authorization: Bearer <token>
 ```
 
 **Example Request**:
+
 ```http
-GET /api/books/search?q=javascript&category=Technical&rating_min=4&sort_by=rating&sort_order=desc&page=1&limit=10
+GET /api/labs/search?q=javascript&category=Technical&rating_min=4&sort_by=rating&sort_order=desc&page=1&limit=10
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
   "data": {
-    "books": [
+    "labs": [
       {
         "id": "uuid",
         "title": "JavaScript: The Good Parts",
@@ -215,19 +224,21 @@ GET /api/books/search?q=javascript&category=Technical&rating_min=4&sort_by=ratin
 
 ---
 
-### **3. Create Book**
+### **3. Create lab**
 
-**Endpoint**: `POST /api/books`
+**Endpoint**: `POST /api/labs`
 
-**Description**: Create a new book in user's catalog.
+**Description**: Create a new lab in user's catalog.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Request Body**:
+
 ```javascript
 {
   "title": "Clean Architecture",           // Required, max 500 chars
@@ -243,6 +254,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -261,11 +273,12 @@ Content-Type: application/json
     "created_at": "2025-07-29T10:00:00Z",
     "updated_at": "2025-07-29T10:00:00Z"
   },
-  "message": "Book created successfully"
+  "message": "lab created successfully"
 }
 ```
 
 **Validation Errors**:
+
 ```javascript
 {
   "success": false,
@@ -289,65 +302,72 @@ Content-Type: application/json
 
 ---
 
-### **4. Update Book**
+### **4. Update lab**
 
-**Endpoint**: `PUT /api/books/:id`
+**Endpoint**: `PUT /api/labs/:id`
 
-**Description**: Update an existing book in user's catalog.
+**Description**: Update an existing lab in user's catalog.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
 **Path Parameters**:
-- `id`: Book UUID
 
-**Request Body**: Same as Create Book (all fields optional for update)
+- `id`: lab UUID
+
+**Request Body**: Same as Create lab (all fields optional for update)
 
 **Response**:
+
 ```javascript
 {
   "success": true,
   "data": {
-    // Updated book object
+    // Updated lab object
   },
-  "message": "Book updated successfully"
+  "message": "lab updated successfully"
 }
 ```
 
 **Error Responses**:
+
 ```javascript
 // 404 Not Found
 {
   "success": false,
-  "message": "Book not found or access denied",
-  "error_code": "BOOK_NOT_FOUND"
+  "message": "lab not found or access denied",
+  "error_code": "LAB_NOT_FOUND"
 }
 ```
 
 ---
 
-### **5. Delete Book**
+### **5. Delete lab**
 
-**Endpoint**: `DELETE /api/books/:id`
+**Endpoint**: `DELETE /api/labs/:id`
 
-**Description**: Delete a book from user's catalog.
+**Description**: Delete a lab from user's catalog.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Path Parameters**:
-- `id`: Book UUID
+
+- `id`: lab UUID
 
 **Response**:
+
 ```javascript
 {
   "success": true,
-  "message": "Book deleted successfully"
+  "message": "lab deleted successfully"
 }
 ```
 
@@ -355,16 +375,18 @@ Authorization: Bearer <token>
 
 ### **6. Bulk Operations**
 
-**Endpoint**: `GET /api/books/search`
+**Endpoint**: `GET /api/labs/search`
 
-**Description**: Search books by title or author for the authenticated user.
+**Description**: Search labs by title or author for the authenticated user.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Query Parameters**:
+
 ```javascript
 {
   q: string,      // Search query for title/author
@@ -374,11 +396,13 @@ Authorization: Bearer <token>
 ```
 
 **Example Request**:
+
 ```
-GET /api/books/search?q=atomic&page=1&limit=10
+GET /api/labs/search?q=atomic&page=1&limit=10
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -390,27 +414,31 @@ GET /api/books/search?q=atomic&page=1&limit=10
   "timestamp": "2025-07-31T10:00:00.000Z"
 }
 ```
+
 }
-```
+
+````
 
 2. **Update Category**:
 ```javascript
 {
   "action": "update_category",
-  "book_ids": ["uuid1", "uuid2"],
+  "lab_ids": ["uuid1", "uuid2"],
   "data": { "category": "Fiction" }
 }
-```
+````
 
 3. **Bulk Delete**:
+
 ```javascript
 {
   "action": "delete",
-  "book_ids": ["uuid1", "uuid2"]
+  "lab_ids": ["uuid1", "uuid2"]
 }
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -422,17 +450,17 @@ GET /api/books/search?q=atomic&page=1&limit=10
       {
         "id": "uuid1",
         "success": true,
-        "data": { /* updated book object */ }
+        "data": { /* updated lab object */ }
       },
       {
         "id": "uuid2",
         "success": true,
-        "data": { /* updated book object */ }
+        "data": { /* updated lab object */ }
       },
       {
         "id": "uuid3",
         "success": false,
-        "error": "Book not found"
+        "error": "lab not found"
       }
     ]
   },
@@ -442,7 +470,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 
 ---
 
-## 🔐 Authentication Endpoints
+## ðŸ” Authentication Endpoints
 
 ### **1. User Registration**
 
@@ -451,6 +479,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 **Description**: Register a new user account.
 
 **Request Body**:
+
 ```javascript
 {
   "email": "user@example.com",       // Required, valid email
@@ -460,6 +489,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -475,11 +505,12 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Password Requirements**:
+
 - Minimum 8 characters
 - At least one uppercase letter
 - At least one lowercase letter
 - At least one number
-- At least one special character (@$!%*?&)
+- At least one special character (@$!%\*?&)
 
 ---
 
@@ -490,6 +521,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 **Description**: Authenticate user and receive tokens.
 
 **Request Body**:
+
 ```javascript
 {
   "email": "user@example.com",
@@ -498,6 +530,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -528,6 +561,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 **Rate Limiting**: 3 requests per hour per email/IP
 
 **Request Body**:
+
 ```javascript
 {
   "email": "user@example.com"
@@ -535,6 +569,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Response** (Always returns success to prevent email enumeration):
+
 ```javascript
 {
   "success": true,
@@ -547,6 +582,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Rate Limit Error**:
+
 ```javascript
 {
   "success": false,
@@ -565,9 +601,11 @@ GET /api/books/search?q=atomic&page=1&limit=10
 **Description**: Validate password reset token.
 
 **Path Parameters**:
+
 - `token`: Password reset token from email
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -580,6 +618,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Invalid Token**:
+
 ```javascript
 {
   "success": false,
@@ -597,6 +636,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 **Description**: Complete password reset process.
 
 **Request Body**:
+
 ```javascript
 {
   "token": "reset-token-from-email",
@@ -605,6 +645,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -613,6 +654,7 @@ GET /api/books/search?q=atomic&page=1&limit=10
 ```
 
 **Validation Errors**:
+
 ```javascript
 {
   "success": false,
@@ -632,34 +674,36 @@ GET /api/books/search?q=atomic&page=1&limit=10
 
 ---
 
-## 📊 User Statistics Endpoints
+## ðŸ“Š User Statistics Endpoints
 
-### **1. Get User Book Statistics**
+### **1. Get User lab Statistics**
 
 **Endpoint**: `GET /api/users/stats`
 
-**Description**: Get comprehensive statistics about user's book collection.
+**Description**: Get comprehensive statistics about user's lab collection.
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
   "data": {
-    "total_books": 127,
-    "books_read": 89,
-    "books_reading": 5,
-    "books_to_read": 33,
+    "total_labs": 127,
+    "labs_read": 89,
+    "labs_reading": 5,
+    "labs_to_read": 33,
     "average_rating": 4.2,
     "total_authors": 76,
     "total_categories": 12,
     "reading_stats": {
-      "books_this_year": 28,
-      "books_this_month": 3,
+      "labs_this_year": 28,
+      "labs_this_month": 3,
       "favorite_category": "Technical",
       "most_read_author": "Robert C. Martin"
     },
@@ -674,7 +718,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 🔍 Search Analytics Endpoints
+## ðŸ” Search Analytics Endpoints
 
 ### **1. Popular Search Terms**
 
@@ -683,11 +727,13 @@ Authorization: Bearer <token>
 **Description**: Get popular search terms (aggregated anonymously).
 
 **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -707,7 +753,7 @@ Authorization: Bearer <token>
 
 ---
 
-## ⚡ Performance & Health Endpoints
+## âš¡ Performance & Health Endpoints
 
 ### **1. API Health Check**
 
@@ -718,6 +764,7 @@ Authorization: Bearer <token>
 **No Authentication Required**
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -746,11 +793,13 @@ Authorization: Bearer <token>
 **Description**: Get API performance metrics (admin only).
 
 **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
 
 **Response**:
+
 ```javascript
 {
   "success": true,
@@ -767,7 +816,7 @@ Authorization: Bearer <admin_token>
     },
     "endpoints": [
       {
-        "path": "/api/books/search",
+        "path": "/api/labs/search",
         "count": 45231,
         "avg_time": 156
       }
@@ -778,7 +827,7 @@ Authorization: Bearer <admin_token>
 
 ---
 
-## 🚨 Error Handling
+## ðŸš¨ Error Handling
 
 ### **Standard Error Response Format**
 
@@ -800,52 +849,52 @@ Authorization: Bearer <admin_token>
 
 ### **HTTP Status Codes**
 
-| Status Code | Meaning | Usage |
-|-------------|---------|-------|
-| 200 | OK | Successful GET, PUT requests |
-| 201 | Created | Successful POST requests |
-| 400 | Bad Request | Validation errors, malformed requests |
-| 401 | Unauthorized | Authentication required or failed |
-| 403 | Forbidden | Access denied (authenticated but not authorized) |
-| 404 | Not Found | Resource not found or access denied |
-| 409 | Conflict | Resource already exists (e.g., duplicate email) |
-| 422 | Unprocessable Entity | Semantic validation errors |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server errors |
-| 503 | Service Unavailable | Temporary server issues |
+| Status Code | Meaning               | Usage                                            |
+| ----------- | --------------------- | ------------------------------------------------ |
+| 200         | OK                    | Successful GET, PUT requests                     |
+| 201         | Created               | Successful POST requests                         |
+| 400         | Bad Request           | Validation errors, malformed requests            |
+| 401         | Unauthorized          | Authentication required or failed                |
+| 403         | Forbidden             | Access denied (authenticated but not authorized) |
+| 404         | Not Found             | Resource not found or access denied              |
+| 409         | Conflict              | Resource already exists (e.g., duplicate email)  |
+| 422         | Unprocessable Entity  | Semantic validation errors                       |
+| 429         | Too Many Requests     | Rate limit exceeded                              |
+| 500         | Internal Server Error | Server errors                                    |
+| 503         | Service Unavailable   | Temporary server issues                          |
 
 ### **Common Error Codes**
 
 ```javascript
 // Authentication Errors
-"AUTH_REQUIRED"          // No token provided
-"AUTH_INVALID"           // Invalid token
-"AUTH_EXPIRED"           // Token expired
-"ACCESS_DENIED"          // Insufficient permissions
+"AUTH_REQUIRED"; // No token provided
+"AUTH_INVALID"; // Invalid token
+"AUTH_EXPIRED"; // Token expired
+"ACCESS_DENIED"; // Insufficient permissions
 
 // Validation Errors
-"VALIDATION_FAILED"      // Request validation failed
-"INVALID_FORMAT"         // Data format errors
-"REQUIRED_FIELD"         // Missing required fields
+"VALIDATION_FAILED"; // Request validation failed
+"INVALID_FORMAT"; // Data format errors
+"REQUIRED_FIELD"; // Missing required fields
 
 // Resource Errors
-"RESOURCE_NOT_FOUND"     // Resource doesn't exist
-"RESOURCE_EXISTS"        // Resource already exists
-"RESOURCE_LIMIT"         // Resource limit exceeded
+"RESOURCE_NOT_FOUND"; // Resource doesn't exist
+"RESOURCE_EXISTS"; // Resource already exists
+"RESOURCE_LIMIT"; // Resource limit exceeded
 
 // Rate Limiting
-"RATE_LIMIT_EXCEEDED"    // Too many requests
-"QUOTA_EXCEEDED"         // Usage quota exceeded
+"RATE_LIMIT_EXCEEDED"; // Too many requests
+"QUOTA_EXCEEDED"; // Usage quota exceeded
 
 // System Errors
-"DATABASE_ERROR"         // Database connection issues
-"SERVICE_UNAVAILABLE"    // External service down
-"INTERNAL_ERROR"         // Generic server error
+"DATABASE_ERROR"; // Database connection issues
+"SERVICE_UNAVAILABLE"; // External service down
+"INTERNAL_ERROR"; // Generic server error
 ```
 
 ---
 
-## 🔧 Rate Limiting
+## ðŸ”§ Rate Limiting
 
 ### **Rate Limit Headers**
 
@@ -858,31 +907,33 @@ X-RateLimit-Window: 900
 
 ### **Rate Limits by Endpoint**
 
-| Endpoint | Limit | Window | Notes |
-|----------|-------|--------|-------|
-| `/api/auth/login` | 10 | 15 min | Per IP address |
-| `/api/auth/register` | 5 | 1 hour | Per IP address |
-| `/api/auth/forgot-password` | 3 | 1 hour | Per email/IP |
-| `/api/books/search` | 100 | 15 min | Per user |
-| `/api/books/*` | 200 | 15 min | Per user |
-| `/api/*` (general) | 1000 | 15 min | Per user |
+| Endpoint                    | Limit | Window | Notes          |
+| --------------------------- | ----- | ------ | -------------- |
+| `/api/auth/login`           | 10    | 15 min | Per IP address |
+| `/api/auth/register`        | 5     | 1 hour | Per IP address |
+| `/api/auth/forgot-password` | 3     | 1 hour | Per email/IP   |
+| `/api/labs/search`         | 100   | 15 min | Per user       |
+| `/api/labs/*`              | 200   | 15 min | Per user       |
+| `/api/*` (general)          | 1000  | 15 min | Per user       |
 
 ---
 
-## 📈 API Versioning
+## ðŸ“ˆ API Versioning
 
 ### **Current Version**: v2.0
 
 ### **Versioning Strategy**
 
 1. **Header-based versioning** (preferred):
+
 ```http
 API-Version: 2.0
 ```
 
 2. **URL-based versioning** (fallback):
+
 ```http
-GET /api/v2/books
+GET /api/v2/labs
 ```
 
 ### **Version Compatibility**
@@ -893,36 +944,37 @@ GET /api/v2/books
 
 ---
 
-## 🧪 Testing the API
+## ðŸ§ª Testing the API
 
 ### **Using cURL**
 
 ```bash
 # Login
-curl -X POST https://api.bookcatalog.com/api/auth/login \
+curl -X POST https://api.scriptlabs.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"password"}'
 
-# Search books
-curl -X GET "https://api.bookcatalog.com/api/books/search?q=javascript&limit=5" \
+# Search labs
+curl -X GET "https://api.scriptlabs.com/api/labs/search?q=javascript&limit=5" \
   -H "Authorization: Bearer <token>"
 
-# Create book
-curl -X POST https://api.bookcatalog.com/api/books \
+# Create lab
+curl -X POST https://api.scriptlabs.com/api/labs \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -d '{"title":"New Book","author":"Author Name"}'
+  -d '{"title":"New lab","author":"Author Name"}'
 ```
 
 ### **Postman Collection**
 
 A comprehensive Postman collection is available at:
-- **File**: `Book_Catalog_API_v2.postman_collection.json`
-- **Environment**: `Book-Catalog-Environment.postman_environment.json`
+
+- **File**: `Script_Labs_API_v2.postman_collection.json`
+- **Environment**: `lab-Catalog-Environment.postman_environment.json`
 
 ---
 
-## 📋 API Development Guidelines
+## ðŸ“‹ API Development Guidelines
 
 ### **Request/Response Best Practices**
 
@@ -944,16 +996,18 @@ A comprehensive Postman collection is available at:
 
 ---
 
-## 🎯 API Roadmap
+## ðŸŽ¯ API Roadmap
 
 ### **Planned Enhancements (v2.1)**
+
 - GraphQL endpoint for flexible queries
 - WebSocket support for real-time updates
 - Advanced analytics endpoints
-- Book recommendation engine
+- lab recommendation engine
 - Social features (sharing, reviews)
 
 ### **Future Considerations (v3.0)**
+
 - Microservices architecture
 - API gateway implementation
 - Advanced caching strategies
@@ -961,7 +1015,9 @@ A comprehensive Postman collection is available at:
 
 ---
 
-**Document Status**: ✅ Complete  
+**Document Status**: âœ… Complete  
 **Last Updated**: July 29, 2025  
 **API Version**: 2.0  
 **Next Review**: Monthly during active development
+
+

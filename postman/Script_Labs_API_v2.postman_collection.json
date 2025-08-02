@@ -1,7 +1,7 @@
-{
+﻿{
   "info": {
-    "name": "Book Catalog App API",
-    "description": "Complete API collection for Book Catalog App with authentication and CRUD operations",
+    "name": "Script Labs App API",
+    "description": "Complete API collection for Script Labs App with authentication and CRUD operations",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "1.0.0"
   },
@@ -17,7 +17,7 @@
       "type": "string"
     },
     {
-      "key": "bookId",
+      "key": "labId",
       "value": "",
       "type": "string"
     }
@@ -231,10 +231,10 @@
       ]
     },
     {
-      "name": "Books Management",
+      "name": "labs Management",
       "item": [
         {
-          "name": "Get All Books",
+          "name": "Get All labs",
           "request": {
             "auth": {
               "type": "bearer",
@@ -249,16 +249,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/books",
+              "raw": "{{baseUrl}}/api/labs",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "books"]
+              "path": ["api", "labs"]
             },
-            "description": "Get all books belonging to the authenticated user"
+            "description": "Get all labs belonging to the authenticated user"
           },
           "response": []
         },
         {
-          "name": "Search Books",
+          "name": "Search labs",
           "request": {
             "auth": {
               "type": "bearer",
@@ -273,21 +273,21 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/books/search?q=atomic&page=1&limit=10",
+              "raw": "{{baseUrl}}/api/labs/search?q=atomic&page=1&limit=10",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "books", "search"],
+              "path": ["api", "labs", "search"],
               "query": [
                 { "key": "q", "value": "atomic" },
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "10" }
               ]
             },
-            "description": "Search books by title or author for the authenticated user"
+            "description": "Search labs by title or author for the authenticated user"
           },
           "response": []
         },
         {
-          "name": "Add New Book",
+          "name": "Add New lab",
           "event": [
             {
               "listen": "test",
@@ -296,8 +296,8 @@
                   "if (pm.response.code === 201) {",
                   "    const responseJson = pm.response.json();",
                   "    if (responseJson.data && responseJson.data.id) {",
-                  "        pm.collectionVariables.set('bookId', responseJson.data.id);",
-                  "        console.log('Book ID set: ' + responseJson.data.id);",
+                  "        pm.collectionVariables.set('labId', responseJson.data.id);",
+                  "        console.log('lab ID set: ' + responseJson.data.id);",
                   "    }",
                   "}"
                 ],
@@ -328,16 +328,16 @@
               "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/books",
+              "raw": "{{baseUrl}}/api/labs",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "books"]
+              "path": ["api", "labs"]
             },
-            "description": "Add a new book to the catalog"
+            "description": "Add a new lab to the catalog"
           },
           "response": []
         },
         {
-          "name": "Update Book",
+          "name": "Update lab",
           "request": {
             "auth": {
               "type": "bearer",
@@ -361,16 +361,16 @@
               "raw": "{\n  \"title\": \"Atomic Habits - Updated Edition\",\n  \"author\": \"James Clear\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/books/{{bookId}}",
+              "raw": "{{baseUrl}}/api/labs/{{labId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "books", "{{bookId}}"]
+              "path": ["api", "labs", "{{labId}}"]
             },
-            "description": "Update an existing book (replace {{bookId}} with actual book ID)"
+            "description": "Update an existing lab (replace {{labId}} with actual lab ID)"
           },
           "response": []
         },
         {
-          "name": "Delete Book",
+          "name": "Delete lab",
           "request": {
             "auth": {
               "type": "bearer",
@@ -385,11 +385,11 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/books/{{bookId}}",
+              "raw": "{{baseUrl}}/api/labs/{{labId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "books", "{{bookId}}"]
+              "path": ["api", "labs", "{{labId}}"]
             },
-            "description": "Delete a book (replace {{bookId}} with actual book ID)"
+            "description": "Delete a lab (replace {{labId}} with actual lab ID)"
           },
           "response": []
         }
@@ -459,7 +459,7 @@
               }
             },
             {
-              "name": "3. Add Multiple Books",
+              "name": "3. Add Multiple labs",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -483,14 +483,14 @@
                   "raw": "{\n  \"title\": \"The 7 Habits of Highly Effective People\",\n  \"author\": \"Stephen R. Covey\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/books",
+                  "raw": "{{baseUrl}}/api/labs",
                   "host": ["{{baseUrl}}"],
-                  "path": ["api", "books"]
+                  "path": ["api", "labs"]
                 }
               }
             },
             {
-              "name": "4. Get All Books",
+              "name": "4. Get All labs",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -505,9 +505,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/books",
+                  "raw": "{{baseUrl}}/api/labs",
                   "host": ["{{baseUrl}}"],
-                  "path": ["api", "books"]
+                  "path": ["api", "labs"]
                 }
               }
             }
@@ -538,19 +538,19 @@
               }
             },
             {
-              "name": "Access Books without Token",
+              "name": "Access labs without Token",
               "request": {
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/books",
+                  "raw": "{{baseUrl}}/api/labs",
                   "host": ["{{baseUrl}}"],
-                  "path": ["api", "books"]
+                  "path": ["api", "labs"]
                 }
               }
             },
             {
-              "name": "Add Book without Required Fields",
+              "name": "Add lab without Required Fields",
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -571,12 +571,12 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"title\": \"Incomplete Book\"\n}"
+                  "raw": "{\n  \"title\": \"Incomplete lab\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/books",
+                  "raw": "{{baseUrl}}/api/labs",
                   "host": ["{{baseUrl}}"],
-                  "path": ["api", "books"]
+                  "path": ["api", "labs"]
                 }
               }
             }
@@ -586,3 +586,5 @@
     }
   ]
 }
+
+

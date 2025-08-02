@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -413,7 +413,7 @@ const errorHandler = (err, req, res, next) =&gt; {
 &nbsp;
 // Handle unhandled promise rejections
 process.on("unhandledRejection", <span class="fstat-no" title="function not covered" >(e</span>rr, promise) =&gt; {
-<span class="cstat-no" title="statement not covered" >	console.error("🚨 Unhandled Promise Rejection:");</span>
+<span class="cstat-no" title="statement not covered" >	console.error("ðŸš¨ Unhandled Promise Rejection:");</span>
 <span class="cstat-no" title="statement not covered" >	console.error("Error:", err.message);</span>
 <span class="cstat-no" title="statement not covered" >	console.error("Promise:", promise);</span>
 &nbsp;
@@ -423,7 +423,7 @@ process.on("unhandledRejection", <span class="fstat-no" title="function not cove
 &nbsp;
 // Handle uncaught exceptions
 process.on("uncaughtException", <span class="fstat-no" title="function not covered" >(e</span>rr) =&gt; {
-<span class="cstat-no" title="statement not covered" >	console.error("🚨 Uncaught Exception:");</span>
+<span class="cstat-no" title="statement not covered" >	console.error("ðŸš¨ Uncaught Exception:");</span>
 <span class="cstat-no" title="statement not covered" >	console.error("Error:", err.message);</span>
 <span class="cstat-no" title="statement not covered" >	console.error("Stack:", err.stack);</span>
 &nbsp;
@@ -455,3 +455,4 @@ module.exports = {
     </body>
 </html>
     
+

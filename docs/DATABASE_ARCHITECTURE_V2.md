@@ -1,31 +1,31 @@
-# 📊 Book Catalog App - Database Architecture V2.0
+﻿# ðŸ“Š lab Catalog App - Database Architecture V2.0
 
-## 📋 Document Information
+## ðŸ“‹ Document Information
 
 - **Version**: 2.0
 - **Date**: July 29, 2025
 - **Status**: Database Design Specification
-- **Related**: [PRD V2.0](./PRD_Book_Catalog_V2.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
+- **Related**: [PRD V2.0](./PRD_Script_Labs_V2.md), [Implementation Architecture](./IMPLEMENTATION_ARCHITECTURE.md)
 
 ---
 
-## 🎯 Database Architecture Overview
+## ðŸŽ¯ Database Architecture Overview
 
-Book Catalog V2 implements a modern PostgreSQL database architecture using Supabase, featuring enhanced search capabilities, security policies, and optimized performance for scalable book management.
+lab Catalog V2 implements a modern PostgreSQL database architecture using Supabase, featuring enhanced search capabilities, security policies, and optimized performance for scalable lab management.
 
 ---
 
-## 🏗️ Database Technology Stack
+## ðŸ—ï¸ Database Technology Stack
 
 ### **Primary Database System**
 ```
-🗄️ Database Stack
-├── Database Engine: PostgreSQL 15+
-├── Cloud Provider: Supabase
-├── Authentication: Supabase Auth
-├── Real-time: Supabase Realtime
-├── Storage: Supabase Storage (Future)
-└── Backup: Automated Supabase Backups
+ðŸ—„ï¸ Database Stack
+â”œâ”€â”€ Database Engine: PostgreSQL 15+
+â”œâ”€â”€ Cloud Provider: Supabase
+â”œâ”€â”€ Authentication: Supabase Auth
+â”œâ”€â”€ Real-time: Supabase Realtime
+â”œâ”€â”€ Storage: Supabase Storage (Future)
+â””â”€â”€ Backup: Automated Supabase Backups
 ```
 
 ### **Database Features**
@@ -38,13 +38,13 @@ Book Catalog V2 implements a modern PostgreSQL database architecture using Supab
 
 ---
 
-## 📊 Database Schema Design
+## ðŸ“Š Database Schema Design
 
 ### **Core Entity Relationship Diagram**
 
 ```mermaid
 erDiagram
-    auth_users ||--o{ books : "owns"
+    auth_users ||--o{ labs : "owns"
     auth_users ||--o{ password_reset_tokens : "has"
     auth_users ||--o{ user_sessions : "maintains"
     
@@ -58,7 +58,7 @@ erDiagram
         boolean email_confirmed
     }
     
-    books {
+    labs {
         uuid id PK
         varchar title
         varchar author
@@ -136,13 +136,13 @@ CREATE TABLE auth.users (
 );
 ```
 
-#### **2. Books Table (Enhanced)**
+#### **2. labs Table (Enhanced)**
 ```sql
-CREATE TABLE public.books (
+CREATE TABLE public.labs (
   -- Primary identifiers
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   
-  -- Basic book information
+  -- Basic lab information
   title VARCHAR(500) NOT NULL CHECK (LENGTH(TRIM(title)) > 0),
   author VARCHAR(300) NOT NULL CHECK (LENGTH(TRIM(author)) > 0),
   
@@ -174,10 +174,10 @@ CREATE TABLE public.books (
 );
 
 -- Comments for documentation
-COMMENT ON TABLE public.books IS 'User book catalog with enhanced search and metadata';
-COMMENT ON COLUMN public.books.search_vector IS 'Full-text search vector with weighted fields';
-COMMENT ON COLUMN public.books.rating IS 'User rating from 1-5 stars';
-COMMENT ON COLUMN public.books.reading_status IS 'Current reading status: to_read, reading, read';
+COMMENT ON TABLE public.labs IS 'User lab catalog with enhanced search and metadata';
+COMMENT ON COLUMN public.labs.search_vector IS 'Full-text search vector with weighted fields';
+COMMENT ON COLUMN public.labs.rating IS 'User rating from 1-5 stars';
+COMMENT ON COLUMN public.labs.reading_status IS 'Current reading status: to_read, reading, read';
 ```
 
 #### **3. Password Reset Tokens Table**
@@ -239,28 +239,28 @@ COMMENT ON TABLE public.user_sessions IS 'Enhanced user session tracking and man
 
 ---
 
-## 🔍 Database Indexes & Performance
+## ðŸ” Database Indexes & Performance
 
 ### **Primary Indexes**
 
 ```sql
--- Books table indexes
-CREATE INDEX idx_books_user_id ON public.books(user_id);
-CREATE INDEX idx_books_search_vector ON public.books USING GIN(search_vector);
-CREATE INDEX idx_books_title_gin ON public.books USING GIN(to_tsvector('english', title));
-CREATE INDEX idx_books_author_gin ON public.books USING GIN(to_tsvector('english', author));
-CREATE INDEX idx_books_category ON public.books(category) WHERE category IS NOT NULL;
-CREATE INDEX idx_books_reading_status ON public.books(reading_status);
-CREATE INDEX idx_books_rating ON public.books(rating) WHERE rating IS NOT NULL;
-CREATE INDEX idx_books_publication_year ON public.books(publication_year) WHERE publication_year IS NOT NULL;
-CREATE INDEX idx_books_created_at_desc ON public.books(created_at DESC);
-CREATE INDEX idx_books_updated_at_desc ON public.books(updated_at DESC);
+-- labs table indexes
+CREATE INDEX idx_labs_user_id ON public.labs(user_id);
+CREATE INDEX idx_labs_search_vector ON public.labs USING GIN(search_vector);
+CREATE INDEX idx_labs_title_gin ON public.labs USING GIN(to_tsvector('english', title));
+CREATE INDEX idx_labs_author_gin ON public.labs USING GIN(to_tsvector('english', author));
+CREATE INDEX idx_labs_category ON public.labs(category) WHERE category IS NOT NULL;
+CREATE INDEX idx_labs_reading_status ON public.labs(reading_status);
+CREATE INDEX idx_labs_rating ON public.labs(rating) WHERE rating IS NOT NULL;
+CREATE INDEX idx_labs_publication_year ON public.labs(publication_year) WHERE publication_year IS NOT NULL;
+CREATE INDEX idx_labs_created_at_desc ON public.labs(created_at DESC);
+CREATE INDEX idx_labs_updated_at_desc ON public.labs(updated_at DESC);
 
 -- Composite indexes for common queries
-CREATE INDEX idx_books_user_category ON public.books(user_id, category) WHERE category IS NOT NULL;
-CREATE INDEX idx_books_user_status ON public.books(user_id, reading_status);
-CREATE INDEX idx_books_user_rating ON public.books(user_id, rating) WHERE rating IS NOT NULL;
-CREATE INDEX idx_books_user_created_desc ON public.books(user_id, created_at DESC);
+CREATE INDEX idx_labs_user_category ON public.labs(user_id, category) WHERE category IS NOT NULL;
+CREATE INDEX idx_labs_user_status ON public.labs(user_id, reading_status);
+CREATE INDEX idx_labs_user_rating ON public.labs(user_id, rating) WHERE rating IS NOT NULL;
+CREATE INDEX idx_labs_user_created_desc ON public.labs(user_id, created_at DESC);
 
 -- Password reset tokens indexes
 CREATE INDEX idx_password_reset_tokens_token ON public.password_reset_tokens(token);
@@ -305,31 +305,31 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 
 ---
 
-## 🔐 Row Level Security (RLS)
+## ðŸ” Row Level Security (RLS)
 
 ### **Security Policies**
 
 ```sql
 -- Enable RLS on all tables
-ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.labs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.password_reset_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_sessions ENABLE ROW LEVEL SECURITY;
 
--- Books table policies
-CREATE POLICY "users_can_view_own_books" ON public.books
+-- labs table policies
+CREATE POLICY "users_can_view_own_books" ON public.labs
   FOR SELECT 
   USING (auth.uid() = user_id);
 
-CREATE POLICY "users_can_insert_own_books" ON public.books
+CREATE POLICY "users_can_insert_own_books" ON public.labs
   FOR INSERT 
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "users_can_update_own_books" ON public.books
+CREATE POLICY "users_can_update_own_books" ON public.labs
   FOR UPDATE 
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "users_can_delete_own_books" ON public.books
+CREATE POLICY "users_can_delete_own_books" ON public.labs
   FOR DELETE 
   USING (auth.uid() = user_id);
 
@@ -362,7 +362,7 @@ CREATE POLICY "users_can_delete_own_sessions" ON public.user_sessions
 ```sql
 -- Grant appropriate permissions
 GRANT USAGE ON SCHEMA public TO authenticated;
-GRANT ALL ON public.books TO authenticated;
+GRANT ALL ON public.labs TO authenticated;
 GRANT ALL ON public.password_reset_tokens TO service_role;
 GRANT ALL ON public.user_sessions TO authenticated;
 
@@ -389,7 +389,7 @@ GRANT EXECUTE ON FUNCTION public.cleanup_expired_tokens() TO service_role;
 
 ---
 
-## 🔄 Database Functions & Triggers
+## ðŸ”„ Database Functions & Triggers
 
 ### **Utility Functions**
 
@@ -441,7 +441,7 @@ BEGIN
       WHEN p_search_query = '' THEN 0
       ELSE ts_rank(b.search_vector, plainto_tsquery('english', p_search_query))
     END AS search_rank
-  FROM public.books b
+  FROM public.labs b
   WHERE 
     b.user_id = p_user_id
     AND (p_search_query = '' OR b.search_vector @@ plainto_tsquery('english', p_search_query))
@@ -455,13 +455,13 @@ BEGIN
 END;
 $$;
 
--- Book statistics function
+-- lab statistics function
 CREATE OR REPLACE FUNCTION public.get_user_book_stats(p_user_id UUID)
 RETURNS TABLE(
-  total_books BIGINT,
-  books_read BIGINT,
-  books_reading BIGINT,
-  books_to_read BIGINT,
+  total_labs BIGINT,
+  labs_read BIGINT,
+  labs_reading BIGINT,
+  labs_to_read BIGINT,
   average_rating NUMERIC,
   total_authors BIGINT,
   total_categories BIGINT
@@ -472,14 +472,14 @@ AS $$
 BEGIN
   RETURN QUERY
   SELECT 
-    COUNT(*) as total_books,
-    COUNT(*) FILTER (WHERE reading_status = 'read') as books_read,
-    COUNT(*) FILTER (WHERE reading_status = 'reading') as books_reading,
-    COUNT(*) FILTER (WHERE reading_status = 'to_read') as books_to_read,
+    COUNT(*) as total_labs,
+    COUNT(*) FILTER (WHERE reading_status = 'read') as labs_read,
+    COUNT(*) FILTER (WHERE reading_status = 'reading') as labs_reading,
+    COUNT(*) FILTER (WHERE reading_status = 'to_read') as labs_to_read,
     ROUND(AVG(rating), 2) as average_rating,
     COUNT(DISTINCT author) as total_authors,
     COUNT(DISTINCT category) FILTER (WHERE category IS NOT NULL) as total_categories
-  FROM public.books
+  FROM public.labs
   WHERE user_id = p_user_id;
 END;
 $$;
@@ -513,8 +513,8 @@ $$;
 
 ```sql
 -- Auto-update timestamps
-CREATE TRIGGER trigger_update_books_updated_at
-  BEFORE UPDATE ON public.books
+CREATE TRIGGER trigger_update_labs_updated_at
+  BEFORE UPDATE ON public.labs
   FOR EACH ROW
   EXECUTE FUNCTION public.update_updated_at_column();
 
@@ -545,14 +545,14 @@ $$;
 
 -- Only needed if not using GENERATED ALWAYS AS
 -- CREATE TRIGGER trigger_update_book_search_vector
---   BEFORE INSERT OR UPDATE ON public.books
+--   BEFORE INSERT OR UPDATE ON public.labs
 --   FOR EACH ROW
 --   EXECUTE FUNCTION public.update_book_search_vector();
 ```
 
 ---
 
-## 📈 Performance Optimization
+## ðŸ“ˆ Performance Optimization
 
 ### **Query Optimization Examples**
 
@@ -576,7 +576,7 @@ SELECT
   mean_time,
   rows
 FROM pg_stat_statements 
-WHERE query LIKE '%books%'
+WHERE query LIKE '%labs%'
 ORDER BY total_time DESC
 LIMIT 10;
 
@@ -603,7 +603,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 ### **Performance Tuning Configuration**
 
 ```sql
--- Optimize PostgreSQL for book catalog workload
+-- Optimize PostgreSQL for lab catalog workload
 -- These would be set in postgresql.conf or via Supabase dashboard
 
 -- Memory settings
@@ -620,7 +620,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 -- default_text_search_config = 'english'
 
 -- Analyze tables for better query planning
-ANALYZE public.books;
+ANALYZE public.labs;
 ANALYZE public.password_reset_tokens;
 ANALYZE public.user_sessions;
 
@@ -630,7 +630,7 @@ SELECT pg_stat_reset();
 
 ---
 
-## 💾 Backup & Recovery Strategy
+## ðŸ’¾ Backup & Recovery Strategy
 
 ### **Backup Configuration**
 
@@ -664,7 +664,7 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 ### **Data Export/Import Scripts**
 
 ```sql
--- Export books data
+-- Export labs data
 COPY (
   SELECT 
     b.id,
@@ -680,7 +680,7 @@ COPY (
     au.email as user_email,
     b.created_at,
     b.updated_at
-  FROM public.books b
+  FROM public.labs b
   JOIN auth.users au ON au.id = b.user_id
 ) TO '/tmp/books_backup.csv' WITH CSV HEADER;
 
@@ -697,20 +697,20 @@ COPY (
 
 ---
 
-## 🔧 Database Maintenance
+## ðŸ”§ Database Maintenance
 
 ### **Regular Maintenance Tasks**
 
 ```sql
 -- Vacuum and analyze (automated by Supabase)
-VACUUM ANALYZE public.books;
+VACUUM ANALYZE public.labs;
 VACUUM ANALYZE public.password_reset_tokens;
 
 -- Reindex if needed
-REINDEX INDEX CONCURRENTLY idx_books_search_vector;
+REINDEX INDEX CONCURRENTLY idx_labs_search_vector;
 
 -- Update table statistics
-SELECT pg_stat_reset_single_table_counters('public.books'::regclass);
+SELECT pg_stat_reset_single_table_counters('public.labs'::regclass);
 
 -- Check for table bloat
 SELECT 
@@ -762,13 +762,13 @@ ORDER BY relation ASC;
 
 ---
 
-## 📊 Database Metrics & KPIs
+## ðŸ“Š Database Metrics & KPIs
 
 ### **Performance Metrics**
 
 | Metric | Target | Monitoring Query |
 |--------|--------|------------------|
-| Average Query Response Time | < 100ms | `SELECT mean_time FROM pg_stat_statements WHERE query LIKE '%books%'` |
+| Average Query Response Time | < 100ms | `SELECT mean_time FROM pg_stat_statements WHERE query LIKE '%labs%'` |
 | Search Query Performance | < 200ms | `EXPLAIN ANALYZE SELECT * FROM search_books(...)` |
 | Index Hit Ratio | > 95% | `SELECT sum(idx_blks_hit) * 100 / sum(idx_blks_hit + idx_blks_read) FROM pg_statio_user_indexes` |
 | Table Hit Ratio | > 95% | `SELECT sum(heap_blks_hit) * 100 / sum(heap_blks_hit + heap_blks_read) FROM pg_statio_user_tables` |
@@ -786,12 +786,12 @@ WHERE last_sign_in_at >= NOW() - INTERVAL '30 days'
 GROUP BY DATE(last_sign_in_at)
 ORDER BY date DESC;
 
--- Book creation trends
+-- lab creation trends
 SELECT 
   DATE(created_at) as date,
   COUNT(*) as books_created,
   COUNT(DISTINCT user_id) as active_users
-FROM public.books
+FROM public.labs
 WHERE created_at >= NOW() - INTERVAL '30 days'
 GROUP BY DATE(created_at)
 ORDER BY date DESC;
@@ -803,21 +803,21 @@ ORDER BY date DESC;
 
 ---
 
-## 🎯 Database Architecture Summary
+## ðŸŽ¯ Database Architecture Summary
 
 ### **Key Features Implemented**
-- ✅ **Scalable Schema**: Supabase PostgreSQL with modern design
-- ✅ **Full-Text Search**: Optimized search with ranking and weighting
-- ✅ **Security**: Row Level Security with comprehensive policies
-- ✅ **Performance**: Strategic indexing and query optimization
-- ✅ **Maintainability**: Functions, triggers, and automated cleanup
-- ✅ **Monitoring**: Health checks and performance metrics
+- âœ… **Scalable Schema**: Supabase PostgreSQL with modern design
+- âœ… **Full-Text Search**: Optimized search with ranking and weighting
+- âœ… **Security**: Row Level Security with comprehensive policies
+- âœ… **Performance**: Strategic indexing and query optimization
+- âœ… **Maintainability**: Functions, triggers, and automated cleanup
+- âœ… **Monitoring**: Health checks and performance metrics
 
 ### **Performance Characteristics**
 - **Search Queries**: Target < 200ms response time
 - **CRUD Operations**: Target < 100ms response time
 - **Concurrent Users**: Designed for 1000+ simultaneous users
-- **Data Volume**: Optimized for millions of books per user
+- **Data Volume**: Optimized for millions of labs per user
 - **Backup/Recovery**: 30-day point-in-time recovery
 
 ### **Security Features**
@@ -826,10 +826,12 @@ ORDER BY date DESC;
 - **Audit Trail**: Comprehensive logging and monitoring
 - **Access Control**: Granular permissions and role-based access
 
-**This database architecture provides a robust, scalable foundation for Book Catalog V2!** 📚
+**This database architecture provides a robust, scalable foundation for lab Catalog V2!** ðŸ“š
 
 ---
 
-**Document Status**: ✅ Complete  
+**Document Status**: âœ… Complete  
 **Last Updated**: July 29, 2025  
 **Next Review**: During implementation milestones
+
+

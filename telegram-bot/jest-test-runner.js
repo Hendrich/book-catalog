@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Jest Test Runner with Telegram Notification
@@ -11,10 +11,10 @@ const path = require('path');
 const TelegramTestNotifier = require('./TelegramTestNotifier');
 
 async function runTestsWithNotification() {
-  console.log('🚀 Running Jest tests with Telegram notification...');
+  console.log('ðŸš€ Running Jest tests with Telegram notification...');
   
   const notifier = new TelegramTestNotifier();
-  console.log(`📱 Telegram notifications: ${notifier.enabled ? 'enabled' : 'disabled'}`);
+  console.log(`ðŸ“± Telegram notifications: ${notifier.enabled ? 'enabled' : 'disabled'}`);
   
   let testData = {
     numTotalTests: 0,
@@ -28,7 +28,7 @@ async function runTestsWithNotification() {
   
   try {
     // Run Jest with JSON output
-    console.log('⚡ Starting Jest process...');
+    console.log('âš¡ Starting Jest process...');
     const jestProcess = spawn('npx', ['jest', '--coverage', '--ci', '--passWithNoTests', '--json'], {
       stdio: ['inherit', 'pipe', 'pipe'],
       shell: true
@@ -50,14 +50,14 @@ async function runTestsWithNotification() {
     });
     
     jestProcess.on('close', async (code) => {
-      console.log(`\n📊 Jest process completed with exit code: ${code}`);
-      console.log(`📝 stdout length: ${stdout.length} chars`);
-      console.log(`📝 stderr length: ${stderr.length} chars`);
+      console.log(`\nðŸ“Š Jest process completed with exit code: ${code}`);
+      console.log(`ðŸ“ stdout length: ${stdout.length} chars`);
+      console.log(`ðŸ“ stderr length: ${stderr.length} chars`);
       
       try {
         // Parse Jest JSON output
         if (stdout.trim()) {
-          console.log('📄 Parsing Jest JSON output...');
+          console.log('ðŸ“„ Parsing Jest JSON output...');
           const jestResults = JSON.parse(stdout);
           testData = {
             numTotalTests: jestResults.numTotalTests || 0,
@@ -66,9 +66,9 @@ async function runTestsWithNotification() {
             numPendingTests: jestResults.numPendingTests || 0,
             testExecError: code !== 0
           };
-          console.log(`📊 Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
+          console.log(`ðŸ“Š Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
         } else {
-          console.log('⚠️ No JSON output from Jest');
+          console.log('âš ï¸ No JSON output from Jest');
         }
         
         // Read coverage data
@@ -77,13 +77,13 @@ async function runTestsWithNotification() {
           const rawCoverage = fs.readFileSync(coveragePath, 'utf8');
           const coverage = JSON.parse(rawCoverage);
           coverageData = coverage.total;
-          console.log('📊 Coverage data loaded successfully');
+          console.log('ðŸ“Š Coverage data loaded successfully');
         }
         
         // Send notification
         if (notifier.enabled) {
           const options = {
-            projectName: 'Book Catalog App',
+            projectName: 'lab Catalog App',
             branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || 'main',
             author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || 'Automated',
             timestamp: new Date(),
@@ -97,22 +97,22 @@ async function runTestsWithNotification() {
           };
           
           await notifier.sendNotification(testData, coverageData, options);
-          console.log('✅ Telegram notification sent successfully!');
+          console.log('âœ… Telegram notification sent successfully!');
         } else {
-          console.log('⚠️ Telegram notifications disabled (missing credentials)');
+          console.log('âš ï¸ Telegram notifications disabled (missing credentials)');
         }
         
         // Exit with same code as Jest
         process.exit(code);
         
       } catch (error) {
-        console.error('❌ Failed to process test results:', error.message);
+        console.error('âŒ Failed to process test results:', error.message);
         
         // Still try to send notification with basic info
         if (notifier.enabled) {
           try {
             const options = {
-              projectName: 'Book Catalog App',
+              projectName: 'lab Catalog App',
               branch: process.env.GIT_BRANCH || 'main',
               author: process.env.GIT_AUTHOR || 'Automated',
               timestamp: new Date(),
@@ -121,7 +121,7 @@ async function runTestsWithNotification() {
             
             await notifier.sendNotification(testData, coverageData, options);
           } catch (notifError) {
-            console.error('❌ Failed to send error notification:', notifError.message);
+            console.error('âŒ Failed to send error notification:', notifError.message);
           }
         }
         
@@ -130,7 +130,7 @@ async function runTestsWithNotification() {
     });
     
   } catch (error) {
-    console.error('❌ Failed to run tests:', error.message);
+    console.error('âŒ Failed to run tests:', error.message);
     process.exit(1);
   }
 }
@@ -141,3 +141,5 @@ if (require.main === module) {
 }
 
 module.exports = runTestsWithNotification;
+
+

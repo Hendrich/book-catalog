@@ -1,4 +1,4 @@
-const { requestLogger, securityLogger, statsLogger, getApiStats } = require('../../backend/middlewares/logger');
+﻿const { requestLogger, securityLogger, statsLogger, getApiStats } = require('../../backend/middlewares/logger');
 
 describe('Logger Middleware', () => {
 	let req, res, next, originalConsoleLog, originalConsoleError;
@@ -216,7 +216,7 @@ describe('Logger Middleware', () => {
 		test('should handle POST requests', () => {
 			// Arrange
 			req.method = 'POST';
-			req.url = '/api/books';
+			req.url = '/api/labs';
 
 			// Act
 			requestLogger(req, res, next);
@@ -228,7 +228,7 @@ describe('Logger Middleware', () => {
 		test('should handle PUT requests', () => {
 			// Arrange
 			req.method = 'PUT';
-			req.url = '/api/books/1';
+			req.url = '/api/labs/1';
 
 			// Act
 			requestLogger(req, res, next);
@@ -240,7 +240,7 @@ describe('Logger Middleware', () => {
 		test('should handle DELETE requests', () => {
 			// Arrange
 			req.method = 'DELETE';
-			req.url = '/api/books/1';
+			req.url = '/api/labs/1';
 
 			// Act
 			requestLogger(req, res, next);
@@ -270,7 +270,7 @@ describe('Logger Middleware', () => {
 
 			// Assert
 			expect(console.log).toHaveBeenCalledWith(
-				expect.stringMatching(/🔐.*SECURITY: LOGIN attempt from 127\.0\.0\.1/)
+				expect.stringMatching(/ðŸ”.*SECURITY: LOGIN attempt from 127\.0\.0\.1/)
 			);
 			expect(console.log).toHaveBeenCalledWith(
 				expect.stringMatching(/User-Agent: test-user-agent/)
@@ -320,7 +320,7 @@ describe('Logger Middleware', () => {
 
 			// Assert
 			expect(console.log).toHaveBeenCalledWith(
-				expect.stringMatching(/🔐.*SECURITY: LOGOUT attempt from 192\.168\.1\.1/)
+				expect.stringMatching(/ðŸ”.*SECURITY: LOGOUT attempt from 192\.168\.1\.1/)
 			);
 			expect(console.log).toHaveBeenCalledWith(
 				expect.stringMatching(/User-Agent: another-user-agent/)
@@ -411,3 +411,5 @@ describe('Logger Middleware', () => {
 		});
 	});
 });
+
+

@@ -1,6 +1,6 @@
-# Product Requirements Document (PRD)
+﻿# Product Requirements Document (PRD)
 
-## Book Catalog Application
+## lab Catalog Application
 
 ### Document Information
 
@@ -15,7 +15,7 @@
 
 ### 1.1 Product Overview
 
-Book Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pribadi dengan sistem autentikasi yang aman. Aplikasi ini memungkinkan pengguna untuk mendaftar, login, dan mengelola koleksi buku mereka dengan operasi CRUD (Create, Read, Update, Delete).
+lab Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pribadi dengan sistem autentikasi yang aman. Aplikasi ini memungkinkan pengguna untuk mendaftar, login, dan mengelola koleksi buku mereka dengan operasi CRUD (Create, Read, Update, Delete).
 
 ### 1.2 Business Objectives
 
@@ -47,7 +47,7 @@ Book Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pri
 
 ### 2.3 User Personas
 
-#### Persona 1: Book Enthusiast
+#### Persona 1: lab Enthusiast
 
 - **Age**: 25-45
 - **Tech Savvy**: Medium
@@ -75,16 +75,16 @@ Book Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pri
 | AUTH-004   | Password Encryption  | High     | Password di-hash dengan bcrypt sebelum disimpan |
 | AUTH-005   | Token Expiration     | Medium   | JWT token memiliki expiration time              |
 
-### 3.2 Book Management
+### 3.2 lab Management
 
 | Feature ID | Feature Name    | Priority | Description                                      |
 | ---------- | --------------- | -------- | ------------------------------------------------ |
-| BOOK-001   | View All Books  | High     | User dapat melihat semua buku dalam koleksi      |
-| BOOK-002   | Add New Book    | High     | User dapat menambah buku baru (title, author)    |
-| BOOK-003   | Update Book     | High     | User dapat mengedit informasi buku               |
-| BOOK-004   | Delete Book     | High     | User dapat menghapus buku dari koleksi           |
-| BOOK-005   | Book Search     | Medium   | User dapat mencari buku berdasarkan title/author |
-| BOOK-006   | Book Categories | Low      | User dapat mengkategorikan buku                  |
+| lab-001   | View All labs  | High     | User dapat melihat semua buku dalam koleksi      |
+| lab-002   | Add New lab    | High     | User dapat menambah buku baru (title, author)    |
+| lab-003   | Update lab     | High     | User dapat mengedit informasi buku               |
+| lab-004   | Delete lab     | High     | User dapat menghapus buku dari koleksi           |
+| lab-005   | lab Search     | Medium   | User dapat mencari buku berdasarkan title/author |
+| lab-006   | lab Categories | Low      | User dapat mengkategorikan buku                  |
 
 ### 3.3 User Interface
 
@@ -92,8 +92,8 @@ Book Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pri
 | ---------- | ------------------- | -------- | ---------------------------------------- |
 | UI-001     | Responsive Design   | High     | UI responsif untuk desktop dan mobile    |
 | UI-002     | Login/Register Form | High     | Form yang user-friendly untuk auth       |
-| UI-003     | Book List Display   | High     | Tampilan list buku yang mudah dibaca     |
-| UI-004     | Add/Edit Book Modal | High     | Modal untuk input data buku              |
+| UI-003     | lab List Display   | High     | Tampilan list buku yang mudah dibaca     |
+| UI-004     | Add/Edit lab Modal | High     | Modal untuk input data buku              |
 | UI-005     | Error Messages      | High     | Pesan error yang informatif              |
 | UI-006     | Loading States      | Medium   | Indikator loading untuk async operations |
 
@@ -104,8 +104,8 @@ Book Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pri
 ### 4.1 Architecture
 
 ```
-Frontend (HTML/CSS/JS) ↔ Backend API (Node.js/Express) ↔ Database (PostgreSQL/Supabase)
-                        ↕
+Frontend (HTML/CSS/JS) â†” Backend API (Node.js/Express) â†” Database (PostgreSQL/Supabase)
+                        â†•
                    JWT Authentication
 ```
 
@@ -127,12 +127,12 @@ Frontend (HTML/CSS/JS) ↔ Backend API (Node.js/Express) ↔ Database (PostgreSQ
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 
-#### Book Endpoints (Protected)
+#### lab Endpoints (Protected)
 
-- `GET /api/books` - Get all user's books
-- `POST /api/books` - Add new book
-- `PUT /api/books/:id` - Update book
-- `DELETE /api/books/:id` - Delete book
+- `GET /api/labs` - Get all user's labs
+- `POST /api/labs` - Add new lab
+- `PUT /api/labs/:id` - Update lab
+- `DELETE /api/labs/:id` - Delete lab
 
 ### 4.4 Database Schema
 
@@ -145,8 +145,8 @@ auth.users (
   created_at TIMESTAMP
 )
 
--- Books table
-public.books (
+-- labs table
+public.labs (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
@@ -306,35 +306,35 @@ public.books (
 
 ## 10. Timeline & Milestones
 
-### Phase 1: Foundation (Week 1-2) ✅ COMPLETED
+### Phase 1: Foundation (Week 1-2) âœ… COMPLETED
 
 - [x] Basic project structure
 - [x] Authentication system (register/login)
 - [x] Database setup dengan Supabase
 - [x] Basic API endpoints
 
-### Phase 2: Core Features (Week 3-4) ✅ COMPLETED
+### Phase 2: Core Features (Week 3-4) âœ… COMPLETED
 
-- [x] CRUD operations untuk books
+- [x] CRUD operations untuk labs
 - [x] JWT middleware
 - [x] Frontend integration
 - [x] Basic error handling
 
-### Phase 3: Enhancement (Week 5-6) 🔄 CURRENT
+### Phase 3: Enhancement (Week 5-6) ðŸ”„ CURRENT
 
 - [ ] API documentation (OpenAPI/Swagger)
 - [ ] Postman collection dengan tests
 - [ ] Code refactoring dan optimization
 - [ ] UI/UX improvements
 
-### Phase 4: Quality Assurance (Week 7-8) 📋 PLANNED
+### Phase 4: Quality Assurance (Week 7-8) ðŸ“‹ PLANNED
 
 - [ ] Comprehensive testing
 - [ ] Security audit
 - [ ] Performance optimization
 - [ ] Documentation completion
 
-### Phase 5: Deployment & Maintenance (Week 9+) 📋 PLANNED
+### Phase 5: Deployment & Maintenance (Week 9+) ðŸ“‹ PLANNED
 
 - [ ] Production deployment
 - [ ] Monitoring setup
@@ -362,9 +362,9 @@ public.books (
 
 ### 11.3 Future Enhancements
 
-- [ ] Book categories dan tags
+- [ ] lab categories dan tags
 - [ ] Reading progress tracking
-- [ ] Book recommendations
+- [ ] lab recommendations
 - [ ] Export/import functionality
 - [ ] Social features (sharing, reviews)
 
@@ -398,3 +398,5 @@ public.books (
 **Document Status**: Active Development
 **Next Review Date**: Weekly during development phase
 **Stakeholders**: Development Team, Product Owner
+
+

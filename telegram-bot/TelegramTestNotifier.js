@@ -1,4 +1,4 @@
-const TelegramBot = require('node-telegram-bot-api');
+﻿const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,7 +8,7 @@ class TelegramTestNotifier {
     this.chatId = process.env.TELEGRAM_CHAT_ID;
     
     if (!this.token || !this.chatId) {
-      console.warn('⚠️ Telegram bot credentials not found. Notifications disabled.');
+      console.warn('âš ï¸ Telegram bot credentials not found. Notifications disabled.');
       this.enabled = false;
       return;
     }
@@ -16,7 +16,7 @@ class TelegramTestNotifier {
     this.bot = new TelegramBot(this.token, { polling: false });
     this.enabled = true;
     
-    console.log('📱 Telegram Test Notifier initialized');
+    console.log('ðŸ“± Telegram Test Notifier initialized');
   }
 
   /**
@@ -116,7 +116,7 @@ class TelegramTestNotifier {
    */
   getStatusEmoji(testData, coverageData) {
     if (testData.hasErrors || testData.failed > 0) {
-      return '❌'; // Failed
+      return 'âŒ'; // Failed
     }
     
     if (coverageData) {
@@ -127,13 +127,13 @@ class TelegramTestNotifier {
         coverageData.lines.pct
       ) / 4;
       
-      if (avgCoverage >= 90) return '🟢'; // Excellent
-      if (avgCoverage >= 80) return '🟡'; // Good
-      if (avgCoverage >= 70) return '🟠'; // Fair
-      return '🔴'; // Poor
+      if (avgCoverage >= 90) return 'ðŸŸ¢'; // Excellent
+      if (avgCoverage >= 80) return 'ðŸŸ¡'; // Good
+      if (avgCoverage >= 70) return 'ðŸŸ '; // Fair
+      return 'ðŸ”´'; // Poor
     }
     
-    return '✅'; // Success without coverage
+    return 'âœ…'; // Success without coverage
   }
 
   /**
@@ -145,7 +145,7 @@ class TelegramTestNotifier {
    */
   formatCleanMessage(testData, coverageData, options = {}) {
     const {
-      projectName = 'Book Catalog',
+      projectName = 'lab Catalog',
       branch = 'main',
       author = 'Automated Testing',
       timestamp = new Date()
@@ -174,14 +174,14 @@ class TelegramTestNotifier {
       : '0.00';
 
     // Determine status emoji and project status
-    let statusIcon = '🟢';
+    let statusIcon = 'ðŸŸ¢';
     let statusText = 'SUCCESS';
     
     if (safeTestData.failed > 0 || safeTestData.hasErrors) {
-      statusIcon = '🔴';
+      statusIcon = 'ðŸ”´';
       statusText = 'FAILED';
     } else if (safeTestData.total === 0) {
-      statusIcon = '⚪';
+      statusIcon = 'âšª';
       statusText = 'NO TESTS';
     }
 
@@ -202,7 +202,7 @@ class TelegramTestNotifier {
 
     // Coverage summary (if available)
     if (coverageData) {
-      message += `📊 **Coverage Summary:**\n`;
+      message += `ðŸ“Š **Coverage Summary:**\n`;
       message += `- Statements = ${coverageData.statements.pct.toFixed(2)}%\n`;
       message += `- Branches = ${coverageData.branches.pct.toFixed(2)}%\n`;
       message += `- Functions = ${coverageData.functions.pct.toFixed(2)}%\n`;
@@ -211,19 +211,19 @@ class TelegramTestNotifier {
 
     // Final status
     if (safeTestData.failed > 0) {
-      message += `🚨 **Status:** ${statusText} - ${safeTestData.failed} test(s) failed`;
+      message += `ðŸš¨ **Status:** ${statusText} - ${safeTestData.failed} test(s) failed`;
     } else {
-      message += `✅ **Status:** ${statusText} - All tests passed`;
+      message += `âœ… **Status:** ${statusText} - All tests passed`;
     }
 
     // Add GitHub Actions context if available
     if (options.githubContext && options.githubContext.repository) {
-      message += `\n\n🔗 **GitHub Action:** ${options.githubContext.serverUrl}/${options.githubContext.repository}/actions/runs/${options.githubContext.runId}`;
+      message += `\n\nðŸ”— **GitHub Action:** ${options.githubContext.serverUrl}/${options.githubContext.repository}/actions/runs/${options.githubContext.runId}`;
       if (options.githubContext.commit) {
         const shortCommit = options.githubContext.commit.substring(0, 7);
-        message += `\n📝 **Commit:** ${shortCommit} by ${options.author}`;
+        message += `\nðŸ“ **Commit:** ${shortCommit} by ${options.author}`;
       }
-      message += `\n🌿 **Branch:** ${options.branch}`;
+      message += `\nðŸŒ¿ **Branch:** ${options.branch}`;
     }
 
     return message;
@@ -238,7 +238,7 @@ class TelegramTestNotifier {
    */
   formatMessage(testData, coverageData, options = {}) {
     const {
-      projectName = 'Book Catalog App',
+      projectName = 'lab Catalog App',
       branch = 'main',
       author = 'Automated',
       timestamp = new Date()
@@ -256,12 +256,12 @@ class TelegramTestNotifier {
       ? ((testData.passed / testData.total) * 100).toFixed(2)
       : '0.00';
 
-    let message = `🔴 **${projectName}** | ${timeString}\n\n`;
+    let message = `ðŸ”´ **${projectName}** | ${timeString}\n\n`;
     message += `**${statusEmoji} ${projectName.replace(/\s+/g, '-')}**\n`;
     message += `${author} | Test Coverage Report\n\n`;
 
     // Test Results
-    message += `📊 **Test Results:**\n`;
+    message += `ðŸ“Š **Test Results:**\n`;
     message += `- Tests = ${testData.total}\n`;
     message += `- Passes = ${testData.passed}\n`;
     message += `- Skip = ${testData.skipped}\n`;
@@ -271,7 +271,7 @@ class TelegramTestNotifier {
 
     // Coverage Results (if available)
     if (coverageData) {
-      message += `📈 **Coverage Results:**\n`;
+      message += `ðŸ“ˆ **Coverage Results:**\n`;
       message += `- Statements = ${coverageData.statements.pct.toFixed(2)}% (${coverageData.statements.covered}/${coverageData.statements.total})\n`;
       message += `- Branches = ${coverageData.branches.pct.toFixed(2)}% (${coverageData.branches.covered}/${coverageData.branches.total})\n`;
       message += `- Functions = ${coverageData.functions.pct.toFixed(2)}% (${coverageData.functions.covered}/${coverageData.functions.total})\n`;
@@ -280,22 +280,22 @@ class TelegramTestNotifier {
 
     // Status Summary
     if (testData.failed > 0) {
-      message += `🚨 **Status:** FAILED - ${testData.failed} test(s) failed\n`;
+      message += `ðŸš¨ **Status:** FAILED - ${testData.failed} test(s) failed\n`;
     } else if (testData.total === 0) {
-      message += `⚠️ **Status:** NO TESTS - No tests were found\n`;
+      message += `âš ï¸ **Status:** NO TESTS - No tests were found\n`;
     } else {
-      message += `✅ **Status:** SUCCESS - All tests passed\n`;
+      message += `âœ… **Status:** SUCCESS - All tests passed\n`;
     }
 
-    message += `🌿 **Branch:** ${branch}\n`;
-    message += `⏰ **Time:** ${timestamp.toISOString()}\n`;
+    message += `ðŸŒ¿ **Branch:** ${branch}\n`;
+    message += `â° **Time:** ${timestamp.toISOString()}\n`;
 
     // Add GitHub Actions context if available
     if (options.githubContext && options.githubContext.repository) {
-      message += `🔗 **GitHub Action:** ${options.githubContext.serverUrl}/${options.githubContext.repository}/actions/runs/${options.githubContext.runId}\n`;
+      message += `ðŸ”— **GitHub Action:** ${options.githubContext.serverUrl}/${options.githubContext.repository}/actions/runs/${options.githubContext.runId}\n`;
       if (options.githubContext.commit) {
         const shortCommit = options.githubContext.commit.substring(0, 7);
-        message += `📝 **Commit:** ${shortCommit} by ${author}\n`;
+        message += `ðŸ“ **Commit:** ${shortCommit} by ${author}\n`;
       }
     }
 
@@ -310,7 +310,7 @@ class TelegramTestNotifier {
    */
   async sendNotification(testData, coverageData = null, options = {}) {
     if (!this.enabled) {
-      console.log('📱 Telegram notifications disabled');
+      console.log('ðŸ“± Telegram notifications disabled');
       return;
     }
 
@@ -323,7 +323,7 @@ class TelegramTestNotifier {
         disable_web_page_preview: true
       });
 
-      console.log('📱 Test notification sent to Telegram');
+      console.log('ðŸ“± Test notification sent to Telegram');
     } catch (error) {
       console.error('Failed to send Telegram notification:', error.message);
     }
@@ -337,7 +337,7 @@ class TelegramTestNotifier {
    */
   async sendDetailedNotification(testData, coverageData = null, options = {}) {
     if (!this.enabled) {
-      console.log('📱 Telegram notifications disabled');
+      console.log('ðŸ“± Telegram notifications disabled');
       return;
     }
 
@@ -350,7 +350,7 @@ class TelegramTestNotifier {
         disable_web_page_preview: true
       });
 
-      console.log('📱 Detailed test notification sent to Telegram');
+      console.log('ðŸ“± Detailed test notification sent to Telegram');
     } catch (error) {
       console.error('Failed to send Telegram notification:', error.message);
     }
@@ -374,24 +374,26 @@ class TelegramTestNotifier {
    */
   async testConnection() {
     if (!this.enabled) {
-      console.log('❌ Bot not enabled - missing credentials');
+      console.log('âŒ Bot not enabled - missing credentials');
       return false;
     }
 
     try {
       const me = await this.bot.getMe();
-      console.log(`✅ Bot connected: ${me.first_name} (@${me.username})`);
+      console.log(`âœ… Bot connected: ${me.first_name} (@${me.username})`);
       
       // Send test message
-      await this.bot.sendMessage(this.chatId, '🤖 Test notification: Bot is working!');
-      console.log('✅ Test message sent successfully');
+      await this.bot.sendMessage(this.chatId, 'ðŸ¤– Test notification: Bot is working!');
+      console.log('âœ… Test message sent successfully');
       
       return true;
     } catch (error) {
-      console.error('❌ Bot connection failed:', error.message);
+      console.error('âŒ Bot connection failed:', error.message);
       return false;
     }
   }
 }
 
 module.exports = TelegramTestNotifier;
+
+

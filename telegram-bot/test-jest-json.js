@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Test Jest JSON output parsing
@@ -7,7 +7,7 @@
 const { spawn } = require('child_process');
 
 async function testJestJsonOutput() {
-    console.log('🧪 Testing Jest JSON output parsing...');
+    console.log('ðŸ§ª Testing Jest JSON output parsing...');
     
     try {
         const result = await new Promise((resolve, reject) => {
@@ -36,19 +36,19 @@ async function testJestJsonOutput() {
             });
         });
         
-        console.log('✅ Jest finished with exit code:', result.code);
-        console.log('📄 JSON output length:', result.jsonOutput.length);
-        console.log('📄 Error output length:', result.errorOutput.length);
+        console.log('âœ… Jest finished with exit code:', result.code);
+        console.log('ðŸ“„ JSON output length:', result.jsonOutput.length);
+        console.log('ðŸ“„ Error output length:', result.errorOutput.length);
         
         // Try to find JSON in output
         const lines = result.jsonOutput.split('\n');
-        console.log('📄 Total lines:', lines.length);
+        console.log('ðŸ“„ Total lines:', lines.length);
         
         let jsonLine = '';
         for (const line of lines) {
             if (line.trim().startsWith('{') && line.includes('numTotalTests')) {
                 jsonLine = line.trim();
-                console.log('✅ Found JSON line');
+                console.log('âœ… Found JSON line');
                 break;
             }
         }
@@ -56,26 +56,28 @@ async function testJestJsonOutput() {
         if (jsonLine) {
             try {
                 const testResults = JSON.parse(jsonLine);
-                console.log('📊 Parsed test results:');
+                console.log('ðŸ“Š Parsed test results:');
                 console.log('- numTotalTests:', testResults.numTotalTests);
                 console.log('- numPassedTests:', testResults.numPassedTests);
                 console.log('- numFailedTests:', testResults.numFailedTests);
                 console.log('- numPendingTests:', testResults.numPendingTests);
             } catch (parseError) {
-                console.error('❌ JSON parse error:', parseError.message);
-                console.log('📄 JSON line:', jsonLine.substring(0, 200));
+                console.error('âŒ JSON parse error:', parseError.message);
+                console.log('ðŸ“„ JSON line:', jsonLine.substring(0, 200));
             }
         } else {
-            console.log('❌ No JSON line found');
-            console.log('📄 First few lines:');
+            console.log('âŒ No JSON line found');
+            console.log('ðŸ“„ First few lines:');
             for (let i = 0; i < Math.min(5, lines.length); i++) {
                 console.log(`${i}: ${lines[i].substring(0, 100)}`);
             }
         }
         
     } catch (error) {
-        console.error('❌ Test failed:', error.message);
+        console.error('âŒ Test failed:', error.message);
     }
 }
 
 testJestJsonOutput();
+
+

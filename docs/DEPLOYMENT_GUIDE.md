@@ -1,14 +1,14 @@
-# 🚀 Book Catalog App - Deployment Guide
+﻿# ðŸš€ lab Catalog App - Deployment Guide
 
 ## Enhanced Version with Security & Best Practices
 
-### 📋 Overview
+### ðŸ“‹ Overview
 
-Panduan lengkap untuk deploy Book Catalog App yang telah ditingkatkan dengan security middleware, error handling, validation, dan performance optimization.
+Panduan lengkap untuk deploy lab Catalog App yang telah ditingkatkan dengan security middleware, error handling, validation, dan performance optimization.
 
 ---
 
-## 🔧 Prerequisites
+## ðŸ”§ Prerequisites
 
 ### System Requirements
 
@@ -24,13 +24,13 @@ Panduan lengkap untuk deploy Book Catalog App yang telah ditingkatkan dengan sec
 
 ---
 
-## 📦 Installation & Setup
+## ðŸ“¦ Installation & Setup
 
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/book-catalog-app.git
-cd book-catalog-app
+git clone https://github.com/yourusername/script-labs-app.git
+cd script-labs-app
 ```
 
 ### 2. Install Dependencies
@@ -85,7 +85,7 @@ ENABLE_SECURITY_HEADERS=true
 
 ---
 
-## 🎯 Development Setup
+## ðŸŽ¯ Development Setup
 
 ### 1. Database Setup (Supabase)
 
@@ -93,8 +93,8 @@ ENABLE_SECURITY_HEADERS=true
 2. Run database migration:
 
 ```sql
--- Books table
-CREATE TABLE books (
+-- labs table
+CREATE TABLE labs (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   author VARCHAR(255) NOT NULL,
@@ -104,19 +104,19 @@ CREATE TABLE books (
 );
 
 -- Enable RLS (Row Level Security)
-ALTER TABLE books ENABLE ROW LEVEL SECURITY;
+ALTER TABLE labs ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
-CREATE POLICY "Users can view own books" ON books
+CREATE POLICY "Users can view own labs" ON labs
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert own books" ON books
+CREATE POLICY "Users can insert own labs" ON labs
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update own books" ON books
+CREATE POLICY "Users can update own labs" ON labs
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete own books" ON books
+CREATE POLICY "Users can delete own labs" ON labs
   FOR DELETE USING (auth.uid() = user_id);
 ```
 
@@ -138,7 +138,7 @@ npm start
 
 ---
 
-## 🌐 Production Deployment
+## ðŸŒ Production Deployment
 
 ### Option 1: Render.com (Recommended)
 
@@ -205,7 +205,7 @@ vercel
 
 ---
 
-## 🔒 Security Checklist
+## ðŸ”’ Security Checklist
 
 ### Pre-Deployment Security
 
@@ -223,7 +223,7 @@ vercel
 curl https://your-app.com/health
 
 # Test rate limiting
-for i in {1..10}; do curl https://your-app.com/api/books; done
+for i in {1..10}; do curl https://your-app.com/api/labs; done
 
 # Check security headers
 curl -I https://your-app.com
@@ -231,7 +231,7 @@ curl -I https://your-app.com
 
 ---
 
-## 📊 Monitoring & Maintenance
+## ðŸ“Š Monitoring & Maintenance
 
 ### Health Monitoring
 
@@ -257,7 +257,7 @@ curl https://your-app.com/api/stats
 
 ---
 
-## 🐛 Troubleshooting
+## ðŸ› Troubleshooting
 
 ### Common Issues
 
@@ -306,7 +306,7 @@ pool.query('SELECT NOW()', (err, res) => {
 
 ---
 
-## 📈 Performance Optimization
+## ðŸ“ˆ Performance Optimization
 
 ### Backend Optimizations
 
@@ -324,7 +324,7 @@ pool.query('SELECT NOW()', (err, res) => {
 
 ---
 
-## 🔄 Continuous Integration/Deployment
+## ðŸ”„ Continuous Integration/Deployment
 
 ### GitHub Actions Example
 
@@ -368,13 +368,13 @@ npm outdated
 
 ---
 
-## 📚 API Documentation
+## ðŸ“š API Documentation
 
 ### Endpoints Overview
 
 - **Health**: `GET /health`
 - **Auth**: `POST /api/auth/login`, `POST /api/auth/register`
-- **Books**: `GET|POST|PUT|DELETE /api/books`
+- **labs**: `GET|POST|PUT|DELETE /api/labs`
 - **Stats**: `GET /api/stats` (dev only)
 
 ### Authentication
@@ -402,7 +402,7 @@ Standardized error response format:
 
 ---
 
-## 📞 Support & Maintenance
+## ðŸ“ž Support & Maintenance
 
 ### Regular Maintenance Tasks
 
@@ -424,3 +424,5 @@ Standardized error response format:
 **Last Updated**: 2024
 **Version**: Enhanced v1.0
 **Support**: Check GitHub issues for common problems
+
+

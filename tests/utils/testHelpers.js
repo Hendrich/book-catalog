@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+﻿const jwt = require('jsonwebtoken');
 const request = require('supertest');
 
 /**
@@ -77,11 +77,11 @@ class TestHelpers {
 	 * Mock database query responses
 	 */
 	static mockDbResponses = {
-		// Mock successful book creation
-		createBook: {
+		// Mock successful lab creation
+		createLab: {
 			rows: [{
 				id: 1,
-				title: 'Test Book',
+				title: 'Test lab',
 				author: 'Test Author',
 				user_id: 'test-user-123',
 				created_at: new Date(),
@@ -89,12 +89,12 @@ class TestHelpers {
 			}]
 		},
 
-		// Mock book list
+		// Mock lab list
 		bookList: {
 			rows: [
 				{
 					id: 1,
-					title: 'Test Book 1',
+					title: 'Test lab 1',
 					author: 'Test Author 1',
 					user_id: 'test-user-123',
 					created_at: new Date(),
@@ -102,7 +102,7 @@ class TestHelpers {
 				},
 				{
 					id: 2,
-					title: 'Test Book 2',
+					title: 'Test lab 2',
 					author: 'Test Author 2',
 					user_id: 'test-user-123',
 					created_at: new Date(),
@@ -127,7 +127,7 @@ class TestHelpers {
 	 */
 	static sampleData = {
 		validBook: {
-			title: 'Sample Book Title',
+			title: 'Sample lab Title',
 			author: 'Sample Author Name'
 		},
 
@@ -187,3 +187,5 @@ class TestHelpers {
 }
 
 module.exports = TestHelpers;
+
+

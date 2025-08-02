@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Demo clean format notification like the image
@@ -8,12 +8,12 @@ require('dotenv').config();
 const TelegramTestNotifier = require('./TelegramTestNotifier');
 
 async function testCleanFormat() {
-  console.log('📱 Testing clean format notification like the image...');
+  console.log('ðŸ“± Testing clean format notification like the image...');
   
   const notifier = new TelegramTestNotifier();
   
   if (!notifier.enabled) {
-    console.log('❌ Telegram bot not enabled');
+    console.log('âŒ Telegram bot not enabled');
     return;
   }
   
@@ -36,25 +36,27 @@ async function testCleanFormat() {
   };
   
   const options = {
-    projectName: 'Book Catalog App',
+    projectName: 'lab Catalog App',
     branch: 'main',
-    author: 'Admin Book Catalog',
+    author: 'Admin lab Catalog',
     timestamp: new Date()
   };
   
   try {
     // Send clean format notification
     await notifier.sendNotification(testData, coverageData, options);
-    console.log('✅ Clean format notification sent!');
+    console.log('âœ… Clean format notification sent!');
     
     // Also send detailed format for comparison
-    console.log('\n📋 Sending detailed format for comparison...');
+    console.log('\nðŸ“‹ Sending detailed format for comparison...');
     await notifier.sendDetailedNotification(testData, coverageData, options);
-    console.log('✅ Detailed format notification sent!');
+    console.log('âœ… Detailed format notification sent!');
     
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('âŒ Error:', error.message);
   }
 }
 
 testCleanFormat();
+
+

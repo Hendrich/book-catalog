@@ -1,4 +1,4 @@
-const authMiddleware = require('../../backend/middlewares/authMiddleware');
+﻿const authMiddleware = require('../../backend/middlewares/authMiddleware');
 const TestHelpers = require('../utils/testHelpers');
 
 describe('authMiddleware', () => {
@@ -270,3 +270,5 @@ describe('authMiddleware', () => {
 		});
 	});
 });
+
+

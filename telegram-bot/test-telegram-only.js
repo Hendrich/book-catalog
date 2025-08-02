@@ -1,4 +1,4 @@
-const TelegramTestNotifier = require('./TelegramTestNotifier');
+﻿const TelegramTestNotifier = require('./TelegramTestNotifier');
 
 async function testTelegram() {
     console.log('Testing Telegram notification...');
@@ -23,10 +23,12 @@ async function testTelegram() {
     
     try {
         await notifier.sendNotification(testData);
-        console.log('✅ Telegram notification sent successfully');
+        console.log('âœ… Telegram notification sent successfully');
     } catch (error) {
-        console.error('❌ Error sending telegram:', error.message);
+        console.error('âŒ Error sending telegram:', error.message);
     }
 }
 
 testTelegram().catch(console.error);
+
+

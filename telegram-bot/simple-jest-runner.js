@@ -1,9 +1,9 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 const { spawn } = require('child_process');
 const TelegramTestNotifier = require('./TelegramTestNotifier');
 
-console.log('🚀 Simple Jest Test Runner...');
+console.log('ðŸš€ Simple Jest Test Runner...');
 
 // Run Jest with just JSON output, no coverage
 const jest = spawn('npx', ['jest', '--json', '--passWithNoTests'], {
@@ -42,7 +42,7 @@ jest.on('close', async (code) => {
         }
         
         if (!jsonLine) {
-            console.error('❌ No JSON line found');
+            console.error('âŒ No JSON line found');
             return;
         }
         
@@ -50,7 +50,7 @@ jest.on('close', async (code) => {
         
         const testResults = JSON.parse(jsonLine);
         
-        console.log('✅ Test results:');
+        console.log('âœ… Test results:');
         console.log('- Total tests:', testResults.numPassedTests + testResults.numFailedTests);
         console.log('- Passed tests:', testResults.numPassedTests);
         console.log('- Failed tests:', testResults.numFailedTests);
@@ -64,13 +64,15 @@ jest.on('close', async (code) => {
             testExecError: testResults.numFailedTests > 0
         };
         
-        console.log('📤 Sending to Telegram:', transformedResults);
+        console.log('ðŸ“¤ Sending to Telegram:', transformedResults);
         
         const notifier = new TelegramTestNotifier();
         await notifier.sendTestResults(transformedResults);
         
     } catch (error) {
-        console.error('❌ Error:', error.message);
+        console.error('âŒ Error:', error.message);
         console.log('Full output:', jsonOutput);
     }
 });
+
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Jest Test Runner with Real-time Result Parsing
@@ -65,7 +65,7 @@ class RealTimeJestRunner {
           this.testData.failed = this.testData.total - this.testData.passed;
         }
         
-        console.log(`🎯 Parsed: ${this.testData.passed}/${this.testData.total} tests passed`);
+        console.log(`ðŸŽ¯ Parsed: ${this.testData.passed}/${this.testData.total} tests passed`);
         break;
       }
     }
@@ -78,7 +78,7 @@ class RealTimeJestRunner {
   }
 
   async runTests() {
-    console.log('🧪 Running Jest tests with real-time parsing...');
+    console.log('ðŸ§ª Running Jest tests with real-time parsing...');
     
     return new Promise((resolve, reject) => {
       const jest = spawn('npx', ['jest', '--coverage', '--verbose'], {
@@ -105,7 +105,7 @@ class RealTimeJestRunner {
         
         // Final validation and fallback
         if (this.testData.total === 0) {
-          console.log('⚠️ No test count parsed, using file analysis...');
+          console.log('âš ï¸ No test count parsed, using file analysis...');
           await this.getFallbackData();
         }
         
@@ -115,13 +115,13 @@ class RealTimeJestRunner {
           this.testData.passed = this.testData.total - this.testData.failed;
         }
         
-        console.log('\n📊 Final Test Results:');
-        console.log(`   ├─ Total: ${this.testData.total}`);
-        console.log(`   ├─ Passed: ${this.testData.passed}`);
-        console.log(`   ├─ Failed: ${this.testData.failed}`);
-        console.log(`   ├─ Skipped: ${this.testData.skipped}`);
-        console.log(`   ├─ Duration: ${this.testData.duration}ms`);
-        console.log(`   └─ Exit Code: ${code}`);
+        console.log('\nðŸ“Š Final Test Results:');
+        console.log(`   â”œâ”€ Total: ${this.testData.total}`);
+        console.log(`   â”œâ”€ Passed: ${this.testData.passed}`);
+        console.log(`   â”œâ”€ Failed: ${this.testData.failed}`);
+        console.log(`   â”œâ”€ Skipped: ${this.testData.skipped}`);
+        console.log(`   â”œâ”€ Duration: ${this.testData.duration}ms`);
+        console.log(`   â””â”€ Exit Code: ${code}`);
         
         await this.sendNotification();
         resolve({ testData: this.testData, exitCode: code });
@@ -151,7 +151,7 @@ class RealTimeJestRunner {
       this.testData.passed = this.testData.total;
       this.testData.failed = 0;
       
-      console.log(`📊 Fallback: Found ${totalTests} tests in ${testFiles.length} files`);
+      console.log(`ðŸ“Š Fallback: Found ${totalTests} tests in ${testFiles.length} files`);
     } catch (error) {
       this.testData.total = 334;
       this.testData.passed = 334;
@@ -197,7 +197,7 @@ class RealTimeJestRunner {
     const notifier = new TelegramTestNotifier();
     
     if (!notifier.enabled) {
-      console.log('⚠️ Telegram notifications disabled');
+      console.log('âš ï¸ Telegram notifications disabled');
       return;
     }
     
@@ -210,14 +210,14 @@ class RealTimeJestRunner {
         const rawCoverage = fs.readFileSync(coveragePath, 'utf8');
         const coverage = JSON.parse(rawCoverage);
         coverageData = coverage.total;
-        console.log('📊 Coverage data loaded');
+        console.log('ðŸ“Š Coverage data loaded');
       } catch (error) {
-        console.warn('⚠️ Failed to read coverage:', error.message);
+        console.warn('âš ï¸ Failed to read coverage:', error.message);
       }
     }
     
     const options = {
-      projectName: 'Book Catalog App',
+      projectName: 'lab Catalog App',
       branch: process.env.GIT_BRANCH || 'main', 
       author: process.env.GIT_AUTHOR || 'Jest Testing',
       timestamp: new Date()
@@ -225,9 +225,9 @@ class RealTimeJestRunner {
     
     try {
       await notifier.sendNotification(this.testData, coverageData, options);
-      console.log('✅ Telegram notification sent with real test data!');
+      console.log('âœ… Telegram notification sent with real test data!');
     } catch (error) {
-      console.error('❌ Failed to send notification:', error.message);
+      console.error('âŒ Failed to send notification:', error.message);
     }
   }
 }
@@ -237,10 +237,10 @@ async function runTestsWithRealResults() {
   
   try {
     const result = await runner.runTests();
-    console.log('\n🎉 Test execution and notification complete!');
+    console.log('\nðŸŽ‰ Test execution and notification complete!');
     process.exit(result.exitCode);
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('âŒ Error:', error.message);
     process.exit(1);
   }
 }
@@ -251,3 +251,5 @@ if (require.main === module) {
 }
 
 module.exports = { RealTimeJestRunner, runTestsWithRealResults };
+
+

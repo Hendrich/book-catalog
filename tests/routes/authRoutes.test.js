@@ -1,4 +1,4 @@
-const request = require('supertest');
+﻿const request = require('supertest');
 const express = require('express');
 const TestHelpers = require('../utils/testHelpers');
 const { errorHandler } = require('../../backend/middlewares/errorHandler');
@@ -663,3 +663,5 @@ describe('Auth Routes', () => {
 		});
 	});
 });
+
+

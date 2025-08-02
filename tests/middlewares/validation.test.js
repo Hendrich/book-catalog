@@ -1,8 +1,8 @@
-const {
-	validateBook,
+﻿const {
+	validateLab,
 	validateAuth,
 	validateId,
-	validateBookUpdate,
+	validateLabUpdate,
 	sanitize,
 	schemas
 } = require('../../backend/middlewares/validation');
@@ -18,9 +18,9 @@ describe('Validation Middleware', () => {
 		next = TestHelpers.createMockNext();
 	});
 
-	describe('validateBook', () => {
-		describe('Valid Book Data', () => {
-			test('should pass validation with valid book data', () => {
+	describe('validateLab', () => {
+		describe('Valid lab Data', () => {
+			test('should pass validation with valid lab data', () => {
 				// Arrange
 				req.body = {
 					title: 'The Great Gatsby',
@@ -28,7 +28,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -45,7 +45,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -63,7 +63,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -72,7 +72,7 @@ describe('Validation Middleware', () => {
 			});
 		});
 
-		describe('Invalid Book Data', () => {
+		describe('Invalid lab Data', () => {
 			test('should reject empty title', () => {
 				// Arrange
 				req.body = {
@@ -81,7 +81,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -98,7 +98,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -115,7 +115,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -132,7 +132,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -148,7 +148,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -165,7 +165,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -183,7 +183,7 @@ describe('Validation Middleware', () => {
 				};
 
 				// Act
-				validateBook(req, res, next);
+				validateLab(req, res, next);
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
@@ -450,7 +450,7 @@ describe('Validation Middleware', () => {
 			test('should sanitize query parameters', () => {
 				// Arrange
 				req.query = {
-					search: '<script>alert("xss")</script>book title',
+					search: '<script>alert("xss")</script>lab title',
 					page: '1'
 				};
 
@@ -459,14 +459,14 @@ describe('Validation Middleware', () => {
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
-				expect(req.query.search).toBe('book title');
+				expect(req.query.search).toBe('lab title');
 				expect(req.query.page).toBe('1');
 			});
 
 			test('should handle nested objects', () => {
 				// Arrange
 				req.body = {
-					book: {
+					lab: {
 						title: '<script>alert("xss")</script>Nested Title',
 						metadata: {
 							description: '<div>Nested <b>description</b></div>'
@@ -479,8 +479,8 @@ describe('Validation Middleware', () => {
 
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
-				expect(req.body.book.title).toBe('Nested Title');
-				expect(req.body.book.metadata.description).toBe('Nested description');
+				expect(req.body.lab.title).toBe('Nested Title');
+				expect(req.body.lab.metadata.description).toBe('Nested description');
 			});
 
 			test('should trim whitespace after sanitization', () => {
@@ -528,7 +528,7 @@ describe('Validation Middleware', () => {
 			};
 
 			// Act
-			validateBook(req, res, next);
+			validateLab(req, res, next);
 
 			// Assert
 			expect(next).toHaveBeenCalledTimes(1);
@@ -556,3 +556,5 @@ describe('Validation Middleware', () => {
 		});
 	});
 });
+
+

@@ -1,4 +1,4 @@
-# Dockerfile for Book Catalog App
+# Dockerfile for Script Labs App
 # Use official Node.js image
 FROM node:18-alpine
 
@@ -21,4 +21,4 @@ EXPOSE 3000
 CMD ["node", "backend/server.js"]
 
 # Link package to repository
-LABEL org.opencontainers.image.source="https://github.com/hendrich/book-catalog"
+LABEL org.opencontainers.image.source="https://github.com/hendrich/script-labs"

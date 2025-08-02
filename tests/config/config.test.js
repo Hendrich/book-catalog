@@ -1,4 +1,4 @@
-const config = require('../../backend/config/config');
+﻿const config = require('../../backend/config/config');
 
 describe('Configuration Module', () => {
 	const originalEnv = process.env;
@@ -303,3 +303,5 @@ describe('Configuration Module', () => {
 		});
 	});
 });
+
+

@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -382,8 +382,8 @@ const { AppError } = require("./errorHandler");
 &nbsp;
 // Schema definitions
 const schemas = {
-  // Book validation schema
-  book: Joi.object({
+  // lab validation schema
+  lab: Joi.object({
     title: Joi.string().min(1).max(255).trim().required().messages({
       "string.empty": "Title cannot be empty",
       "string.max": "Title cannot exceed 255 characters",
@@ -457,13 +457,13 @@ const validate = (schema, property = <span class="branch-0 cbranch-no" title="br
 };
 &nbsp;
 // Specific validation middlewares
-const validateBook = validate(schemas.book, "body");
+const validateLab = validate(schemas.lab, "body");
 const validateAuth = validate(schemas.auth, "body");
 const validateId = validate(schemas.id, "params");
-const validateBookQuery = validate(schemas.bookQuery, "query");
+const validateLabQuery = validate(schemas.bookQuery, "query");
 &nbsp;
-// Custom validation for book update (partial updates allowed)
-const validateBookUpdate = (req, res, next) =&gt; {
+// Custom validation for lab update (partial updates allowed)
+const validateLabUpdate = (req, res, next) =&gt; {
   const updateSchema = Joi.object({
     title: Joi.string().min(1).max(255).trim().optional(),
     author: Joi.string().min(1).max(255).trim().optional(),
@@ -520,11 +520,11 @@ const sanitize = (req, res, next) =&gt; {
 &nbsp;
 module.exports = {
   validate,
-  validateBook,
+  validateLab,
   validateAuth,
   validateId,
-  validateBookQuery,
-  validateBookUpdate,
+  validateLabQuery,
+  validateLabUpdate,
   sanitize,
   schemas,
 };
@@ -548,3 +548,4 @@ module.exports = {
     </body>
 </html>
     
+

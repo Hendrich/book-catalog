@@ -1,4 +1,4 @@
-// Test environment setup
+﻿// Test environment setup
 process.env.NODE_ENV = 'test';
 
 // Mock environment variables for testing
@@ -49,3 +49,5 @@ jest.mock('../../backend/db.js', () => ({
 process.on('unhandledRejection', (reason, promise) => {
 	console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
+
+

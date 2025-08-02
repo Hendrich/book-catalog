@@ -1,4 +1,4 @@
-const { createRateLimiter, authLimiter, apiLimiter, getRelaxedLimiter } = require('../../backend/middlewares/rateLimiter');
+﻿const { createRateLimiter, authLimiter, apiLimiter, getRelaxedLimiter } = require('../../backend/middlewares/rateLimiter');
 
 describe('Rate Limiter Middleware', () => {
 	let req, res, next;
@@ -290,3 +290,5 @@ describe('Rate Limiter Middleware', () => {
 		});
 	});
 });
+
+

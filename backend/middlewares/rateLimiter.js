@@ -1,4 +1,4 @@
-const rateLimit = require("express-rate-limit");
+﻿const rateLimit = require("express-rate-limit");
 const config = require("../config/config");
 
 /**
@@ -107,7 +107,7 @@ module.exports = {
 	strictLimiter,
 	publicLimiter,
 	createRateLimiter,
-	// Relaxed limiter for /api/auth and /api/books endpoints
+	// Relaxed limiter for /api/auth and /api/labs endpoints
 	getRelaxedLimiter: () =>
 		createRateLimiter(
 			config.rateLimit.windowMs,
@@ -115,3 +115,5 @@ module.exports = {
 			"Too many requests from this IP, please try again later"
 		),
 };
+
+

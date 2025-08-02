@@ -1,8 +1,8 @@
-{
+﻿{
   "openapi": "3.0.3",
   "info": {
-    "title": "Book Catalog API",
-    "description": "A secure Book Catalog API built with Node.js and Express, featuring JWT authentication via Supabase and CRUD operations for books management.",
+    "title": "Script Labs API",
+    "description": "A secure Script Labs API built with Node.js and Express, featuring JWT authentication via Supabase and CRUD operations for labs management.",
     "version": "1.0.0",
     "contact": {
       "name": "Hendri Christianto",
@@ -15,7 +15,7 @@
       "description": "Local development server"
     },
     {
-      "url": "https://book-catalog-app-z8p8.onrender.com",
+      "url": "https://script-labs-app-z8p8.onrender.com",
       "description": "Production server on Render"
     }
   ],
@@ -25,12 +25,12 @@
     }
   ],
   "paths": {
-            "/api/books/search": {
+    "/api/labs/search": {
       "get": {
-        "summary": "Search books by title or author",
-        "description": "Search books for the authenticated user by title or author. Tidak mengubah database.",
-        "tags": ["Books"],
-        "security": [ { "BearerAuth": [] } ],
+        "summary": "Search labs by title or author",
+        "description": "Search labs for the authenticated user by title or author. Tidak mengubah database.",
+        "tags": ["Labs"],
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           {
             "name": "q",
@@ -65,7 +65,7 @@
                     "success": { "type": "boolean", "example": true },
                     "data": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/Book" }
+                      "items": { "$ref": "#/components/schemas/Lab" }
                     },
                     "pagination": {
                       "type": "object",
@@ -83,9 +83,19 @@
                 "example": {
                   "success": true,
                   "data": [
-                    { "id": 14, "title": "Atomic Habits", "author": "James Clear", "user_id": "cd004999d-7d4b-4167-a9af-0f15783caee5" }
+                    {
+                      "id": 14,
+                      "title": "Atomic Habits",
+                      "author": "James Clear",
+                      "user_id": "cd004999d-7d4b-4167-a9af-0f15783caee5"
+                    }
                   ],
-                  "pagination": { "page": 1, "limit": 10, "total": 1, "totalPages": 1 },
+                  "pagination": {
+                    "page": 1,
+                    "limit": 10,
+                    "total": 1,
+                    "totalPages": 1
+                  },
                   "search_query": "atomic",
                   "timestamp": "2025-07-31T10:00:00.000Z"
                 }
@@ -97,11 +107,11 @@
         }
       }
     },
-    "/api/books": {
+    "/api/labs": {
       "get": {
-        "summary": "Get all books",
-        "description": "Retrieve all books belonging to the authenticated user",
-        "tags": ["Books"],
+        "summary": "Get all labs",
+        "description": "Retrieve all labs belonging to the authenticated user",
+        "tags": ["Labs"],
         "security": [
           {
             "BearerAuth": []
@@ -109,13 +119,13 @@
         ],
         "responses": {
           "200": {
-            "description": "List of books retrieved successfully",
+            "description": "List of labs retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Book"
+                    "$ref": "#/components/schemas/Lab"
                   }
                 },
                 "example": [
@@ -144,9 +154,9 @@
         }
       },
       "post": {
-        "summary": "Add a new book",
-        "description": "Create a new book entry for the authenticated user",
-        "tags": ["Books"],
+        "summary": "Add a new lab",
+        "description": "Create a new lab entry for the authenticated user",
+        "tags": ["Labs"],
         "security": [
           {
             "BearerAuth": []
@@ -168,11 +178,11 @@
         },
         "responses": {
           "201": {
-            "description": "Book created successfully",
+            "description": "lab created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Book"
+                  "$ref": "#/components/schemas/lab"
                 },
                 "example": {
                   "id": 25,
@@ -205,11 +215,11 @@
         }
       }
     },
-    "/api/books/{id}": {
+    "/api/labs/{id}": {
       "put": {
-        "summary": "Update a book",
-        "description": "Update an existing book (user can only update their own books)",
-        "tags": ["Books"],
+        "summary": "Update a lab",
+        "description": "Update an existing lab (user can only update their own labs)",
+        "tags": ["labs"],
         "security": [
           {
             "BearerAuth": []
@@ -220,7 +230,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "Book ID",
+            "description": "lab ID",
             "schema": {
               "type": "integer",
               "example": 14
@@ -243,11 +253,11 @@
         },
         "responses": {
           "200": {
-            "description": "Book updated successfully",
+            "description": "lab updated successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Book"
+                  "$ref": "#/components/schemas/lab"
                 },
                 "example": {
                   "id": 14,
@@ -275,14 +285,14 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Book not found or unauthorized",
+            "description": "lab not found or unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "Book not found or unauthorized"
+                  "message": "lab not found or unauthorized"
                 }
               }
             }
@@ -293,9 +303,9 @@
         }
       },
       "delete": {
-        "summary": "Delete a book",
-        "description": "Delete an existing book (user can only delete their own books)",
-        "tags": ["Books"],
+        "summary": "Delete a lab",
+        "description": "Delete an existing lab (user can only delete their own labs)",
+        "tags": ["labs"],
         "security": [
           {
             "BearerAuth": []
@@ -306,7 +316,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "Book ID",
+            "description": "lab ID",
             "schema": {
               "type": "integer",
               "example": 14
@@ -315,14 +325,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Book deleted successfully",
+            "description": "lab deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessMessage"
                 },
                 "example": {
-                  "message": "Book deleted successfully"
+                  "message": "lab deleted successfully"
                 }
               }
             }
@@ -331,14 +341,14 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Book not found or unauthorized",
+            "description": "lab not found or unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "Book not found or unauthorized"
+                  "message": "lab not found or unauthorized"
                 }
               }
             }
@@ -670,28 +680,28 @@
       }
     },
     "schemas": {
-      "Book": {
+      "lab": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the book",
+            "description": "Unique identifier for the lab",
             "example": 14
           },
           "title": {
             "type": "string",
-            "description": "Title of the book",
+            "description": "Title of the lab",
             "example": "Atomic Habits"
           },
           "author": {
             "type": "string",
-            "description": "Author of the book",
+            "description": "Author of the lab",
             "example": "James Clear"
           },
           "user_id": {
             "type": "string",
             "format": "uuid",
-            "description": "ID of the user who owns this book",
+            "description": "ID of the user who owns this lab",
             "example": "cd004999d-7d4b-4167-a9af-0f15783caee5"
           }
         },
@@ -702,12 +712,12 @@
         "properties": {
           "title": {
             "type": "string",
-            "description": "Title of the book",
+            "description": "Title of the lab",
             "example": "Atomic Habits"
           },
           "author": {
             "type": "string",
-            "description": "Author of the book",
+            "description": "Author of the lab",
             "example": "James Clear"
           }
         },
@@ -846,8 +856,10 @@
       "description": "Authentication endpoints using backend API with Supabase"
     },
     {
-      "name": "Books",
-      "description": "Book management endpoints (CRUD operations)"
+      "name": "labs",
+      "description": "lab management endpoints (CRUD operations)"
     }
   ]
 }
+
+

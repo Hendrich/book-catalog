@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
 	// Test environment
 	testEnvironment: 'node',
 
@@ -38,8 +38,8 @@ module.exports = {
 		'!backend/**/*.spec.js'
 	],
 
-	// Setup files
-	setupFilesAfterEnv: ['<rootDir>/tests/setup/testSetup.js'],
+	// Setup files - commented out for now
+	// setupFilesAfterEnv: ['./tests/setup/testSetup.js'],
 
 	// Module paths
 	moduleDirectories: ['node_modules', 'backend'],
@@ -68,3 +68,5 @@ module.exports = {
 		'^.+\\.js$': 'babel-jest'
 	}
 };
+
+

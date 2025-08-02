@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -406,7 +406,7 @@ module.exports = {
 	strictLimiter,
 	publicLimiter,
 	createRateLimiter,
-	// Relaxed limiter for /api/auth and /api/books endpoints
+	// Relaxed limiter for /api/auth and /api/labs endpoints
 	getRelaxedLimiter: () =&gt;
 		createRateLimiter(
 			config.rateLimit.windowMs,
@@ -434,3 +434,4 @@ module.exports = {
     </body>
 </html>
     
+

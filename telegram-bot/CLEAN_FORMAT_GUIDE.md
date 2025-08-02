@@ -1,14 +1,14 @@
-# 🎨 Clean Format Telegram Notification
+﻿# ðŸŽ¨ Clean Format Telegram Notification
 
 Bot Telegram dengan format pesan yang clean dan modern seperti pada gambar referensi, disesuaikan untuk Jest test coverage.
 
-## 📱 Format Pesan Baru
+## ðŸ“± Format Pesan Baru
 
 ### **Format Clean (Seperti Gambar)**
 ```
-🟢 Book Catalog App - Daily Test | 6:26AM
+ðŸŸ¢ lab Catalog App - Daily Test | 6:26AM
 
-BookCatalogApp/automated-testing
+scriptlabsApp/automated-testing
 Jest Testing | Jest Testing
 
 - Tests = 179
@@ -18,23 +18,23 @@ Jest Testing | Jest Testing
 - Duration = 650494ms
 - Passes (%) = 36.87
 
-📊 Coverage Summary:
+ðŸ“Š Coverage Summary:
 - Statements = 82.27%
 - Branches = 72.52%
 - Functions = 78.84%
 - Lines = 82.30%
 
-🚨 Status: FAILED - 49 test(s) failed
+ðŸš¨ Status: FAILED - 49 test(s) failed
 ```
 
 ### **Format Detailed (Original)**
 ```
-🔴 Book Catalog App | 6:26AM
+ðŸ”´ lab Catalog App | 6:26AM
 
-🔴 Book-Catalog-App
+ðŸ”´ lab-Catalog-App
 Automated | Test Coverage Report
 
-📊 Test Results:
+ðŸ“Š Test Results:
 - Tests = 179
 - Passes = 66
 - Skip = 61
@@ -42,18 +42,18 @@ Automated | Test Coverage Report
 - Duration = 650494ms
 - Passes (%) = 36.87
 
-📈 Coverage Results:
+ðŸ“ˆ Coverage Results:
 - Statements = 82.27% (376/457)
 - Branches = 72.52% (161/222)
 - Functions = 78.84% (41/52)
 - Lines = 82.30% (372/452)
 
-🚨 Status: FAILED - 49 test(s) failed
-🌿 Branch: main
-⏰ Time: 2025-07-29T12:26:00.000Z
+ðŸš¨ Status: FAILED - 49 test(s) failed
+ðŸŒ¿ Branch: main
+â° Time: 2025-07-29T12:26:00.000Z
 ```
 
-## 🚀 Cara Penggunaan
+## ðŸš€ Cara Penggunaan
 
 ### **1. Format Clean (Recommended)**
 ```bash
@@ -72,15 +72,15 @@ npm run telegram:clean      # Test clean format
 npm run telegram:test       # Test original format
 ```
 
-## 🎯 Status Indicators
+## ðŸŽ¯ Status Indicators
 
 | Status | Icon | Kondisi |
 |--------|------|---------|
-| SUCCESS | 🟢 | Semua test passed |
-| FAILED | 🔴 | Ada test yang failed |
-| NO TESTS | ⚪ | Tidak ada test ditemukan |
+| SUCCESS | ðŸŸ¢ | Semua test passed |
+| FAILED | ðŸ”´ | Ada test yang failed |
+| NO TESTS | âšª | Tidak ada test ditemukan |
 
-## ⚙️ Konfigurasi Format
+## âš™ï¸ Konfigurasi Format
 
 ### **Menggunakan Clean Format**
 ```javascript
@@ -104,16 +104,16 @@ const customMessage = notifier.formatCleanMessage(testData, coverageData, {
 });
 ```
 
-## 📊 Features Format Clean
+## ðŸ“Š Features Format Clean
 
-✅ **Compact Layout** - Lebih ringkas dan mudah dibaca  
-✅ **Status Icons** - Visual indicator yang jelas  
-✅ **Time Format** - Format waktu yang user-friendly (6:26AM)  
-✅ **Simple Metrics** - Metrics essential tanpa noise  
-✅ **Coverage Summary** - Coverage percentage yang clean  
-✅ **Auto Status** - Status otomatis berdasarkan hasil test  
+âœ… **Compact Layout** - Lebih ringkas dan mudah dibaca  
+âœ… **Status Icons** - Visual indicator yang jelas  
+âœ… **Time Format** - Format waktu yang user-friendly (6:26AM)  
+âœ… **Simple Metrics** - Metrics essential tanpa noise  
+âœ… **Coverage Summary** - Coverage percentage yang clean  
+âœ… **Auto Status** - Status otomatis berdasarkan hasil test  
 
-## 🔧 Customization
+## ðŸ”§ Customization
 
 Anda bisa customize format dengan mengubah method `formatCleanMessage` di `TelegramTestNotifier.js`:
 
@@ -125,4 +125,6 @@ formatCleanMessage(testData, coverageData, options = {}) {
 }
 ```
 
-Bot sekarang mendukung dua format: **Clean** (default) dan **Detailed**, disesuaikan dengan kebutuhan project Anda! 🎉
+Bot sekarang mendukung dua format: **Clean** (default) dan **Detailed**, disesuaikan dengan kebutuhan project Anda! ðŸŽ‰
+
+

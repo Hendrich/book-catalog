@@ -1,13 +1,13 @@
-# Product Requirements Document (PRD) - Version 2.0
+﻿# Product Requirements Document (PRD) - Version 2.0
 
-## Book Catalog Application - Enhanced Features
+## lab Catalog Application - Enhanced Features
 
 ### Document Information
 
 - **Version**: 2.0
 - **Date**: July 29, 2025
 - **Status**: Enhancement Phase
-- **Previous Version**: [PRD v1.0](./PRD-Book-Catalog-App.md)
+- **Previous Version**: [PRD v1.0](./PRD-lab-Catalog-App.md)
 
 ---
 
@@ -15,7 +15,7 @@
 
 ### 1.1 Product Overview
 
-Book Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku dengan penambahan fitur pencarian & filter buku, sistem forgot password yang aman, dan migrasi penuh ke Supabase sebagai backend database utama.
+lab Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku dengan penambahan fitur pencarian & filter buku, sistem forgot password yang aman, dan migrasi penuh ke Supabase sebagai backend database utama.
 
 ### 1.2 Business Objectives
 
@@ -26,7 +26,7 @@ Book Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku deng
 
 ### 1.3 Success Metrics V2
 
-- Search response time < 200ms untuk 1000+ books
+- Search response time < 200ms untuk 1000+ labs
 - Password reset success rate > 95%
 - Zero downtime migration ke Supabase
 - User engagement increase 40% dengan enhanced search features
@@ -39,9 +39,9 @@ Book Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku deng
 
 | Feature | Priority | Status | Impact |
 |---------|----------|--------|--------|
-| Search & Filter Books | High | � Planned | High |
-| Forgot Password System | High | 📋 Planned | Medium |
-| Supabase Migration | High | 📋 Planned | High |
+| Search & Filter labs | High | ï¿½ Planned | High |
+| Forgot Password System | High | ðŸ“‹ Planned | Medium |
+| Supabase Migration | High | ðŸ“‹ Planned | High |
 
 ### 2.2 Migration Rationale
 
@@ -60,14 +60,14 @@ Book Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku deng
 
 | Feature ID | Feature Name | Priority | Description |
 |------------|-------------|----------|-------------|
-| SEARCH-001 | Basic Text Search | High | Search books by title and author |
-| SEARCH-002 | Filter by Title/Author | High | Filter books by title or author |
+| SEARCH-001 | Basic Text Search | High | Search labs by title and author |
+| SEARCH-002 | Filter by Title/Author | High | Filter labs by title or author |
 | SEARCH-003 | Sort Options | High | Sort by title, author, date added |
 
 #### 3.1.1 Search API Specifications
 
 ```javascript
-// GET /api/books/search
+// GET /api/labs/search
 Query Parameters:
 - q: string (search query for title/author)
 - sort_by: enum (title|author|created_at)
@@ -79,7 +79,7 @@ Response:
 {
   "success": true,
   "data": {
-    "books": [...],
+    "labs": [...],
     "pagination": {
       "current_page": 1,
       "total_pages": 10,
@@ -135,10 +135,10 @@ POST /api/auth/reset-password
 ### 4.1 Enhanced Architecture
 
 ```
-Frontend (Enhanced UI) ↔ Backend API (Node.js/Express) ↔ Supabase (PostgreSQL + Auth)
-                        ↕                               ↕
+Frontend (Enhanced UI) â†” Backend API (Node.js/Express) â†” Supabase (PostgreSQL + Auth)
+                        â†•                               â†•
                    JWT + Supabase Auth           Real-time Updates
-                        ↕                               ↕
+                        â†•                               â†•
                    Email Service (Supabase)      File Storage (Future)
 ```
 
@@ -160,8 +160,8 @@ Frontend (Enhanced UI) ↔ Backend API (Node.js/Express) ↔ Supabase (PostgreSQ
 ### 4.3 Database Schema V2
 
 ```sql
--- Enhanced Books table
-CREATE TABLE public.books (
+-- Enhanced labs table
+CREATE TABLE public.labs (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title VARCHAR(500) NOT NULL,
   author VARCHAR(300) NOT NULL,
@@ -171,9 +171,9 @@ CREATE TABLE public.books (
 );
 
 -- Indexes for performance
-CREATE INDEX idx_books_user_id ON public.books(user_id);
-CREATE INDEX idx_books_title ON public.books(title);
-CREATE INDEX idx_books_author ON public.books(author);
+CREATE INDEX idx_labs_user_id ON public.labs(user_id);
+CREATE INDEX idx_labs_title ON public.labs(title);
+CREATE INDEX idx_labs_author ON public.labs(author);
 
 -- Password reset tokens table
 CREATE TABLE public.password_reset_tokens (
@@ -195,44 +195,44 @@ CREATE INDEX idx_password_reset_tokens_user_id ON public.password_reset_tokens(u
 
 ## 5. API Specifications V2
 
-### 5.1 Enhanced Book Endpoints
+### 5.1 Enhanced lab Endpoints
 
 ```javascript
-// Search books by title/author
-GET /api/books/search?q={query}&sort_by={field}&page={num}
+// Search labs by title/author
+GET /api/labs/search?q={query}&sort_by={field}&page={num}
 
 // Standard CRUD operations (existing)
-GET /api/books
-POST /api/books
-PUT /api/books/:id
-DELETE /api/books/:id
+GET /api/labs
+POST /api/labs
+PUT /api/labs/:id
+DELETE /api/labs/:id
 
-// Update book (same as V1)
-PUT /api/books/:id
+// Update lab (same as V1)
+PUT /api/labs/:id
 {
-  "title": "Book Title",
+  "title": "lab Title",
   "author": "Author Name"
   "category": "Technical",
   "publication_year": 2024,
   "isbn": "978-1234567890",
   "rating": 5,
   "reading_status": "read",
-  "notes": "Excellent book about...",
+  "notes": "Excellent lab about...",
   "cover_url": "https://example.com/cover.jpg"
 }
 
 // Bulk operations (future)
-POST /api/books/bulk
+POST /api/labs/bulk
 {
   "action": "update_status",
-  "book_ids": ["uuid1", "uuid2"],
+  "lab_ids": ["uuid1", "uuid2"],
   "data": { "reading_status": "read" }
 }
 ```
 
 ```javascript
 // New endpoint on Enhance V2
-// GET /api/books/search
+// GET /api/labs/search
 Query Parameters:
 - q: string (search query for title/author)
 - page: number (pagination, default: 1)
@@ -305,18 +305,18 @@ Response: {
 -- 4. Set up Row Level Security (RLS)
 
 -- RLS Policies
-ALTER TABLE public.books ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.labs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own books" ON public.books
+CREATE POLICY "Users can view their own labs" ON public.labs
   FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own books" ON public.books
+CREATE POLICY "Users can insert their own labs" ON public.labs
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own books" ON public.books
+CREATE POLICY "Users can update their own labs" ON public.labs
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own books" ON public.books
+CREATE POLICY "Users can delete their own labs" ON public.labs
   FOR DELETE USING (auth.uid() = user_id);
 ```
 
@@ -391,7 +391,7 @@ const jwtConfig = {
 - **Input Sanitization**: Prevent SQL injection in search queries
 - **Query Limits**: Maximum 100 results per request
 - **Rate Limiting**: 100 searches per minute per user
-- **Permission Check**: Users can only search their own books
+- **Permission Check**: Users can only search their own labs
 
 ---
 
@@ -409,11 +409,11 @@ const jwtConfig = {
 
 ```sql
 -- Performance monitoring queries
-SELECT COUNT(*) FROM books WHERE user_id = $1;
+SELECT COUNT(*) FROM labs WHERE user_id = $1;
 
 -- Search query performance
 EXPLAIN ANALYZE
-SELECT * FROM books 
+SELECT * FROM labs 
 WHERE user_id = $1 AND (title ILIKE $2 OR author ILIKE $3);
 ```
 
@@ -425,20 +425,20 @@ WHERE user_id = $1 AND (title ILIKE $2 OR author ILIKE $3);
 
 ```javascript
 // Search functionality tests
-describe('Book Search API', () => {
-  test('should return books matching search query', async () => {
+describe('lab Search API', () => {
+  test('should return labs matching search query', async () => {
     const response = await request(app)
-      .get('/api/books/search?q=javascript')
+      .get('/api/labs/search?q=javascript')
       .set('Authorization', `Bearer ${validToken}`)
       .expect(200);
     
-    expect(response.body.data.books).toHaveLength(5);
+    expect(response.body.data.labs).toHaveLength(5);
     expect(response.body.performance.query_time_ms).toBeLessThan(200);
   });
 
   test('should handle complex filters', async () => {
     const response = await request(app)
-      .get('/api/books/search?category=Technical&year_from=2020&sort_by=rating')
+      .get('/api/labs/search?category=Technical&year_from=2020&sort_by=rating')
       .set('Authorization', `Bearer ${validToken}`)
       .expect(200);
     
@@ -473,7 +473,7 @@ describe('Password Reset Flow', () => {
 ```javascript
 // Migration test suite
 describe('Database Migration', () => {
-  test('should migrate all books data correctly', async () => {
+  test('should migrate all labs data correctly', async () => {
     const oldCount = await getOldDatabaseBookCount();
     await runMigration();
     const newCount = await getSupabaseBookCount();
@@ -485,10 +485,10 @@ describe('Database Migration', () => {
     const sampleBooks = await getRandomBooksFromOldDB(10);
     await runMigration();
     
-    for (const book of sampleBooks) {
-      const migratedBook = await getBookFromSupabase(book.id);
-      expect(migratedBook.title).toBe(book.title);
-      expect(migratedBook.author).toBe(book.author);
+    for (const lab of sampleBooks) {
+      const migratedBook = await getBookFromSupabase(lab.id);
+      expect(migratedBook.title).toBe(lab.title);
+      expect(migratedBook.author).toBe(lab.author);
     }
   });
 });
@@ -499,26 +499,26 @@ describe('Database Migration', () => {
 ## 10. Implementation Timeline
 
 ### Phase 1: Foundation Enhancement (Week 1-2)
-- [x] ✅ Project structure analysis
-- [ ] 🔄 Supabase project setup
-- [ ] 🔄 Enhanced database schema
-- [ ] 📋 Authentication system update
+- [x] âœ… Project structure analysis
+- [ ] ðŸ”„ Supabase project setup
+- [ ] ðŸ”„ Enhanced database schema
+- [ ] ðŸ“‹ Authentication system update
 
 ### Phase 2: Search & Filter (Week 3-4)
-- [ ] 📋 Basic search implementation
-- [ ] 📋 Search API endpoints
-- [ ] 📋 Frontend search UI
+- [ ] ðŸ“‹ Basic search implementation
+- [ ] ðŸ“‹ Search API endpoints
+- [ ] ðŸ“‹ Frontend search UI
 
 ### Phase 3: Forgot Password (Week 5-6)
-- [ ] 📋 Email service integration
-- [ ] 📋 Password reset flow
-- [ ] 📋 Security implementation
-- [ ] 📋 Frontend reset forms
+- [ ] ðŸ“‹ Email service integration
+- [ ] ðŸ“‹ Password reset flow
+- [ ] ðŸ“‹ Security implementation
+- [ ] ðŸ“‹ Frontend reset forms
 
 ### Phase 4: Migration & Testing (Week 7-8)
-- [ ] 📋 Data migration scripts
-- [ ] 📋 System testing
-- [ ] 📋 Security audit
+- [ ] ðŸ“‹ Data migration scripts
+- [ ] ðŸ“‹ System testing
+- [ ] ðŸ“‹ Security audit
 
 ---
 
@@ -526,7 +526,7 @@ describe('Database Migration', () => {
 
 ### 11.1 MVP V2 Requirements
 
-- [ ] Search books by title/author with < 300ms response time
+- [ ] Search labs by title/author with < 300ms response time
 - [ ] Forgot password with email verification
 - [ ] 100% data migration success to Supabase
 - [ ] Zero downtime deployment
@@ -577,7 +577,7 @@ const performanceTargets = {
 
 ## 13. Conclusion
 
-Book Catalog V2 focuses on three core enhancements: search functionality, password recovery, and Supabase migration. This streamlined approach ensures reliable implementation while maintaining system stability.
+lab Catalog V2 focuses on three core enhancements: search functionality, password recovery, and Supabase migration. This streamlined approach ensures reliable implementation while maintaining system stability.
 
 ### Key Deliverables:
 1. **Search System** - Basic search by title and author
@@ -594,3 +594,5 @@ Book Catalog V2 focuses on three core enhancements: search functionality, passwo
 **Document Status**: Ready for Development  
 **Approval Required**: Technical Lead, Product Owner  
 **Next Review**: Weekly during development phase
+
+

@@ -1,16 +1,16 @@
-# 📖 Swagger UI Documentation Guide
+﻿# ðŸ“– Swagger UI Documentation Guide
 
 ## Akses Swagger UI
 
 Setelah server berjalan, dokumentasi API interaktif tersedia di:
 
-### 🌐 URL Swagger UI
+### ðŸŒ URL Swagger UI
 
 ```
 http://localhost:3000/api-docs
 ```
 
-### 🚀 Cara Menggunakan
+### ðŸš€ Cara Menggunakan
 
 1. **Jalankan Server**
 
@@ -31,7 +31,7 @@ http://localhost:3000/api-docs
    - Isi parameter yang diperlukan
    - Klik "Execute" untuk menjalankan request
 
-### 🔐 Authentication
+### ðŸ” Authentication
 
 1. **Untuk endpoint yang memerlukan authentication:**
 
@@ -46,10 +46,10 @@ http://localhost:3000/api-docs
    1. POST /api/auth/register (buat akun baru)
    2. POST /api/auth/login (dapatkan token)
    3. Authorize dengan token
-   4. Test endpoint books (GET, POST, PUT, DELETE)
+   4. Test endpoint labs (GET, POST, PUT, DELETE)
    ```
 
-### ✨ Fitur Swagger UI
+### âœ¨ Fitur Swagger UI
 
 - **Interactive Testing**: Test API langsung dari browser
 - **Request/Response Examples**: Lihat contoh request dan response
@@ -57,13 +57,13 @@ http://localhost:3000/api-docs
 - **Authentication Support**: Built-in auth untuk testing
 - **Export Options**: Download OpenAPI spec
 
-### 🔗 URL Lainnya
+### ðŸ”— URL Lainnya
 
 - **Frontend**: `http://localhost:3000`
 - **Health Check**: `http://localhost:3000/health`
 - **API Stats** (dev only): `http://localhost:3000/api/stats`
 
-### 📝 Tips
+### ðŸ“ Tips
 
 1. **Bookmark URL**: Simpan `http://localhost:3000/api-docs` untuk akses cepat
 2. **Testing Authentication**: Selalu test login dulu sebelum endpoint lain
@@ -73,3 +73,5 @@ http://localhost:3000/api-docs
 ---
 
 **File ini menggantikan kebutuhan Postman Collection - semua testing API bisa dilakukan melalui Swagger UI yang lebih interaktif dan terintegrasi!**
+
+

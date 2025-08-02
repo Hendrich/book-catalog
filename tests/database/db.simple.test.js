@@ -1,4 +1,4 @@
-const db = require('../../backend/db');
+﻿const db = require('../../backend/db');
 
 // Mock the pg module
 jest.mock('pg', () => {
@@ -138,3 +138,5 @@ describe('Database Module - Simple Coverage', () => {
 		});
 	});
 });
+
+

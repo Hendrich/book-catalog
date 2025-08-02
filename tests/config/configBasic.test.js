@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Config Basic Tests
  * Simple tests to increase config.js coverage
  */
@@ -138,3 +138,5 @@ describe('Config Basic Tests', () => {
 		expect(typeof config.nodeEnv).toBe('string');
 	});
 });
+
+

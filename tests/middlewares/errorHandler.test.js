@@ -1,4 +1,4 @@
-const { AppError, errorHandler } = require('../../backend/middlewares/errorHandler');
+﻿const { AppError, errorHandler } = require('../../backend/middlewares/errorHandler');
 const TestHelpers = require('../utils/testHelpers');
 
 describe('Error Handler Middleware', () => {
@@ -310,7 +310,7 @@ describe('Error Handler Middleware', () => {
 
 			test('should preserve request context in error response', () => {
 				// Arrange
-				req.path = '/api/books/123';
+				req.path = '/api/labs/123';
 				req.method = 'DELETE';
 				const error = new AppError('Test error', 404);
 
@@ -319,7 +319,7 @@ describe('Error Handler Middleware', () => {
 
 				// Assert
 				const responseData = res.json.mock.calls[0][0];
-				expect(responseData.path).toBe('/api/books/123');
+				expect(responseData.path).toBe('/api/labs/123');
 				expect(responseData.method).toBe('DELETE');
 			});
 		});
@@ -403,3 +403,5 @@ describe('Error Handler Middleware', () => {
 		});
 	});
 });
+
+

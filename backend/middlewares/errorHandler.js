@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Centralized Error Handling Middleware
  * Handles all errors consistently across the application
  */
@@ -100,7 +100,7 @@ const errorHandler = (err, req, res, next) => {
 
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {
-	console.error("🚨 Unhandled Promise Rejection:");
+	console.error("ðŸš¨ Unhandled Promise Rejection:");
 	console.error("Error:", err.message);
 	console.error("Promise:", promise);
 
@@ -110,7 +110,7 @@ process.on("unhandledRejection", (err, promise) => {
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-	console.error("🚨 Uncaught Exception:");
+	console.error("ðŸš¨ Uncaught Exception:");
 	console.error("Error:", err.message);
 	console.error("Stack:", err.stack);
 
@@ -122,3 +122,5 @@ module.exports = {
 	AppError,
 	errorHandler,
 };
+
+

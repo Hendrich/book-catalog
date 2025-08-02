@@ -1,8 +1,8 @@
-# 📚 Book Catalog API
+﻿# ðŸ“š Script Labs API
 
-A secure and production-ready Book Catalog API built with Node.js, Express, PostgreSQL (Supabase), and JWT authentication.
+A secure and production-ready Script Labs API built with Node.js, Express, PostgreSQL (Supabase), and JWT authentication.
 
-## 🚀 Quick Start
+## ðŸš€ Quick Start
 
 ### Prerequisites
 
@@ -16,7 +16,7 @@ A secure and production-ready Book Catalog API built with Node.js, Express, Post
 
    ```bash
    git clone <repository-url>
-   cd book-catalog-app
+   cd script-labs-app
    npm install
    ```
 
@@ -42,9 +42,9 @@ A secure and production-ready Book Catalog API built with Node.js, Express, Post
    npm run dev
    ```
 
-## 📖 API Documentation
+## ðŸ“– API Documentation
 
-### 🌐 Interactive Documentation (Swagger UI)
+### ðŸŒ Interactive Documentation (Swagger UI)
 
 ```
 http://localhost:3000/api-docs
@@ -53,17 +53,17 @@ http://localhost:3000/api-docs
 **Swagger UI provides:**
 
 - Interactive API testing
-- Complete endpoint documentation
+  cd script-labs-app
 - Authentication support
 - Request/response examples
 - Schema validation
 
-### 📋 Alternative Documentation
+### ðŸ“‹ Alternative Documentation
 
 - **OpenAPI Spec**: `openapi-spec.json`
 - **Swagger Guide**: `SWAGGER_UI_GUIDE.md`
 
-## 🔐 Authentication
+## ðŸ” Authentication
 
 The API uses JWT authentication via Supabase:
 
@@ -71,7 +71,7 @@ The API uses JWT authentication via Supabase:
 2. **Login**: `POST /api/auth/login`
 3. **Use Token**: Include in header: `Authorization: Bearer <token>`
 
-## 📚 API Endpoints
+## ðŸ“š API Endpoints
 
 ### Authentication
 
@@ -80,20 +80,20 @@ The API uses JWT authentication via Supabase:
 - `GET /api/auth/profile` - Get user profile
 - `PUT /api/auth/profile` - Update user profile
 
-### Books Management
+### Labs Management
 
-- `GET /api/books` - Get all user's books
-- `GET /api/books/:id` - Get specific book
-- `POST /api/books` - Create new book
-- `PUT /api/books/:id` - Update book
-- `DELETE /api/books/:id` - Delete book
+- `GET /api/labs` - Get all user's labs
+- `GET /api/labs/:id` - Get specific lab
+- `POST /api/labs` - Create new lab
+- `PUT /api/labs/:id` - Update lab
+- `DELETE /api/labs/:id` - Delete lab
 
 ### System
 
 - `GET /health` - Health check
 - `GET /api/stats` - API statistics (dev only)
 
-## 🛠️ Development
+## ðŸ› ï¸ Development
 
 ### Scripts
 
@@ -108,54 +108,54 @@ npm run lint:fix   # Fix linting issues
 ### Project Structure
 
 ```
-book-catalog/
-├── backend/
-│   ├── server.js              # Main server file
-│   ├── config/
-│   │   └── config.js          # Configuration
-│   ├── middlewares/           # Custom middlewares
-│   │   ├── authMiddleware.js
-│   │   ├── errorHandler.js
-│   │   ├── logger.js
-│   │   ├── rateLimiter.js
-│   │   └── validation.js
-│   ├── routes/                # API routes
-│   │   ├── authRoutes.js
-│   │   └── bookRoutes.js
-│   └── db.js                  # Database connection
-├── database/                  # Database schemas and scripts
-│   ├── schema_pg.sql          # PostgreSQL schema
-│   ├── schema_my.sql          # MySQL schema
-│   ├── query.sql              # Example queries
-│   └── README.md
-├── docs/                      # Documentation
-│   ├── api/                   # API documentation
-│   │   ├── openapi-spec.json
-│   │   ├── OPENAPI_GUIDE.md
-│   │   ├── SWAGGER_INTEGRATION_COMPLETE.md
-│   │   └── SWAGGER_UI_GUIDE.md
-│   ├── assignments/           # Assignment files
-│   ├── deployment/            # Deployment guides
-│   │   ├── DEPLOYMENT_GUIDE.md
-│   │   └── CRITICAL_DEPLOYMENT_FIX.md
-│   └── *.md                   # Other documentation
-├── postman/                   # Postman collections
-│   ├── Book_Catalog_API_v2.postman_collection.json
-│   ├── Book-Catalog-Environment.postman_environment.json
-│   ├── POSTMAN_COLLECTION_GUIDE.md
-│   ├── POSTMAN_COLLECTION_README.md
-│   └── README.md
-├── tests/                     # Test files
-│   ├── test-api.js
-│   └── README.md
-├── scripts/                   # Utility scripts
-├── .env                       # Environment variables
-├── .env.template              # Environment template
-├── package.json
-└── README.md
+script-labs/
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ server.js              # Main server file
+â”‚   â”œâ”€â”€ config/
+â”‚   â”‚   â””â”€â”€ config.js          # Configuration
+â”‚   â”œâ”€â”€ middlewares/           # Custom middlewares
+â”‚   â”‚   â”œâ”€â”€ authMiddleware.js
+â”‚   â”‚   â”œâ”€â”€ errorHandler.js
+â”‚   â”‚   â”œâ”€â”€ logger.js
+â”‚   â”‚   â”œâ”€â”€ rateLimiter.js
+â”‚   â”‚   â””â”€â”€ validation.js
+â”‚   â”œâ”€â”€ routes/                # API routes
+â”‚   â”‚   â”œâ”€â”€ authRoutes.js
+â”‚   â”‚   â””â”€â”€ labRoutes.js
+â”‚   â””â”€â”€ db.js                  # Database connection
+â”œâ”€â”€ database/                  # Database schemas and scripts
+â”‚   â”œâ”€â”€ schema_pg.sql          # PostgreSQL schema
+â”‚   â”œâ”€â”€ schema_my.sql          # MySQL schema
+â”‚   â”œâ”€â”€ query.sql              # Example queries
+â”‚   â””â”€â”€ README.md
+â”œâ”€â”€ docs/                      # Documentation
+â”‚   â”œâ”€â”€ api/                   # API documentation
+â”‚   â”‚   â”œâ”€â”€ openapi-spec.json
+â”‚   â”‚   â”œâ”€â”€ OPENAPI_GUIDE.md
+â”‚   â”‚   â”œâ”€â”€ SWAGGER_INTEGRATION_COMPLETE.md
+â”‚   â”‚   â””â”€â”€ SWAGGER_UI_GUIDE.md
+â”‚   â”œâ”€â”€ assignments/           # Assignment files
+â”‚   â”œâ”€â”€ deployment/            # Deployment guides
+â”‚   â”‚   â”œâ”€â”€ DEPLOYMENT_GUIDE.md
+â”‚   â”‚   â””â”€â”€ CRITICAL_DEPLOYMENT_FIX.md
+â”‚   â””â”€â”€ *.md                   # Other documentation
+â”œâ”€â”€ postman/                   # Postman collections
+â”‚   â”œâ”€â”€ Script_Labs_API_v2.postman_collection.json
+â”‚   â”œâ”€â”€ Script-Labs-Environment.postman_environment.json
+â”‚   â”œâ”€â”€ POSTMAN_COLLECTION_GUIDE.md
+â”‚   â”œâ”€â”€ POSTMAN_COLLECTION_README.md
+â”‚   â””â”€â”€ README.md
+â”œâ”€â”€ tests/                     # Test files
+â”‚   â”œâ”€â”€ test-api.js
+â”‚   â””â”€â”€ README.md
+â”œâ”€â”€ scripts/                   # Utility scripts
+â”œâ”€â”€ .env                       # Environment variables
+â”œâ”€â”€ .env.template              # Environment template
+â”œâ”€â”€ package.json
+â””â”€â”€ README.md
 ```
 
-## 🔧 Configuration
+## ðŸ”§ Configuration
 
 ### Environment Variables
 
@@ -181,7 +181,7 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 ```
 
-## 🚀 Deployment
+## ðŸš€ Deployment
 
 ### Render.com (Recommended)
 
@@ -203,7 +203,7 @@ DB_PASSWORD=your_db_password
 
 See `docs/deployment/DEPLOYMENT_GUIDE.md` for detailed instructions.
 
-## 🧪 Testing
+## ðŸ§ª Testing
 
 ### Manual Testing
 
@@ -218,7 +218,7 @@ npm test           # Run all tests
 npm run test:watch # Watch mode
 ```
 
-## 🔒 Security Features
+## ðŸ”’ Security Features
 
 - **Helmet**: Security headers
 - **Rate Limiting**: API protection
@@ -227,7 +227,7 @@ npm run test:watch # Watch mode
 - **JWT Authentication**: Secure token-based auth
 - **Input Sanitization**: XSS protection
 
-## 🚨 Troubleshooting
+## ðŸš¨ Troubleshooting
 
 ### Common Issues & Solutions
 
@@ -333,16 +333,16 @@ curl http://localhost:3000/api/stats
 npm run dev
 ```
 
-## 📋 TODO & Roadmap
+## ðŸ“‹ TODO & Roadmap
 
 - [ ] User roles and permissions
-- [ ] Book categories and tags
+- [ ] Lab categories and tags
 - [ ] Search and filtering
-- [ ] File upload for book covers
+- [ ] File upload for lab covers
 - [ ] API versioning
 - [ ] Comprehensive test coverage
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
 1. Fork the repository
 2. Create feature branch
@@ -350,11 +350,11 @@ npm run dev
 4. Push to branch
 5. Create Pull Request
 
-## 📄 License
+## ðŸ“„ License
 
 MIT License - see LICENSE file for details.
 
-## 📞 Support
+## ðŸ“ž Support
 
 - **Author**: Hendri Christianto
 - **Email**: hendri.christianto24@gmail.com
@@ -363,7 +363,7 @@ MIT License - see LICENSE file for details.
 
 ---
 
-## 📚 Documentation Files
+## ðŸ“š Documentation Files
 
 - `SWAGGER_UI_GUIDE.md` - Swagger UI usage guide
 - `DEPLOYMENT_GUIDE.md` - Deployment instructions
@@ -373,4 +373,6 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**Happy coding! 🚀**
+**Happy coding! ðŸš€**
+
+

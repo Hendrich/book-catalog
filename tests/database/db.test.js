@@ -1,4 +1,4 @@
-const mockDb = require('../../backend/db');
+﻿const mockDb = require('../../backend/db');
 
 // Database module is already mocked in testSetup.js
 // We'll use the existing mock and enhance it for our tests
@@ -24,13 +24,13 @@ describe('Database Connection', () => {
 		test('should execute query with parameters', async () => {
 			// Arrange
 			const mockQueryResult = {
-				rows: [{ id: 1, title: 'Test Book' }],
+				rows: [{ id: 1, title: 'Test lab' }],
 				rowCount: 1
 			};
 
 			mockDb.query.mockResolvedValueOnce(mockQueryResult);
 
-			const query = 'SELECT * FROM books WHERE id = $1';
+			const query = 'SELECT * FROM labs WHERE id = $1';
 			const params = [1];
 
 			// Act
@@ -50,7 +50,7 @@ describe('Database Connection', () => {
 
 			mockDb.query.mockResolvedValueOnce(mockQueryResult);
 
-			const query = 'SELECT COUNT(*) FROM books';
+			const query = 'SELECT COUNT(*) FROM labs';
 
 			// Act
 			const result = await mockDb.query(query);
@@ -65,7 +65,7 @@ describe('Database Connection', () => {
 			const connectionError = new Error('Database connection failed');
 			mockDb.query.mockRejectedValueOnce(connectionError);
 
-			const query = 'SELECT * FROM books';
+			const query = 'SELECT * FROM labs';
 
 			// Act & Assert
 			await expect(mockDb.query(query)).rejects.toThrow('Database connection failed');
@@ -78,7 +78,7 @@ describe('Database Connection', () => {
 			sqlError.code = '42601';
 			mockDb.query.mockRejectedValueOnce(sqlError);
 
-			const invalidQuery = 'SELEC * FROM books'; // Typo in SELECT
+			const invalidQuery = 'SELEC * FROM labs'; // Typo in SELECT
 
 			// Act & Assert
 			await expect(mockDb.query(invalidQuery)).rejects.toThrow('syntax error at or near "SELEC"');
@@ -91,7 +91,7 @@ describe('Database Connection', () => {
 			timeoutError.code = 'ECONNRESET';
 			mockDb.query.mockRejectedValueOnce(timeoutError);
 
-			const query = 'SELECT * FROM books';
+			const query = 'SELECT * FROM labs';
 
 			// Act & Assert
 			await expect(mockDb.query(query)).rejects.toThrow('Connection timeout');
@@ -165,7 +165,7 @@ describe('Database Connection', () => {
 				.mockRejectedValueOnce(new Error('Connection lost'))
 				.mockResolvedValueOnce({ rows: [{ id: 1 }], rowCount: 1 });
 
-			const query = 'SELECT * FROM books WHERE id = $1';
+			const query = 'SELECT * FROM labs WHERE id = $1';
 			const params = [1];
 
 			// Act & Assert - First call should fail
@@ -177,3 +177,5 @@ describe('Database Connection', () => {
 		});
 	});
 });
+
+

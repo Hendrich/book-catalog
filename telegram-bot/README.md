@@ -1,14 +1,14 @@
-# 🤖 Telegram Bot untuk Jest Test Coverage Notifications
+﻿# ðŸ¤– Telegram Bot untuk Jest Test Coverage Notifications
 
 Bot Telegram yang mengirim notifikasi hasil test coverage dari Jest dengan format yang clean dan modern.
 
-## 📱 Format Pesan
+## ðŸ“± Format Pesan
 
 ### **Clean Format (Default)**
 ```
-🟢 Book Catalog App | 7:45PM
+ðŸŸ¢ lab Catalog App | 7:45PM
 
-BookCatalogApp
+scriptlabsApp
 Automated | Test Coverage Report
 
 - Tests = 337
@@ -18,16 +18,16 @@ Automated | Test Coverage Report
 - Duration = 4521ms
 - Passes (%) = 100.00
 
-📊 Coverage Summary:
+ðŸ“Š Coverage Summary:
 - Statements = 82.27%
 - Branches = 72.52%
 - Functions = 78.84%
 - Lines = 82.30%
 
-✅ Status: SUCCESS - All tests passed
+âœ… Status: SUCCESS - All tests passed
 ```
 
-## 🚀 Quick Start
+## ðŸš€ Quick Start
 
 ### 1. Setup Bot Telegram
 1. Chat dengan `@BotFather` di Telegram
@@ -53,7 +53,7 @@ npm run telegram:diagnose
 npm run test:coverage
 ```
 
-## 📋 Available Commands
+## ðŸ“‹ Available Commands
 
 ### **Test Coverage Commands**
 ```bash
@@ -77,25 +77,25 @@ node telegram-bot/count-tests.js    # Count actual tests
 node telegram-bot/diagnose.js       # System diagnostics
 ```
 
-## 🎯 Status Indicators
+## ðŸŽ¯ Status Indicators
 
 | Emoji | Status | Kondisi |
 |-------|--------|---------|
-| 🟢 | SUCCESS | Semua test passed |
-| 🔴 | FAILED | Ada test yang failed |
-| ⚪ | NO TESTS | Tidak ada test ditemukan |
+| ðŸŸ¢ | SUCCESS | Semua test passed |
+| ðŸ”´ | FAILED | Ada test yang failed |
+| âšª | NO TESTS | Tidak ada test ditemukan |
 
-## 📊 Features
+## ðŸ“Š Features
 
-✅ **Real Test Count** - Parsing akurat dari Jest output (337 tests detected)  
-✅ **Clean Format** - Format pesan yang modern dan readable  
-✅ **Auto Status** - Status emoji otomatis berdasarkan hasil  
-✅ **Coverage Integration** - Data coverage real dari Jest  
-✅ **Multiple Fallbacks** - Parsing dengan multiple strategies  
-✅ **Environment Config** - Konfigurasi via environment variables  
-✅ **Comprehensive Testing** - Tools untuk debugging dan testing  
+âœ… **Real Test Count** - Parsing akurat dari Jest output (337 tests detected)  
+âœ… **Clean Format** - Format pesan yang modern dan readable  
+âœ… **Auto Status** - Status emoji otomatis berdasarkan hasil  
+âœ… **Coverage Integration** - Data coverage real dari Jest  
+âœ… **Multiple Fallbacks** - Parsing dengan multiple strategies  
+âœ… **Environment Config** - Konfigurasi via environment variables  
+âœ… **Comprehensive Testing** - Tools untuk debugging dan testing  
 
-## 🔧 Troubleshooting
+## ðŸ”§ Troubleshooting
 
 ### Bot tidak mengirim pesan
 ```bash
@@ -117,21 +117,21 @@ Common solutions:
 npm run test:coverage  # Generate coverage first
 ```
 
-## 📁 File Structure
+## ðŸ“ File Structure
 
 ```
 telegram-bot/
-├── TelegramTestNotifier.js      # Main bot class
-├── test-notification.js        # Connection tester
-├── send-notification.js        # Manual sender
-├── count-tests.js              # Test counter
-├── diagnose.js                 # Diagnostic tool
-├── jest-clean-notification.js  # Jest integration
-├── test-clean-format.js        # Format tester
-└── CLEAN_FORMAT_GUIDE.md       # Format documentation
+â”œâ”€â”€ TelegramTestNotifier.js      # Main bot class
+â”œâ”€â”€ test-notification.js        # Connection tester
+â”œâ”€â”€ send-notification.js        # Manual sender
+â”œâ”€â”€ count-tests.js              # Test counter
+â”œâ”€â”€ diagnose.js                 # Diagnostic tool
+â”œâ”€â”€ jest-clean-notification.js  # Jest integration
+â”œâ”€â”€ test-clean-format.js        # Format tester
+â””â”€â”€ CLEAN_FORMAT_GUIDE.md       # Format documentation
 ```
 
-## 🎨 Customization
+## ðŸŽ¨ Customization
 
 ### Change Project Name
 Edit `.env`:
@@ -145,7 +145,7 @@ Edit `formatCleanMessage` method in `TelegramTestNotifier.js`
 ### Different Format
 Use `sendDetailedNotification()` for verbose format
 
-## 📖 API Reference
+## ðŸ“– API Reference
 
 ### TelegramTestNotifier Class
 
@@ -184,4 +184,6 @@ const coverageData = {
 };
 ```
 
-Bot siap digunakan dan akan memberikan notifikasi yang informatif setiap kali test dijalankan! 🚀
+Bot siap digunakan dan akan memberikan notifikasi yang informatif setiap kali test dijalankan! ðŸš€
+
+

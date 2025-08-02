@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Debug Test Runner - untuk melihat data test yang sebenarnya
@@ -15,14 +15,14 @@ const testData = {
   testExecError: false
 };
 
-console.log('📊 Debug - Test data being sent:');
+console.log('ðŸ“Š Debug - Test data being sent:');
 console.log(JSON.stringify(testData, null, 2));
 
-console.log('\n📱 Creating TelegramTestNotifier...');
+console.log('\nðŸ“± Creating TelegramTestNotifier...');
 const notifier = new TelegramTestNotifier();
 
 if (!notifier.enabled) {
-  console.log('⚠️ Telegram not enabled, but let\'s check the message formatting...');
+  console.log('âš ï¸ Telegram not enabled, but let\'s check the message formatting...');
   
   // Simulate the safeTestData processing like in TelegramTestNotifier
   const safeTestData = {
@@ -34,22 +34,24 @@ if (!notifier.enabled) {
     hasErrors: testData.hasErrors || testData.testExecError || (testData.failed > 0)
   };
   
-  console.log('\n🔍 Processed safeTestData:');
+  console.log('\nðŸ” Processed safeTestData:');
   console.log(JSON.stringify(safeTestData, null, 2));
   
   // Check status logic
-  let statusIcon = '🟢';
+  let statusIcon = 'ðŸŸ¢';
   let statusText = 'SUCCESS';
   
   if (safeTestData.failed > 0 || safeTestData.hasErrors) {
-    statusIcon = '🔴';
+    statusIcon = 'ðŸ”´';
     statusText = 'FAILED';
   } else if (safeTestData.total === 0) {
-    statusIcon = '⚪';
+    statusIcon = 'âšª';
     statusText = 'NO TESTS';
-    console.log('❌ PROBLEM: safeTestData.total is 0!');
+    console.log('âŒ PROBLEM: safeTestData.total is 0!');
   }
   
-  console.log(`\n📋 Status: ${statusIcon} ${statusText}`);
-  console.log(`📊 Total: ${safeTestData.total}, Passed: ${safeTestData.passed}, Failed: ${safeTestData.failed}`);
+  console.log(`\nðŸ“‹ Status: ${statusIcon} ${statusText}`);
+  console.log(`ðŸ“Š Total: ${safeTestData.total}, Passed: ${safeTestData.passed}, Failed: ${safeTestData.failed}`);
 }
+
+

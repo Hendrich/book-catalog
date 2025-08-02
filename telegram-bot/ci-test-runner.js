@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * CI/CD Test Runner for GitHub Actions
@@ -9,19 +9,19 @@ const { spawn } = require('child_process');
 const TelegramTestNotifier = require('./TelegramTestNotifier');
 
 async function runCITests() {
-    console.log('🚀 CI/CD Test Runner Starting...');
+    console.log('ðŸš€ CI/CD Test Runner Starting...');
     
     // Check environment
-    console.log('📋 Environment Check:');
-    console.log('- TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? '✅ Available' : '❌ Missing');
-    console.log('- TELEGRAM_CHAT_ID:', process.env.TELEGRAM_CHAT_ID ? '✅ Available' : '❌ Missing');
+    console.log('ðŸ“‹ Environment Check:');
+    console.log('- TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN ? 'âœ… Available' : 'âŒ Missing');
+    console.log('- TELEGRAM_CHAT_ID:', process.env.TELEGRAM_CHAT_ID ? 'âœ… Available' : 'âŒ Missing');
     console.log('- Node version:', process.version);
     
     const notifier = new TelegramTestNotifier();
     
     try {
         // Run Jest with coverage and JSON output
-        console.log('\n⚡ Running Jest tests...');
+        console.log('\nâš¡ Running Jest tests...');
         
         const jestResult = await new Promise((resolve, reject) => {
             const jest = spawn('npx', ['jest', '--coverage', '--ci', '--passWithNoTests', '--json'], {
@@ -43,12 +43,12 @@ async function runCITests() {
             });
             
             jest.on('close', (code) => {
-                console.log(`\n✅ Jest finished with exit code: ${code}`);
+                console.log(`\nâœ… Jest finished with exit code: ${code}`);
                 resolve({ code, jsonOutput, errorOutput });
             });
             
             jest.on('error', (error) => {
-                console.error('❌ Jest process error:', error);
+                console.error('âŒ Jest process error:', error);
                 reject(error);
             });
         });
@@ -64,8 +64,8 @@ async function runCITests() {
         
         try {
             if (jestResult.jsonOutput.trim()) {
-                console.log('📄 Parsing Jest JSON output...');
-                console.log('📄 Output length:', jestResult.jsonOutput.length);
+                console.log('ðŸ“„ Parsing Jest JSON output...');
+                console.log('ðŸ“„ Output length:', jestResult.jsonOutput.length);
                 
                 // Try to parse the entire output as JSON first
                 try {
@@ -78,9 +78,9 @@ async function runCITests() {
                         testExecError: jestResult.code !== 0
                     };
                     
-                    console.log(`📊 Real Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
+                    console.log(`ðŸ“Š Real Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
                 } catch (directParseError) {
-                    console.log('⚠️ Direct JSON parse failed, trying line-by-line...');
+                    console.log('âš ï¸ Direct JSON parse failed, trying line-by-line...');
                     
                     // Find the JSON part in the output
                     const lines = jestResult.jsonOutput.split('\n');
@@ -103,18 +103,18 @@ async function runCITests() {
                             testExecError: jestResult.code !== 0
                         };
                         
-                        console.log(`📊 Real Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
+                        console.log(`ðŸ“Š Real Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`);
                     } else {
-                        console.log('⚠️ No JSON line found in Jest output');
-                        console.log('📄 First 300 chars of output:', jestResult.jsonOutput.substring(0, 300));
+                        console.log('âš ï¸ No JSON line found in Jest output');
+                        console.log('ðŸ“„ First 300 chars of output:', jestResult.jsonOutput.substring(0, 300));
                     }
                 }
             } else {
-                console.log('⚠️ No JSON output from Jest');
+                console.log('âš ï¸ No JSON output from Jest');
             }
         } catch (parseError) {
-            console.error('❌ Failed to parse Jest JSON:', parseError.message);
-            console.log('📄 Raw output (first 500 chars):', jestResult.jsonOutput.substring(0, 500));
+            console.error('âŒ Failed to parse Jest JSON:', parseError.message);
+            console.log('ðŸ“„ Raw output (first 500 chars):', jestResult.jsonOutput.substring(0, 500));
         }
         
         // Try to read coverage data
@@ -127,17 +127,17 @@ async function runCITests() {
                 const rawCoverage = fs.readFileSync(coveragePath, 'utf8');
                 const coverage = JSON.parse(rawCoverage);
                 coverageData = coverage.total;
-                console.log('📊 Coverage data loaded successfully');
+                console.log('ðŸ“Š Coverage data loaded successfully');
             } else {
-                console.log('⚠️ Coverage summary not found at:', coveragePath);
+                console.log('âš ï¸ Coverage summary not found at:', coveragePath);
             }
         } catch (error) {
-            console.log('⚠️ Failed to load coverage data:', error.message);
+            console.log('âš ï¸ Failed to load coverage data:', error.message);
         }
         
         // Prepare options with GitHub context
         const options = {
-            projectName: 'Book Catalog',
+            projectName: 'lab Catalog',
             branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || 'main',
             author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || 'Automated',
             timestamp: new Date(),
@@ -150,23 +150,23 @@ async function runCITests() {
             }
         };
         
-        console.log('\n📤 Sending results to Telegram...');
+        console.log('\nðŸ“¤ Sending results to Telegram...');
         console.log('Test data:', testData);
         console.log('Coverage available:', !!coverageData);
         console.log('GitHub context:', options.githubContext);
         
         if (notifier.enabled) {
             await notifier.sendNotification(testData, coverageData, options);
-            console.log('✅ Telegram notification sent!');
+            console.log('âœ… Telegram notification sent!');
         } else {
-            console.log('⚠️ Telegram disabled - notification skipped');
+            console.log('âš ï¸ Telegram disabled - notification skipped');
         }
         
         // Exit with Jest's exit code
         process.exit(jestResult.code);
         
     } catch (error) {
-        console.error('❌ CI Test Runner failed:', error);
+        console.error('âŒ CI Test Runner failed:', error);
         
         // Send failure notification
         const failureData = {
@@ -178,7 +178,7 @@ async function runCITests() {
         };
         
         const failureOptions = {
-            projectName: 'Book Catalog',
+            projectName: 'lab Catalog',
             branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || 'main',
             author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || 'Automated',
             timestamp: new Date(),
@@ -196,7 +196,7 @@ async function runCITests() {
             try {
                 await notifier.sendNotification(failureData, null, failureOptions);
             } catch (telegramError) {
-                console.error('❌ Failed to send failure notification:', telegramError);
+                console.error('âŒ Failed to send failure notification:', telegramError);
             }
         }
         
@@ -205,3 +205,5 @@ async function runCITests() {
 }
 
 runCITests();
+
+

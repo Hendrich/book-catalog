@@ -1,9 +1,9 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Code coverage report for backend/routes/bookRoutes.js</title>
+    <title>Code coverage report for backend/routes/labRoutes.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">backend/routes</a> bookRoutes.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">backend/routes</a> labRoutes.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -707,9 +707,9 @@ const express = require("express");
 const pool = require("../db");
 const authMiddleware = require("../middlewares/authMiddleware");
 const {
-  validateBook,
+  validateLab,
   validateId,
-  validateBookUpdate,
+  validateLabUpdate,
 } = require("../middlewares/validation");
 const { authLimiter } = require("../middlewares/rateLimiter");
 const { securityLogger } = require("../middlewares/logger");
@@ -719,8 +719,8 @@ const router = express.Router();
 router.use(authMiddleware);
 &nbsp;
 /**
- * @route   GET /api/books/search
- * @desc    Search books by title or author (no DB/schema change)
+ * @route   GET /api/labs/search
+ * @desc    Search labs by title or author (no DB/schema change)
  * @access  Private
  * @query   {string} q - Search query (title or author)
  * @query   {number} page - Page number (default: 1)
@@ -734,7 +734,7 @@ router.get("/search", <span class="fstat-no" title="function not covered" >as</s
 	const limitNum = <span class="cstat-no" title="statement not covered" >Math.min(100, Math.max(1, parseInt(limit)));</span>
 	const offset = <span class="cstat-no" title="statement not covered" >(pageNum - 1) * limitNum;</span>
 &nbsp;
-	let query = <span class="cstat-no" title="statement not covered" >"SELECT * FROM books WHERE user_id = $1";</span>
+	let query = <span class="cstat-no" title="statement not covered" >"SELECT * FROM labs WHERE user_id = $1";</span>
 	let queryParams = <span class="cstat-no" title="statement not covered" >[userId];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	if (q) {</span>
@@ -752,7 +752,7 @@ router.get("/search", <span class="fstat-no" title="function not covered" >as</s
 	const { rows } = <span class="cstat-no" title="statement not covered" >await pool.query(query, queryParams);</span>
 &nbsp;
 	// Get total count for pagination
-	let countQuery = <span class="cstat-no" title="statement not covered" >"SELECT COUNT(*) FROM books WHERE user_id = $1";</span>
+	let countQuery = <span class="cstat-no" title="statement not covered" >"SELECT COUNT(*) FROM labs WHERE user_id = $1";</span>
 	let countParams = <span class="cstat-no" title="statement not covered" >[userId];</span>
 <span class="cstat-no" title="statement not covered" >	if (q) {</span>
 <span class="cstat-no" title="statement not covered" >	  countQuery += " AND (title ILIKE $2 OR author ILIKE $2)";</span>
@@ -780,8 +780,8 @@ router.get("/search", <span class="fstat-no" title="function not covered" >as</s
 // ...existing code...
 &nbsp;
 /**
- * @route   GET /api/books
- * @desc    Get all books for the authenticated user
+ * @route   GET /api/labs
+ * @desc    Get all labs for the authenticated user
  * @access  Private
  */
 router.get("/", async (req, res, next) =&gt; {
@@ -792,7 +792,7 @@ router.get("/", async (req, res, next) =&gt; {
 		const { page = 1, limit = 50, search } = req.query;
 		const offset = (page - 1) * limit;
 &nbsp;
-		let query = "SELECT * FROM books WHERE user_id = $1";
+		let query = "SELECT * FROM labs WHERE user_id = $1";
 		let queryParams = [userId];
 &nbsp;
 		// Add search functionality if search parameter is provided
@@ -812,7 +812,7 @@ router.get("/", async (req, res, next) =&gt; {
 		const { rows } = await pool.query(query, queryParams);
 &nbsp;
 		// Get total count for pagination
-		let countQuery = "SELECT COUNT(*) FROM books WHERE user_id = $1";
+		let countQuery = "SELECT COUNT(*) FROM labs WHERE user_id = $1";
 		let countParams = [userId];
 &nbsp;
 		if (search) {
@@ -836,29 +836,29 @@ router.get("/", async (req, res, next) =&gt; {
 		});
 	} catch (err) {
 		<span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== "test") {
-<span class="cstat-no" title="statement not covered" >			console.error("❌ Error fetching books:", err.message);</span>
+<span class="cstat-no" title="statement not covered" >			console.error("âŒ Error fetching labs:", err.message);</span>
 		}
-		next(new AppError("Failed to fetch books", 500));
+		next(new AppError("Failed to fetch labs", 500));
 	}
 });
 &nbsp;
 /**
- * @route   GET /api/books/:id
- * @desc    Get a specific book by ID
+ * @route   GET /api/labs/:id
+ * @desc    Get a specific lab by ID
  * @access  Private
  */
 router.get("/:id", validateId, async (req, res, next) =&gt; {
 	try {
-		const bookId = req.params.id;
+		const labId = req.params.id;
 		const userId = req.user_id;
 &nbsp;
 		const { rows } = await pool.query(
-			"SELECT * FROM books WHERE id = $1 AND user_id = $2",
-			[bookId, userId]
+			"SELECT * FROM labs WHERE id = $1 AND user_id = $2",
+			[labId, userId]
 		);
 &nbsp;
 		if (rows.length === 0) {
-			return next(new AppError("Book not found", 404));
+			return next(new AppError("lab not found", 404));
 		}
 &nbsp;
 		res.json({
@@ -868,71 +868,71 @@ router.get("/:id", validateId, async (req, res, next) =&gt; {
 		});
 	} catch (err) {
 		<span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== "test") {
-<span class="cstat-no" title="statement not covered" >			console.error("❌ Error fetching book:", err.message);</span>
+<span class="cstat-no" title="statement not covered" >			console.error("âŒ Error fetching lab:", err.message);</span>
 		}
-		next(new AppError("Failed to fetch book", 500));
+		next(new AppError("Failed to fetch lab", 500));
 	}
 });
 &nbsp;
 /**
- * @route   POST /api/books
- * @desc    Add a new book
+ * @route   POST /api/labs
+ * @desc    Add a new lab
  * @access  Private
  */
 router.post(
 	"/",
-	validateBook,
+	validateLab,
 	securityLogger("CREATE_BOOK"),
 	async (req, res, next) =&gt; {
 		try {
 			const { title, author } = req.body;
 			const userId = req.user_id;
 &nbsp;
-			// Check for duplicate books (same title and author for the same user)
+			// Check for duplicate labs (same title and author for the same user)
 			const { rows: existingBooks } = await pool.query(
-				"SELECT id FROM books WHERE title = $1 AND author = $2 AND user_id = $3",
+				"SELECT id FROM labs WHERE title = $1 AND author = $2 AND user_id = $3",
 				[title, author, userId]
 			);
 &nbsp;
 			if (existingBooks.length &gt; 0) {
 				return next(
-					new AppError("Book with this title and author already exists", 409)
+					new AppError("lab with this title and author already exists", 409)
 				);
 			}
 &nbsp;
 			const { rows } = await pool.query(
-				"INSERT INTO books (title, author, user_id, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
+				"INSERT INTO labs (title, author, user_id, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
 				[title, author, userId]
 			);
 &nbsp;
 			res.status(201).json({
 				success: true,
 				data: rows[0],
-				message: "Book added successfully",
+				message: "lab added successfully",
 				timestamp: new Date().toISOString(),
 			});
 		} catch (err) {
 			<span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== "test") {
-<span class="cstat-no" title="statement not covered" >				console.error("❌ Error adding book:", err.message);</span>
+<span class="cstat-no" title="statement not covered" >				console.error("âŒ Error adding lab:", err.message);</span>
 			}
-			next(new AppError("Failed to add book", 500));
+			next(new AppError("Failed to add lab", 500));
 		}
 	}
 );
 &nbsp;
 /**
- * @route   PUT /api/books/:id
- * @desc    Update a book
+ * @route   PUT /api/labs/:id
+ * @desc    Update a lab
  * @access  Private
  */
 router.put(
 	"/:id",
 	validateId,
-	validateBookUpdate,
+	validateLabUpdate,
 	securityLogger("UPDATE_BOOK"),
 	async (req, res, next) =&gt; {
 		try {
-			const bookId = req.params.id;
+			const labId = req.params.id;
 			const userId = req.user_id;
 			const updateFields = req.body;
 &nbsp;
@@ -951,10 +951,10 @@ router.put(
 			setClauses.push(`updated_at = NOW()`);
 &nbsp;
 			// Add WHERE conditions
-			values.push(bookId, userId);
+			values.push(labId, userId);
 &nbsp;
 			const query = `
-	  UPDATE books 
+	  UPDATE labs 
 	  SET ${setClauses.join(", ")} 
 	  WHERE id = $${values.length - 1} AND user_id = $${values.length}
 	  RETURNING *
@@ -963,27 +963,27 @@ router.put(
 			const { rows } = await pool.query(query, values);
 &nbsp;
 			if (rows.length === 0) {
-				return next(new AppError("Book not found or unauthorized", 404));
+				return next(new AppError("lab not found or unauthorized", 404));
 			}
 &nbsp;
 			res.json({
 				success: true,
 				data: rows[0],
-				message: "Book updated successfully",
+				message: "lab updated successfully",
 				timestamp: new Date().toISOString(),
 			});
 		} catch (err) {
 			<span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== "test") {
-<span class="cstat-no" title="statement not covered" >				console.error("❌ Error updating book:", err.message);</span>
+<span class="cstat-no" title="statement not covered" >				console.error("âŒ Error updating lab:", err.message);</span>
 			}
-			next(new AppError("Failed to update book", 500));
+			next(new AppError("Failed to update lab", 500));
 		}
 	}
 );
 &nbsp;
 /**
- * @route   DELETE /api/books/:id
- * @desc    Delete a book
+ * @route   DELETE /api/labs/:id
+ * @desc    Delete a lab
  * @access  Private
  */
 router.delete(
@@ -992,29 +992,29 @@ router.delete(
 	securityLogger("DELETE_BOOK"),
 	async (req, res, next) =&gt; {
 		try {
-			const bookId = req.params.id;
+			const labId = req.params.id;
 			const userId = req.user_id;
 &nbsp;
 			const { rows } = await pool.query(
-				"DELETE FROM books WHERE id = $1 AND user_id = $2 RETURNING *",
-				[bookId, userId]
+				"DELETE FROM labs WHERE id = $1 AND user_id = $2 RETURNING *",
+				[labId, userId]
 			);
 &nbsp;
 			if (rows.length === 0) {
-				return next(new AppError("Book not found or unauthorized", 404));
+				return next(new AppError("lab not found or unauthorized", 404));
 			}
 &nbsp;
 			res.json({
 				success: true,
-				data: { id: bookId },
-				message: "Book deleted successfully",
+				data: { id: labId },
+				message: "lab deleted successfully",
 				timestamp: new Date().toISOString(),
 			});
 		} catch (err) {
 			<span class="missing-if-branch" title="if path not taken" >I</span>if (process.env.NODE_ENV !== "test") {
-<span class="cstat-no" title="statement not covered" >				console.error("❌ Error deleting book:", err.message);</span>
+<span class="cstat-no" title="statement not covered" >				console.error("âŒ Error deleting lab:", err.message);</span>
 			}
-			next(new AppError("Failed to delete book", 500));
+			next(new AppError("Failed to delete lab", 500));
 		}
 	}
 );
@@ -1040,3 +1040,4 @@ module.exports = router;
     </body>
 </html>
     
+

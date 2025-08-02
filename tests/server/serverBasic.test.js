@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Server Basic Tests
  * Simple tests to increase server.js coverage
  */
@@ -41,7 +41,7 @@ describe('Server Basic Tests', () => {
 
 	test('should have CORS enabled', async () => {
 		const response = await request(app)
-			.options('/api/books')
+			.options('/api/labs')
 			.expect(204);
 	});
 
@@ -93,7 +93,7 @@ describe('Server Basic Tests', () => {
 		};
 
 		await request(app)
-			.post('/api/books')
+			.post('/api/labs')
 			.send(largeData)
 			.expect(401); // Unauthorized because no token, but payload was processed
 	});
@@ -114,3 +114,5 @@ describe('Server Basic Tests', () => {
 		});
 	});
 });
+
+

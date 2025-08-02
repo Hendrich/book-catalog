@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 <html lang="en">
 
@@ -672,7 +672,7 @@ const { apiLimiter } = require("./middlewares/rateLimiter");
 const { sanitize } = require("./middlewares/validation");
 &nbsp;
 // Import routes
-const bookRoutes = require("./routes/bookRoutes");
+const labRoutes = require("./routes/labRoutes");
 const authRoutes = require("./routes/authRoutes");
 &nbsp;
 // Load OpenAPI specification with fallback
@@ -700,7 +700,7 @@ try {
 		// Fallback minimal spec for tests
 <span class="cstat-no" title="statement not covered" >		openApiSpec = {</span>
 			openapi: "3.0.0",
-			info: { title: "Book Catalog API", version: "2.0.0" },
+			info: { title: "lab Catalog API", version: "2.0.0" },
 			paths: {}
 		};
 	}
@@ -709,7 +709,7 @@ try {
 	// Minimal fallback spec
 <span class="cstat-no" title="statement not covered" >	openApiSpec = {</span>
 		openapi: "3.0.0",
-		info: { title: "Book Catalog API", version: "2.0.0" },
+		info: { title: "lab Catalog API", version: "2.0.0" },
 		paths: {}
 	};
 }
@@ -735,7 +735,7 @@ if (config.nodeEnv === "test") {
 &nbsp;
 app.use(
 	session({
-		secret: process.env.SESSION_SECRET || "bookcatalogsecret",
+		secret: process.env.SESSION_SECRET || "scriptlabssecret",
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
@@ -804,7 +804,7 @@ app.use(
 	)
 );
 app.use(
-	"/api/books",
+	"/api/labs",
 	createRateLimiter(
 		600000,
 		1000,
@@ -841,7 +841,7 @@ const swaggerOptions = {
     .swagger-ui .info { margin: 50px 0; }
     .swagger-ui .info .title { color: #3b82f6; }
   `,
-	customSiteTitle: "Book Catalog API Documentation",
+	customSiteTitle: "lab Catalog API Documentation",
 	customfavIcon: "/favicon.ico",
 };
 &nbsp;
@@ -864,7 +864,7 @@ app.get("/health", (req, res) =&gt; {
 &nbsp;
 // API routes
 app.use("/api/auth", authRoutes);
-app.use("/api/books", bookRoutes);
+app.use("/api/labs", labRoutes);
 &nbsp;
 // API stats endpoint (only in development)
 if (config.nodeEnv === "development") {
@@ -921,30 +921,30 @@ app.use(errorHandler);
 <span class="missing-if-branch" title="if path not taken" >I</span>if (require.main === module) {
 	// Start server
 	const server = <span class="cstat-no" title="statement not covered" >app.listen(PORT, <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		console.log(`🚀 Server running on port ${PORT}`);</span>
-<span class="cstat-no" title="statement not covered" >		console.log(`📍 Environment: ${config.nodeEnv}`);</span>
-<span class="cstat-no" title="statement not covered" >		console.log(`🔗 Health check: http://localhost:${PORT}/health`);</span>
-<span class="cstat-no" title="statement not covered" >		console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);</span>
+<span class="cstat-no" title="statement not covered" >		console.log(`ðŸš€ Server running on port ${PORT}`);</span>
+<span class="cstat-no" title="statement not covered" >		console.log(`ðŸ“ Environment: ${config.nodeEnv}`);</span>
+<span class="cstat-no" title="statement not covered" >		console.log(`ðŸ”— Health check: http://localhost:${PORT}/health`);</span>
+<span class="cstat-no" title="statement not covered" >		console.log(`ðŸ“– API Documentation: http://localhost:${PORT}/api-docs`);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >		if (config.nodeEnv === "development") {</span>
-<span class="cstat-no" title="statement not covered" >			console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);</span>
-<span class="cstat-no" title="statement not covered" >			console.log(`📚 Frontend: http://localhost:${PORT}`);</span>
+<span class="cstat-no" title="statement not covered" >			console.log(`ðŸ“Š API Stats: http://localhost:${PORT}/api/stats`);</span>
+<span class="cstat-no" title="statement not covered" >			console.log(`ðŸ“š Frontend: http://localhost:${PORT}`);</span>
 		}
 	});
 &nbsp;
 	// Graceful shutdown handling
 <span class="cstat-no" title="statement not covered" >	process.on("SIGTERM", <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		console.log("🔄 SIGTERM signal received: closing HTTP server");</span>
+<span class="cstat-no" title="statement not covered" >		console.log("ðŸ”„ SIGTERM signal received: closing HTTP server");</span>
 <span class="cstat-no" title="statement not covered" >		server.close(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >			console.log("✅ HTTP server closed");</span>
+<span class="cstat-no" title="statement not covered" >			console.log("âœ… HTTP server closed");</span>
 <span class="cstat-no" title="statement not covered" >			process.exit(0);</span>
 		});
 	});
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	process.on("SIGINT", <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		console.log("🔄 SIGINT signal received: closing HTTP server");</span>
+<span class="cstat-no" title="statement not covered" >		console.log("ðŸ”„ SIGINT signal received: closing HTTP server");</span>
 <span class="cstat-no" title="statement not covered" >		server.close(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >			console.log("✅ HTTP server closed");</span>
+<span class="cstat-no" title="statement not covered" >			console.log("âœ… HTTP server closed");</span>
 <span class="cstat-no" title="statement not covered" >			process.exit(0);</span>
 		});
 	});
@@ -971,3 +971,4 @@ module.exports = app;
     </body>
 </html>
     
+
