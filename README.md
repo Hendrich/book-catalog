@@ -1,8 +1,8 @@
-﻿# ðŸ“š Script Labs API
+﻿#  Script Labs API
 
 A secure and production-ready Script Labs API built with Node.js, Express, PostgreSQL (Supabase), and JWT authentication.
 
-## ðŸš€ Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -42,9 +42,9 @@ A secure and production-ready Script Labs API built with Node.js, Express, Postg
    npm run dev
    ```
 
-## ðŸ“– API Documentation
+## – API Documentation
 
-### ðŸŒ Interactive Documentation (Swagger UI)
+###  Interactive Documentation (Swagger UI)
 
 ```
 http://localhost:3000/api-docs
@@ -58,12 +58,12 @@ http://localhost:3000/api-docs
 - Request/response examples
 - Schema validation
 
-### ðŸ“‹ Alternative Documentation
+### ‹ Alternative Documentation
 
 - **OpenAPI Spec**: `openapi-spec.json`
 - **Swagger Guide**: `SWAGGER_UI_GUIDE.md`
 
-## ðŸ” Authentication
+## Authentication
 
 The API uses JWT authentication via Supabase:
 
@@ -71,7 +71,7 @@ The API uses JWT authentication via Supabase:
 2. **Login**: `POST /api/auth/login`
 3. **Use Token**: Include in header: `Authorization: Bearer <token>`
 
-## ðŸ“š API Endpoints
+##  API Endpoints
 
 ### Authentication
 
@@ -93,7 +93,7 @@ The API uses JWT authentication via Supabase:
 - `GET /health` - Health check
 - `GET /api/stats` - API statistics (dev only)
 
-## ðŸ› ï¸ Development
+## Development
 
 ### Scripts
 
@@ -109,53 +109,53 @@ npm run lint:fix   # Fix linting issues
 
 ```
 script-labs/
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ server.js              # Main server file
-â”‚   â”œâ”€â”€ config/
-â”‚   â”‚   â””â”€â”€ config.js          # Configuration
-â”‚   â”œâ”€â”€ middlewares/           # Custom middlewares
-â”‚   â”‚   â”œâ”€â”€ authMiddleware.js
-â”‚   â”‚   â”œâ”€â”€ errorHandler.js
-â”‚   â”‚   â”œâ”€â”€ logger.js
-â”‚   â”‚   â”œâ”€â”€ rateLimiter.js
-â”‚   â”‚   â””â”€â”€ validation.js
-â”‚   â”œâ”€â”€ routes/                # API routes
-â”‚   â”‚   â”œâ”€â”€ authRoutes.js
-â”‚   â”‚   â””â”€â”€ labRoutes.js
-â”‚   â””â”€â”€ db.js                  # Database connection
-â”œâ”€â”€ database/                  # Database schemas and scripts
-â”‚   â”œâ”€â”€ schema_pg.sql          # PostgreSQL schema
-â”‚   â”œâ”€â”€ schema_my.sql          # MySQL schema
-â”‚   â”œâ”€â”€ query.sql              # Example queries
-â”‚   â””â”€â”€ README.md
-â”œâ”€â”€ docs/                      # Documentation
-â”‚   â”œâ”€â”€ api/                   # API documentation
-â”‚   â”‚   â”œâ”€â”€ openapi-spec.json
-â”‚   â”‚   â”œâ”€â”€ OPENAPI_GUIDE.md
-â”‚   â”‚   â”œâ”€â”€ SWAGGER_INTEGRATION_COMPLETE.md
-â”‚   â”‚   â””â”€â”€ SWAGGER_UI_GUIDE.md
-â”‚   â”œâ”€â”€ assignments/           # Assignment files
-â”‚   â”œâ”€â”€ deployment/            # Deployment guides
-â”‚   â”‚   â”œâ”€â”€ DEPLOYMENT_GUIDE.md
-â”‚   â”‚   â””â”€â”€ CRITICAL_DEPLOYMENT_FIX.md
-â”‚   â””â”€â”€ *.md                   # Other documentation
-â”œâ”€â”€ postman/                   # Postman collections
-â”‚   â”œâ”€â”€ Script_Labs_API_v2.postman_collection.json
-â”‚   â”œâ”€â”€ Script-Labs-Environment.postman_environment.json
-â”‚   â”œâ”€â”€ POSTMAN_COLLECTION_GUIDE.md
-â”‚   â”œâ”€â”€ POSTMAN_COLLECTION_README.md
-â”‚   â””â”€â”€ README.md
-â”œâ”€â”€ tests/                     # Test files
-â”‚   â”œâ”€â”€ test-api.js
-â”‚   â””â”€â”€ README.md
-â”œâ”€â”€ scripts/                   # Utility scripts
-â”œâ”€â”€ .env                       # Environment variables
-â”œâ”€â”€ .env.template              # Environment template
-â”œâ”€â”€ package.json
-â””â”€â”€ README.md
+ backend/
+‚    server.js              # Main server file
+‚    config/
+‚   ‚   ” config.js          # Configuration
+‚    middlewares/           # Custom middlewares
+‚   ‚    authMiddleware.js
+‚   ‚    errorHandler.js
+‚   ‚    logger.js
+‚   ‚    rateLimiter.js
+‚   ‚   ” validation.js
+‚    routes/                # API routes
+‚   ‚    authRoutes.js
+‚   ‚   ” labRoutes.js
+‚   ” db.js                  # Database connection
+ database/                  # Database schemas and scripts
+‚    schema_pg.sql          # PostgreSQL schema
+‚    schema_my.sql          # MySQL schema
+‚    query.sql              # Example queries
+‚   ” README.md
+ docs/                      # Documentation
+‚    api/                   # API documentation
+‚   ‚    openapi-spec.json
+‚   ‚    OPENAPI_GUIDE.md
+‚   ‚    SWAGGER_INTEGRATION_COMPLETE.md
+‚   ‚   ” SWAGGER_UI_GUIDE.md
+‚    assignments/           # Assignment files
+‚    deployment/            # Deployment guides
+‚   ‚    DEPLOYMENT_GUIDE.md
+‚   ‚   ” CRITICAL_DEPLOYMENT_FIX.md
+‚   ” *.md                   # Other documentation
+ postman/                   # Postman collections
+‚    Script_Labs_API_v2.postman_collection.json
+‚    Script-Labs-Environment.postman_environment.json
+‚    POSTMAN_COLLECTION_GUIDE.md
+‚    POSTMAN_COLLECTION_README.md
+‚   ” README.md
+ tests/                     # Test files
+‚    test-api.js
+‚   ” README.md
+ scripts/                   # Utility scripts
+ .env                       # Environment variables
+ .env.template              # Environment template
+ package.json
+” README.md
 ```
 
-## ðŸ”§ Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -181,7 +181,7 @@ DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 ```
 
-## ðŸš€ Deployment
+##  Deployment
 
 ### Render.com (Recommended)
 
@@ -218,7 +218,7 @@ npm test           # Run all tests
 npm run test:watch # Watch mode
 ```
 
-## ðŸ”’ Security Features
+## Security Features
 
 - **Helmet**: Security headers
 - **Rate Limiting**: API protection
@@ -227,7 +227,7 @@ npm run test:watch # Watch mode
 - **JWT Authentication**: Secure token-based auth
 - **Input Sanitization**: XSS protection
 
-## ðŸš¨ Troubleshooting
+## Troubleshooting
 
 ### Common Issues & Solutions
 
@@ -333,7 +333,7 @@ curl http://localhost:3000/api/stats
 npm run dev
 ```
 
-## ðŸ“‹ TODO & Roadmap
+## ‹ TODO & Roadmap
 
 - [ ] User roles and permissions
 - [ ] Lab categories and tags
@@ -350,11 +350,11 @@ npm run dev
 4. Push to branch
 5. Create Pull Request
 
-## ðŸ“„ License
+## „ License
 
 MIT License - see LICENSE file for details.
 
-## ðŸ“ž Support
+## Support
 
 - **Author**: Hendri Christianto
 - **Email**: hendri.christianto24@gmail.com
@@ -363,7 +363,7 @@ MIT License - see LICENSE file for details.
 
 ---
 
-## ðŸ“š Documentation Files
+##  Documentation Files
 
 - `SWAGGER_UI_GUIDE.md` - Swagger UI usage guide
 - `DEPLOYMENT_GUIDE.md` - Deployment instructions
@@ -373,6 +373,6 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**Happy coding! ðŸš€**
+**Happy coding! **
 
 
