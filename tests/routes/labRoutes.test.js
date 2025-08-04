@@ -24,11 +24,12 @@ describe("Lab Routes - Validation", () => {
     // Create Express app for testing
     app = express();
     app.use(express.json());
-    app.use("/api/Labs", LabRoutes);
+    app.use("/api/Labs", labRoutes);
     app.use(errorHandler);
 
     // Reset all mocks
     jest.clearAllMocks();
+    mockDb.query = jest.fn();
 
     // Generate valid token
     validToken = TestHelpers.generateValidToken();
@@ -56,7 +57,7 @@ describe("Lab Routes - Validation", () => {
     const response = await request(app)
       .post("/api/Labs")
       .set("Authorization", `Bearer ${validToken}`)
-      .send({ title: "Test Lab", author: "Test Author" });
+      .send({ title: "Test lab", author: "Test Author" });
 
     // Assert
     expect(response.status).toBe(500);
@@ -71,11 +72,12 @@ describe("Lab Routes", () => {
     // Create Express app for testing
     app = express();
     app.use(express.json());
-    app.use("/api/Labs", LabRoutes);
+    app.use("/api/Labs", labRoutes);
     app.use(errorHandler);
 
     // Reset all mocks
     jest.clearAllMocks();
+    mockDb.query = jest.fn();
   });
 
   describe("GET /api/Labs", () => {
@@ -103,7 +105,7 @@ describe("Lab Routes", () => {
         // Verify database calls
         expect(mockDb.query).toHaveBeenCalledTimes(2);
         expect(mockDb.query.mock.calls[0][0]).toContain(
-          "SELECT * FROM Labs WHERE user_id = $1"
+          "SELECT * FROM labs WHERE user_id = $1"
         );
         expect(mockDb.query.mock.calls[0][1]).toEqual(["test-user-123", 50, 0]);
       });
@@ -215,7 +217,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to fetch Labs");
+        expect(response.body.error.message).toBe("Failed to fetch labs");
       });
 
       test("should handle invalid pagination parameters gracefully", async () => {
@@ -244,7 +246,7 @@ describe("Lab Routes", () => {
           rows: [
             {
               id: 1,
-              title: "Test Lab",
+              title: "Test lab",
               author: "Test Author",
               user_id: "test-user-123",
               created_at: new Date(),
@@ -260,20 +262,20 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(true);
         expect(response.body.data.id).toBe(1);
-        expect(response.body.data.title).toBe("Test Lab");
+        expect(response.body.data.title).toBe("Test lab");
         expect(response.body.data.user_id).toBe("test-user-123");
         expect(response.body.timestamp).toBeDefined();
 
         // Verify database query
         expect(mockDb.query).toHaveBeenCalledWith(
-          "SELECT * FROM Labs WHERE id = $1 AND user_id = $2",
+          "SELECT * FROM labs WHERE id = $1 AND user_id = $2",
           [1, "test-user-123"]
         );
       });
     });
 
     describe("Error Handling", () => {
-      test("should return 404 when Lab not found", async () => {
+      test("should return 404 when lab not found", async () => {
         // Arrange
         mockDb.query.mockResolvedValueOnce(TestHelpers.mockDbResponses.empty);
 
@@ -282,7 +284,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Lab not found");
+        expect(response.body.error.message).toBe("lab not found");
       });
 
       test("should return 404 when Lab belongs to different user", async () => {
@@ -294,7 +296,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Lab not found");
+        expect(response.body.error.message).toBe("lab not found");
       });
 
       test("should handle database errors", async () => {
@@ -306,7 +308,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to fetch Lab");
+        expect(response.body.error.message).toBe("Failed to fetch lab");
       });
     });
   });
@@ -332,7 +334,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(true);
-        expect(response.body.data.title).toBe("Test Lab");
+        expect(response.body.data.title).toBe("Test lab");
         expect(response.body.data.author).toBe("Test Author");
         expect(response.body.message).toBe("Lab added successfully");
         expect(response.body.timestamp).toBeDefined();
@@ -341,7 +343,7 @@ describe("Lab Routes", () => {
         expect(mockDb.query).toHaveBeenCalledTimes(2);
         // First call: check for duplicates
         expect(mockDb.query.mock.calls[0][0]).toContain(
-          "SELECT id FROM Labs WHERE title = $1 AND author = $2 AND user_id = $3"
+          "SELECT id FROM labs WHERE title = $1 AND author = $2 AND user_id = $3"
         );
         expect(mockDb.query.mock.calls[0][1]).toEqual([
           "New Lab Title",
@@ -349,7 +351,7 @@ describe("Lab Routes", () => {
           "test-user-123",
         ]);
         // Second call: insert new Lab
-        expect(mockDb.query.mock.calls[1][0]).toContain("INSERT INTO Labs");
+        expect(mockDb.query.mock.calls[1][0]).toContain("INSERT INTO labs");
       });
     });
 
@@ -459,7 +461,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to add Lab");
+        expect(response.body.error.message).toBe("Failed to add lab");
       });
 
       test("should handle database errors during Lab creation", async () => {
@@ -481,7 +483,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to add Lab");
+        expect(response.body.error.message).toBe("Failed to add lab");
       });
     });
   });
@@ -519,13 +521,13 @@ describe("Lab Routes", () => {
         expect(response.body.success).toBe(true);
         expect(response.body.data.title).toBe("Updated Title");
         expect(response.body.data.author).toBe("Updated Author");
-        expect(response.body.message).toBe("Lab updated successfully");
+        expect(response.body.message).toBe("lab updated successfully");
         expect(response.body.timestamp).toBeDefined();
 
         // Verify update query
         expect(mockDb.query).toHaveBeenCalledTimes(1);
         const query = mockDb.query.mock.calls[0][0];
-        expect(query).toContain("UPDATE Labs");
+        expect(query).toContain("UPDATE labs");
         expect(query).toContain("title = $1");
         expect(query).toContain("author = $2");
         expect(query).toContain("updated_at = NOW()");
@@ -570,7 +572,7 @@ describe("Lab Routes", () => {
     });
 
     describe("Error Handling", () => {
-      test("should return 404 when Lab not found", async () => {
+      test("should return 404 when lab not found", async () => {
         // Arrange
         mockDb.query.mockResolvedValueOnce(TestHelpers.mockDbResponses.empty);
 
@@ -587,7 +589,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toBe(
-          "Lab not found or unauthorized"
+          "lab not found or unauthorized"
         );
       });
 
@@ -608,7 +610,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toBe(
-          "Lab not found or unauthorized"
+          "lab not found or unauthorized"
         );
       });
 
@@ -647,7 +649,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to update Lab");
+        expect(response.body.error.message).toBe("Failed to update lab");
       });
     });
   });
@@ -674,19 +676,19 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(true);
         expect(response.body.data.id).toBe(1); // ID is returned as number from database
-        expect(response.body.message).toBe("Lab deleted successfully");
+        expect(response.body.message).toBe("lab deleted successfully");
         expect(response.body.timestamp).toBeDefined();
 
         // Verify delete query
         expect(mockDb.query).toHaveBeenCalledWith(
-          "DELETE FROM Labs WHERE id = $1 AND user_id = $2 RETURNING *",
+          "DELETE FROM labs WHERE id = $1 AND user_id = $2 RETURNING *",
           [1, "test-user-123"]
         );
       });
     });
 
     describe("Error Handling", () => {
-      test("should return 404 when Lab not found", async () => {
+      test("should return 404 when lab not found", async () => {
         // Arrange
         mockDb.query.mockResolvedValueOnce(TestHelpers.mockDbResponses.empty);
 
@@ -696,7 +698,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toBe(
-          "Lab not found or unauthorized"
+          "lab not found or unauthorized"
         );
       });
 
@@ -710,7 +712,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toBe(
-          "Lab not found or unauthorized"
+          "lab not found or unauthorized"
         );
       });
 
@@ -723,7 +725,7 @@ describe("Lab Routes", () => {
 
         // Assert
         expect(response.body.success).toBe(false);
-        expect(response.body.error.message).toBe("Failed to delete Lab");
+        expect(response.body.error.message).toBe("Failed to delete lab");
       });
     });
   });
@@ -736,7 +738,7 @@ describe("Lab Routes", () => {
       // All previous tests passing means auth middleware is working
       // This is more of a documentation test
       expect(
-        LabRoutes.stack.every((layer) => {
+        labRoutes.stack.every((layer) => {
           // Check if the route stack has middleware applied
           return layer.handle || layer.route;
         })
@@ -744,5 +746,3 @@ describe("Lab Routes", () => {
     });
   });
 });
-
-

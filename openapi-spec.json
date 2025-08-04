@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "Script Labs API",
@@ -861,5 +861,3 @@
     }
   ]
 }
-
-

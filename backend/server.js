@@ -271,35 +271,33 @@ app.use(errorHandler);
 if (require.main === module) {
   // Start server
   const server = app.listen(PORT, () => {
-    console.log(`ðŸš€ Server running on port ${PORT}`);
-    console.log(`ðŸ“ Environment: ${config.nodeEnv}`);
-    console.log(`ðŸ”— Health check: http://localhost:${PORT}/health`);
-    console.log(`ðŸ“– API Documentation: http://localhost:${PORT}/api-docs`);
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${config.nodeEnv}`);
+    console.log(`🚀 Health check: http://localhost:${PORT}/health`);
+    console.log(`📚 API Documentation: http://localhost:${PORT}/api-docs`);
 
     if (config.nodeEnv === "development") {
-      console.log(`ðŸ“Š API Stats: http://localhost:${PORT}/api/stats`);
-      console.log(`ðŸ“š Frontend: http://localhost:${PORT}`);
+      console.log(`📊 API Stats: http://localhost:${PORT}/api/stats`);
+      console.log(`🌐 Frontend: http://localhost:${PORT}`);
     }
   });
 
   // Graceful shutdown handling
   process.on("SIGTERM", () => {
-    console.log("ðŸ”„ SIGTERM signal received: closing HTTP server");
+    console.log("🛑 SIGTERM signal received: closing HTTP server");
     server.close(() => {
-      console.log("âœ… HTTP server closed");
+      console.log("✅ HTTP server closed");
       process.exit(0);
     });
   });
 
   process.on("SIGINT", () => {
-    console.log("ðŸ”„ SIGINT signal received: closing HTTP server");
+    console.log("🛑 SIGINT signal received: closing HTTP server");
     server.close(() => {
-      console.log("âœ… HTTP server closed");
+      console.log("✅ HTTP server closed");
       process.exit(0);
     });
   });
 }
 
 module.exports = app;
-
-
