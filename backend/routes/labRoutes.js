@@ -191,7 +191,10 @@ router.post(
 
       if (existingLabs.length > 0) {
         return next(
-          new AppError("Lab with this title and description already exists", 409)
+          new AppError(
+            "Lab with this title and description already exists",
+            409
+          )
         );
       }
 
@@ -315,5 +318,3 @@ router.delete(
 );
 
 module.exports = router;
-
-

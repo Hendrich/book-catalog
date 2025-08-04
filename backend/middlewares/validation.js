@@ -156,5 +156,3 @@ module.exports = {
   sanitize,
   schemas,
 };
-
-

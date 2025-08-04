@@ -389,7 +389,9 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toContain("Validation Error:");
-        expect(response.body.error.message).toContain("Description is required");
+        expect(response.body.error.message).toContain(
+          "Description is required"
+        );
       });
 
       test("should reject Lab with empty title", async () => {
