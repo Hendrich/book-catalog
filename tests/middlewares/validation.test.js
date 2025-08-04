@@ -1,4 +1,4 @@
-﻿const {
+const {
 	validateLab,
 	validateAuth,
 	validateId,
@@ -24,7 +24,7 @@ describe('Validation Middleware', () => {
 				// Arrange
 				req.body = {
 					title: 'The Great Gatsby',
-					author: 'F. Scott Fitzgerald'
+					description: 'A classic American novel'
 				};
 
 				// Act
@@ -34,14 +34,14 @@ describe('Validation Middleware', () => {
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(next).toHaveBeenCalledWith();
 				expect(req.body.title).toBe('The Great Gatsby');
-				expect(req.body.author).toBe('F. Scott Fitzgerald');
+				expect(req.body.description).toBe('A classic American novel');
 			});
 
-			test('should trim whitespace from title and author', () => {
+			test('should trim whitespace from title and description', () => {
 				// Arrange
 				req.body = {
 					title: '  The Great Gatsby  ',
-					author: '  F. Scott Fitzgerald  '
+					description: '  A classic American novel  '
 				};
 
 				// Act
@@ -50,16 +50,16 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBe('The Great Gatsby');
-				expect(req.body.author).toBe('F. Scott Fitzgerald');
+				expect(req.body.description).toBe('A classic American novel');
 			});
 
-			test('should handle maximum length title and author', () => {
+			test('should handle maximum length title and description', () => {
 				// Arrange
 				const maxTitle = 'A'.repeat(255);
-				const maxAuthor = 'B'.repeat(255);
+				const maxDescription = 'B'.repeat(1000);
 				req.body = {
 					title: maxTitle,
-					author: maxAuthor
+					description: maxDescription
 				};
 
 				// Act
@@ -68,7 +68,7 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBe(maxTitle);
-				expect(req.body.author).toBe(maxAuthor);
+				expect(req.body.description).toBe(maxDescription);
 			});
 		});
 
@@ -77,7 +77,7 @@ describe('Validation Middleware', () => {
 				// Arrange
 				req.body = {
 					title: '',
-					author: 'Valid Author'
+					description: 'Valid Description'
 				};
 
 				// Act
@@ -94,7 +94,7 @@ describe('Validation Middleware', () => {
 			test('should reject missing title', () => {
 				// Arrange
 				req.body = {
-					author: 'Valid Author'
+					Description: 'Valid Description'
 				};
 
 				// Act
@@ -111,7 +111,7 @@ describe('Validation Middleware', () => {
 				// Arrange
 				req.body = {
 					title: 'A'.repeat(256),
-					author: 'Valid Author'
+					Description: 'Valid Description'
 				};
 
 				// Act
@@ -124,11 +124,11 @@ describe('Validation Middleware', () => {
 				expect(error.message).toContain('Title cannot exceed 255 characters');
 			});
 
-			test('should reject empty author', () => {
+			test('should reject empty Description', () => {
 				// Arrange
 				req.body = {
 					title: 'Valid Title',
-					author: ''
+					Description: ''
 				};
 
 				// Act
@@ -138,10 +138,10 @@ describe('Validation Middleware', () => {
 				expect(next).toHaveBeenCalledTimes(1);
 				const error = next.mock.calls[0][0];
 				expect(error).toBeInstanceOf(AppError);
-				expect(error.message).toContain('Author cannot be empty');
+				        expect(error.message).toContain('Description is required');
 			});
 
-			test('should reject missing author', () => {
+			test('should reject missing Description', () => {
 				// Arrange
 				req.body = {
 					title: 'Valid Title'
@@ -154,14 +154,14 @@ describe('Validation Middleware', () => {
 				expect(next).toHaveBeenCalledTimes(1);
 				const error = next.mock.calls[0][0];
 				expect(error).toBeInstanceOf(AppError);
-				expect(error.message).toContain('Author is required');
+				expect(error.message).toContain('Description is required');
 			});
 
-			test('should reject author exceeding 255 characters', () => {
+			test('should reject Description exceeding 1000 characters', () => {
 				// Arrange
 				req.body = {
 					title: 'Valid Title',
-					author: 'B'.repeat(256)
+					description: 'B'.repeat(1001)
 				};
 
 				// Act
@@ -171,14 +171,14 @@ describe('Validation Middleware', () => {
 				expect(next).toHaveBeenCalledTimes(1);
 				const error = next.mock.calls[0][0];
 				expect(error).toBeInstanceOf(AppError);
-				expect(error.message).toContain('Author cannot exceed 255 characters');
+				expect(error.message).toContain('Description cannot exceed 1000 characters');
 			});
 
 			test('should reject extra unknown fields', () => {
 				// Arrange
 				req.body = {
 					title: 'Valid Title',
-					author: 'Valid Author',
+					Description: 'Valid Description',
 					unknownField: 'should be removed'
 				};
 
@@ -419,7 +419,7 @@ describe('Validation Middleware', () => {
 				// Arrange
 				req.body = {
 					title: '<script>alert("xss")</script>Clean Title',
-					author: 'Clean Author<script>malicious()</script>'
+					Description: 'Clean Description<script>malicious()</script>'
 				};
 
 				// Act
@@ -428,14 +428,14 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBe('Clean Title');
-				expect(req.body.author).toBe('Clean Author');
+				expect(req.body.Description).toBe('Clean Description');
 			});
 
 			test('should remove HTML tags from body', () => {
 				// Arrange
 				req.body = {
 					title: '<div>Title with <b>HTML</b></div>',
-					author: '<p>Author with <i>italic</i></p>'
+					Description: '<p>Description with <i>italic</i></p>'
 				};
 
 				// Act
@@ -444,7 +444,7 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBe('Title with HTML');
-				expect(req.body.author).toBe('Author with italic');
+				expect(req.body.Description).toBe('Description with italic');
 			});
 
 			test('should sanitize query parameters', () => {
@@ -487,7 +487,7 @@ describe('Validation Middleware', () => {
 				// Arrange
 				req.body = {
 					title: '  <script></script>  Clean Title  ',
-					author: '  <div>  Clean Author  </div>  '
+					Description: '  <div>  Clean Description  </div>  '
 				};
 
 				// Act
@@ -496,14 +496,14 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBe('Clean Title');
-				expect(req.body.author).toBe('Clean Author');
+				expect(req.body.Description).toBe('Clean Description');
 			});
 
 			test('should handle null and undefined values', () => {
 				// Arrange
 				req.body = {
 					title: null,
-					author: undefined,
+					Description: undefined,
 					description: 'Valid description'
 				};
 
@@ -513,7 +513,7 @@ describe('Validation Middleware', () => {
 				// Assert
 				expect(next).toHaveBeenCalledTimes(1);
 				expect(req.body.title).toBeNull();
-				expect(req.body.author).toBeUndefined();
+				expect(req.body.Description).toBeUndefined();
 				expect(req.body.description).toBe('Valid description');
 			});
 		});
@@ -524,7 +524,7 @@ describe('Validation Middleware', () => {
 			// Arrange
 			req.body = {
 				title: '', // Invalid: empty
-				author: 'A'.repeat(256) // Invalid: too long
+				description: 'A'.repeat(1001) // Invalid: too long
 			};
 
 			// Act
@@ -535,7 +535,7 @@ describe('Validation Middleware', () => {
 			const error = next.mock.calls[0][0];
 			expect(error).toBeInstanceOf(AppError);
 			expect(error.message).toContain('Title cannot be empty');
-			expect(error.message).toContain('Author cannot exceed 255 characters');
+			expect(error.message).toContain('Description cannot exceed 1000 characters');
 		});
 
 		test('should have consistent error format', () => {

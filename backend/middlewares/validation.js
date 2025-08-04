@@ -14,10 +14,10 @@ const schemas = {
       "string.max": "Title cannot exceed 255 characters",
       "any.required": "Title is required",
     }),
-    author: Joi.string().min(1).max(255).trim().required().messages({
-      "string.empty": "Author cannot be empty",
-      "string.max": "Author cannot exceed 255 characters",
-      "any.required": "Author is required",
+    description: Joi.string().min(1).max(1000).trim().required().messages({
+      "string.empty": "Description cannot be empty",
+      "string.max": "Description cannot exceed 1000 characters",
+      "any.required": "Description is required",
     }),
   }),
 
@@ -50,7 +50,7 @@ const schemas = {
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(10),
     sortBy: Joi.string()
-      .valid("title", "author", "created_at", "updated_at")
+      .valid("title", "description", "created_at", "updated_at")
       .default("created_at"),
     sortOrder: Joi.string().valid("asc", "desc").default("desc"),
   }),
@@ -91,7 +91,7 @@ const validateLabQuery = validate(schemas.labQuery, "query");
 const validateLabUpdate = (req, res, next) => {
   const updateSchema = Joi.object({
     title: Joi.string().min(1).max(255).trim().optional(),
-    author: Joi.string().min(1).max(255).trim().optional(),
+    description: Joi.string().min(1).max(1000).trim().optional(),
   }).min(1); // At least one field must be provided
 
   const { error, value } = updateSchema.validate(req.body, {

@@ -33,7 +33,7 @@ router.get("/search", async (req, res, next) => {
     let queryParams = [userId];
 
     if (q) {
-      query += " AND (title ILIKE $2 OR author ILIKE $2)";
+      query += " AND (title ILIKE $2 OR description ILIKE $2)";
       queryParams.push(`%${q}%`);
     }
 
@@ -50,7 +50,7 @@ router.get("/search", async (req, res, next) => {
     let countQuery = "SELECT COUNT(*) FROM labs WHERE user_id = $1";
     let countParams = [userId];
     if (q) {
-      countQuery += " AND (title ILIKE $2 OR author ILIKE $2)";
+      countQuery += " AND (title ILIKE $2 OR description ILIKE $2)";
       countParams.push(`%${q}%`);
     }
     const { rows: countRows } = await pool.query(countQuery, countParams);
@@ -92,7 +92,7 @@ router.get("/", async (req, res, next) => {
 
     // Add search functionality if search parameter is provided
     if (search) {
-      query += " AND (title ILIKE $2 OR author ILIKE $2)";
+      query += " AND (title ILIKE $2 OR description ILIKE $2)";
       queryParams.push(`%${search}%`);
     }
 
@@ -111,7 +111,7 @@ router.get("/", async (req, res, next) => {
     let countParams = [userId];
 
     if (search) {
-      countQuery += " AND (title ILIKE $2 OR author ILIKE $2)";
+      countQuery += " AND (title ILIKE $2 OR description ILIKE $2)";
       countParams.push(`%${search}%`);
     }
 
@@ -180,24 +180,24 @@ router.post(
   securityLogger("CREATE_LAB"),
   async (req, res, next) => {
     try {
-      const { title, author } = req.body;
+      const { title, description } = req.body;
       const userId = req.user_id;
 
-      // Check for duplicate labs (same title and author for the same user)
+      // Check for duplicate labs (same title and description for the same user)
       const { rows: existingLabs } = await pool.query(
-        "SELECT id FROM labs WHERE title = $1 AND author = $2 AND user_id = $3",
-        [title, author, userId]
+        "SELECT id FROM labs WHERE title = $1 AND description = $2 AND user_id = $3",
+        [title, description, userId]
       );
 
       if (existingLabs.length > 0) {
         return next(
-          new AppError("Lab with this title and author already exists", 409)
+          new AppError("Lab with this title and description already exists", 409)
         );
       }
 
       const { rows } = await pool.query(
-        "INSERT INTO labs (title, author, user_id, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
-        [title, author, userId]
+        "INSERT INTO labs (title, description, user_id, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
+        [title, description, userId]
       );
 
       res.status(201).json({

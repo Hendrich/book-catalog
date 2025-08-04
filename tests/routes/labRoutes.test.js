@@ -57,7 +57,7 @@ describe("Lab Routes - Validation", () => {
     const response = await request(app)
       .post("/api/Labs")
       .set("Authorization", `Bearer ${validToken}`)
-      .send({ title: "Test lab", author: "Test Author" });
+      .send({ title: "Test lab", description: "Test Description" });
 
     // Assert
     expect(response.status).toBe(500);
@@ -149,7 +149,7 @@ describe("Lab Routes", () => {
 
         // Verify search query
         expect(mockDb.query.mock.calls[0][0]).toContain(
-          "AND (title ILIKE $2 OR author ILIKE $2)"
+          "AND (title ILIKE $2 OR description ILIKE $2)"
         );
         expect(mockDb.query.mock.calls[0][1]).toEqual([
           "test-user-123",
@@ -247,7 +247,7 @@ describe("Lab Routes", () => {
             {
               id: 1,
               title: "Test lab",
-              author: "Test Author",
+              description: "Test Description",
               user_id: "test-user-123",
               created_at: new Date(),
               updated_at: new Date(),
@@ -323,7 +323,7 @@ describe("Lab Routes", () => {
 
         const LabData = {
           title: "New Lab Title",
-          author: "New Author",
+          description: "New Description",
         };
 
         // Act
@@ -335,7 +335,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(true);
         expect(response.body.data.title).toBe("Test lab");
-        expect(response.body.data.author).toBe("Test Author");
+        expect(response.body.data.description).toBe("Test Description");
         expect(response.body.message).toBe("Lab added successfully");
         expect(response.body.timestamp).toBeDefined();
 
@@ -343,11 +343,11 @@ describe("Lab Routes", () => {
         expect(mockDb.query).toHaveBeenCalledTimes(2);
         // First call: check for duplicates
         expect(mockDb.query.mock.calls[0][0]).toContain(
-          "SELECT id FROM labs WHERE title = $1 AND author = $2 AND user_id = $3"
+          "SELECT id FROM labs WHERE title = $1 AND description = $2 AND user_id = $3"
         );
         expect(mockDb.query.mock.calls[0][1]).toEqual([
           "New Lab Title",
-          "New Author",
+          "New Description",
           "test-user-123",
         ]);
         // Second call: insert new Lab
@@ -359,7 +359,7 @@ describe("Lab Routes", () => {
       test("should reject Lab with missing title", async () => {
         // Arrange
         const invalidLabData = {
-          author: "Valid Author",
+          description: "Valid Description",
         };
 
         // Act
@@ -374,7 +374,7 @@ describe("Lab Routes", () => {
         expect(response.body.error.message).toContain("Title is required");
       });
 
-      test("should reject Lab with missing author", async () => {
+      test("should reject Lab with missing description", async () => {
         // Arrange
         const invalidLabData = {
           title: "Valid Title",
@@ -389,14 +389,14 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toContain("Validation Error:");
-        expect(response.body.error.message).toContain("Author is required");
+        expect(response.body.error.message).toContain("Description is required");
       });
 
       test("should reject Lab with empty title", async () => {
         // Arrange
         const invalidLabData = {
           title: "",
-          author: "Valid Author",
+          description: "Valid Description",
         };
 
         // Act
@@ -421,7 +421,7 @@ describe("Lab Routes", () => {
 
         const duplicateLabData = {
           title: "Existing Title",
-          author: "Existing Author",
+          description: "Existing Description",
         };
 
         // Act
@@ -433,7 +433,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(false);
         expect(response.body.error.message).toBe(
-          "Lab with this title and author already exists"
+          "Lab with this title and description already exists"
         );
 
         // Should not call insert query
@@ -450,7 +450,7 @@ describe("Lab Routes", () => {
 
         const LabData = {
           title: "Valid Title",
-          author: "Valid Author",
+          description: "Valid Description",
         };
 
         // Act
@@ -472,7 +472,7 @@ describe("Lab Routes", () => {
 
         const LabData = {
           title: "Valid Title",
-          author: "Valid Author",
+          description: "Valid Description",
         };
 
         // Act
@@ -497,7 +497,7 @@ describe("Lab Routes", () => {
             {
               id: 1,
               title: "Updated Title",
-              author: "Updated Author",
+              description: "Updated Description",
               user_id: "test-user-123",
               created_at: new Date(),
               updated_at: new Date(),
@@ -508,7 +508,7 @@ describe("Lab Routes", () => {
 
         const updateData = {
           title: "Updated Title",
-          author: "Updated Author",
+          description: "Updated Description",
         };
 
         // Act
@@ -520,7 +520,7 @@ describe("Lab Routes", () => {
         // Assert
         expect(response.body.success).toBe(true);
         expect(response.body.data.title).toBe("Updated Title");
-        expect(response.body.data.author).toBe("Updated Author");
+        expect(response.body.data.description).toBe("Updated Description");
         expect(response.body.message).toBe("lab updated successfully");
         expect(response.body.timestamp).toBeDefined();
 
@@ -529,7 +529,7 @@ describe("Lab Routes", () => {
         const query = mockDb.query.mock.calls[0][0];
         expect(query).toContain("UPDATE labs");
         expect(query).toContain("title = $1");
-        expect(query).toContain("author = $2");
+        expect(query).toContain("description = $2");
         expect(query).toContain("updated_at = NOW()");
         expect(query).toContain("WHERE id = $3 AND user_id = $4");
       });

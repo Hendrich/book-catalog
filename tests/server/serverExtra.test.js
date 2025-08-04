@@ -50,8 +50,7 @@ describe("Server Extra Coverage Tests", () => {
   test("should handle large request bodies", async () => {
     const largeBody = {
       title: "A".repeat(10000),
-      author: "B".repeat(10000),
-      description: "C".repeat(50000),
+      description: "B".repeat(10000),
     };
 
     await request(app).post("/api/labs").send(largeBody).expect(401); // Unauthorized but body processed

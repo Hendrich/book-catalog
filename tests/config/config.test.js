@@ -46,7 +46,7 @@ describe("Configuration Module", () => {
       const config = require("../../backend/config/config");
 
       // Assert
-      expect(config.port).toBe("8080");
+      expect(config.port).toBe(8080);
     });
 
     test("should use custom JWT expiration from environment", () => {

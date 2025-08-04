@@ -2,7 +2,7 @@
 
 const config = {
   // Server Configuration
-  port: process.env.PORT || 3000,
+  port: parseInt(process.env.PORT) || 3000,
   nodeEnv: process.env.NODE_ENV || "development",
 
   // Database Configuration

@@ -86,7 +86,7 @@ class TestHelpers {
         {
           id: 1,
           title: "Test lab",
-          author: "Test Author",
+          description: "Test Description",
           user_id: "test-user-123",
           created_at: new Date(),
           updated_at: new Date(),
@@ -100,7 +100,7 @@ class TestHelpers {
         {
           id: 1,
           title: "Test lab 1",
-          author: "Test Author 1",
+          description: "Test Description 1",
           user_id: "test-user-123",
           created_at: new Date(),
           updated_at: new Date(),
@@ -108,7 +108,7 @@ class TestHelpers {
         {
           id: 2,
           title: "Test lab 2",
-          author: "Test Author 2",
+          description: "Test Description 2",
           user_id: "test-user-123",
           created_at: new Date(),
           updated_at: new Date(),
@@ -133,12 +133,12 @@ class TestHelpers {
   static sampleData = {
     validBook: {
       title: "Sample lab Title",
-      author: "Sample Author Name",
+      description: "Sample Description",
     },
 
     invalidBook: {
       title: "", // Invalid: empty title
-      author: "A".repeat(256), // Invalid: too long
+      description: "A".repeat(1001), // Invalid: too long
     },
 
     validUser: {

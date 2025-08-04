@@ -15,7 +15,7 @@ CREATE TABLE users (
 CREATE TABLE labs (
   id SERIAL PRIMARY KEY,
   title VARCHAR(100),
-  author VARCHAR(100),
+  description TEXT,
   user_id INTEGER,
   CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -28,11 +28,11 @@ INSERT INTO users (id, username, password) VALUES
   (8, 'santi', '$2b$10$puxe3deN8PxKtFhrVtaiRuTVQH4b5EyPXHQCD2wt3y8cAP4G2mZX.');
 
 -- Data untuk tabel labs
-INSERT INTO labs (id, title, author, user_id) VALUES
-  (14, 'lab menari', 'jojo', 4),
-  (15, 'lab mewarnai', 'santi', 4),
-  (17, 'bahaso', 'darwin', 4),
-  (18, 'lab gambar', 'budiman', 4);
+INSERT INTO labs (id, title, description, user_id) VALUES
+  (14, 'lab menari', 'Lab untuk belajar menari dengan berbagai gaya', 4),
+  (15, 'lab mewarnai', 'Lab kreatif untuk mewarnai dan melukis', 4),
+  (17, 'bahaso', 'Lab pembelajaran bahasa Indonesia', 4),
+  (18, 'lab gambar', 'Lab untuk belajar menggambar dan sketsa', 4);
 
 -- Reset sequence (karena id manual dimasukkan)
 SELECT setval('users_id_seq', 8, true);

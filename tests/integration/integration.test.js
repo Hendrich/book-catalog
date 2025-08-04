@@ -1,4 +1,4 @@
-﻿const request = require("supertest");
+const request = require("supertest");
 const express = require("express");
 const { errorHandler } = require("../../backend/middlewares/errorHandler");
 const TestHelpers = require("../utils/testHelpers");
@@ -189,7 +189,7 @@ describe("Integration Tests - Complete User Workflow", () => {
             {
               id: labId,
               title: "Integration Test lab",
-              author: "Test Author",
+              description: "Test Description",
               user_id: userId,
               created_at: new Date(),
               updated_at: new Date(),
@@ -202,7 +202,7 @@ describe("Integration Tests - Complete User Workflow", () => {
         .set("Authorization", authToken)
         .send({
           title: "Integration Test lab",
-          author: "Test Author",
+          description: "Test Description",
         })
         .expect(201);
 
@@ -216,7 +216,7 @@ describe("Integration Tests - Complete User Workflow", () => {
           {
             id: labId,
             title: "Integration Test lab",
-            author: "Test Author",
+            description: "Test Description",
             user_id: userId,
             created_at: new Date(),
             updated_at: new Date(),
@@ -239,7 +239,7 @@ describe("Integration Tests - Complete User Workflow", () => {
           {
             id: labId,
             title: "Updated Integration Test lab",
-            author: "Updated Test Author",
+            description: "Updated Test Description",
             user_id: userId,
             created_at: new Date(),
             updated_at: new Date(),
@@ -252,7 +252,7 @@ describe("Integration Tests - Complete User Workflow", () => {
         .set("Authorization", authToken)
         .send({
           title: "Updated Integration Test lab",
-          author: "Updated Test Author",
+          description: "Updated Test Description",
         })
         .expect(200);
 
@@ -269,7 +269,7 @@ describe("Integration Tests - Complete User Workflow", () => {
             {
               id: labId,
               title: "Updated Integration Test lab",
-              author: "Updated Test Author",
+              description: "Updated Test Description",
               user_id: userId,
               created_at: new Date(),
               updated_at: new Date(),
@@ -296,7 +296,7 @@ describe("Integration Tests - Complete User Workflow", () => {
           {
             id: labId,
             title: "Updated Integration Test lab",
-            author: "Updated Test Author",
+            description: "Updated Test Author",
             user_id: userId,
           },
         ],
@@ -365,7 +365,7 @@ describe("Integration Tests - Complete User Workflow", () => {
         .set("Authorization", authToken)
         .send({
           title: "", // Invalid: empty title
-          author: "Valid Author",
+          description: "Valid Author",
         })
         .expect(400);
 
@@ -432,13 +432,13 @@ describe("Integration Tests - Complete User Workflow", () => {
         .set("Authorization", authToken)
         .send({
           title: "Existing lab",
-          author: "Existing Author",
+          description: "Existing Description",
         })
         .expect(409);
 
       expect(duplicateResponse.body.success).toBe(false);
       expect(duplicateResponse.body.error.message).toBe(
-        "Lab with this title and author already exists"
+        "Lab with this title and description already exists"
       );
     });
 
@@ -452,7 +452,7 @@ describe("Integration Tests - Complete User Workflow", () => {
             {
               id: 1,
               title: "Search Result lab",
-              author: "Search Author",
+              description: "Search Author",
               user_id: userId,
               created_at: new Date(),
               updated_at: new Date(),
@@ -528,7 +528,7 @@ describe("Integration Tests - Complete User Workflow", () => {
 
       const maliciousData = {
         title: '<script>alert("xss")</script>Clean Title',
-        author: 'Clean Author<img src=x onerror=alert("xss")>',
+        description: 'Clean Author<img src=x onerror=alert("xss")>',
       };
 
       // Should not crash and should sanitize the input

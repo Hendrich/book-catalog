@@ -79,8 +79,7 @@ describe("Server Basic Tests", () => {
   test("should handle requests with large payload", async () => {
     const largeData = {
       title: "A".repeat(1000),
-      author: "B".repeat(1000),
-      description: "C".repeat(5000),
+      description: "B".repeat(1000),
     };
 
     await request(app).post("/api/labs").send(largeData).expect(401); // Unauthorized because no token, but payload was processed
