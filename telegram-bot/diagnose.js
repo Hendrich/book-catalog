@@ -142,24 +142,24 @@ async function runDiagnostics() {
     await notifier.sendDetailedNotification(testData, coverageData, options);
     console.log("   â””â”€ Detailed format: … Sent successfully\n");
 
-    console.log("ðŸŽ‰ ALL DIAGNOSTICS PASSED!");
+    console.log("🟢 ALL DIAGNOSTICS PASSED!");
     console.log("… Telegram bot is configured correctly and ready to use.");
-    console.log("\nðŸ“± Check your Telegram chat for test messages.");
-    console.log("\nðŸš€ Available commands:");
+    console.log("\n🟢 Check your Telegram chat for test messages.");
+    console.log("\n🟡 Available commands:");
     console.log("   npm run test:coverage       # Run tests with notification");
     console.log("   npm run telegram:test       # Test bot connection");
     console.log("   npm run telegram:clean      # Test clean format");
     console.log("   npm run telegram:send       # Send manual notification");
   } catch (error) {
-    console.log(`   â””â”€ Connection test: âŒ Failed\n`);
-    console.error("âŒ ERROR:", error.message);
+    console.log(`   └── Connection test: 🚫 Failed\n`);
+    console.error("🚫 ERROR:", error.message);
 
     if (error.response?.body?.error_code === 401) {
-      console.log("\nðŸ’¡ SOLUTION: Invalid bot token");
+      console.log("\n🛑 SOLUTION: Invalid bot token");
       console.log("   1. Check TELEGRAM_BOT_TOKEN in .env file");
       console.log("   2. Create a new bot with @BotFather if needed");
     } else if (error.response?.body?.error_code === 400) {
-      console.log("\nðŸ’¡ SOLUTION: Invalid chat ID");
+      console.log("\n🛑 SOLUTION: Invalid chat ID");
       console.log("   1. Check TELEGRAM_CHAT_ID in .env file");
       console.log("   2. Make sure you sent /start to the bot");
       console.log("   3. For group chats, add the bot to the group first");

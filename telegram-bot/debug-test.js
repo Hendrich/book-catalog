@@ -4,7 +4,7 @@
  * Debug Test Runner - untuk melihat data test yang sebenarnya
  */
 
-const TelegramTestNotifier = require('./TelegramTestNotifier');
+const TelegramTestNotifier = require("./TelegramTestNotifier");
 
 // Test data yang menyerupai Jest output
 const testData = {
@@ -12,18 +12,20 @@ const testData = {
   numPassedTests: 334,
   numFailedTests: 0,
   numPendingTests: 0,
-  testExecError: false
+  testExecError: false,
 };
 
-console.log('ðŸ“Š Debug - Test data being sent:');
+console.log("🟢 Debug - Test data being sent:");
 console.log(JSON.stringify(testData, null, 2));
 
-console.log('\nðŸ“± Creating TelegramTestNotifier...');
+console.log("\n🟢 Creating TelegramTestNotifier...");
 const notifier = new TelegramTestNotifier();
 
 if (!notifier.enabled) {
-  console.log('âš ï¸ Telegram not enabled, but let\'s check the message formatting...');
-  
+  console.log(
+    "🟡 Telegram not enabled, but let's check the message formatting..."
+  );
+
   // Simulate the safeTestData processing like in TelegramTestNotifier
   const safeTestData = {
     total: testData.total || testData.numTotalTests || 0,
@@ -31,27 +33,28 @@ if (!notifier.enabled) {
     failed: testData.failed || testData.numFailedTests || 0,
     skipped: testData.skipped || testData.numPendingTests || 0,
     duration: testData.duration || 0,
-    hasErrors: testData.hasErrors || testData.testExecError || (testData.failed > 0)
+    hasErrors:
+      testData.hasErrors || testData.testExecError || testData.failed > 0,
   };
-  
-  console.log('\nðŸ” Processed safeTestData:');
+
+  console.log("\n🟡 Processed safeTestData:");
   console.log(JSON.stringify(safeTestData, null, 2));
-  
+
   // Check status logic
-  let statusIcon = 'ðŸŸ¢';
-  let statusText = 'SUCCESS';
-  
+  let statusIcon = "🟢";
+  let statusText = "SUCCESS";
+
   if (safeTestData.failed > 0 || safeTestData.hasErrors) {
-    statusIcon = 'ðŸ”´';
-    statusText = 'FAILED';
+    statusIcon = "🛑";
+    statusText = "FAILED";
   } else if (safeTestData.total === 0) {
-    statusIcon = 'âšª';
-    statusText = 'NO TESTS';
-    console.log('âŒ PROBLEM: safeTestData.total is 0!');
+    statusIcon = "🟡";
+    statusText = "NO TESTS";
+    console.log("🛑 PROBLEM: safeTestData.total is 0!");
   }
-  
-  console.log(`\nðŸ“‹ Status: ${statusIcon} ${statusText}`);
-  console.log(`ðŸ“Š Total: ${safeTestData.total}, Passed: ${safeTestData.passed}, Failed: ${safeTestData.failed}`);
+
+  console.log(`\n🟢 Status: ${statusIcon} ${statusText}`);
+  console.log(
+    `🟢 Total: ${safeTestData.total}, Passed: ${safeTestData.passed}, Failed: ${safeTestData.failed}`
+  );
 }
-
-

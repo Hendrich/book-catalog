@@ -15,7 +15,7 @@ async function runTestsWithNotification() {
 
   const notifier = new TelegramTestNotifier();
   console.log(
-    `ðŸ“± Telegram notifications: ${notifier.enabled ? "enabled" : "disabled"}`
+    `🟢Telegram notifications: ${notifier.enabled ? "enabled" : "disabled"}`
   );
 
   let testData = {
@@ -56,14 +56,14 @@ async function runTestsWithNotification() {
     });
 
     jestProcess.on("close", async (code) => {
-      console.log(`\nðŸ“Š Jest process completed with exit code: ${code}`);
-      console.log(`ðŸ“ stdout length: ${stdout.length} chars`);
-      console.log(`ðŸ“ stderr length: ${stderr.length} chars`);
+      console.log(`\n🟢 Jest process completed with exit code: ${code}`);
+      console.log(`🟢 stdout length: ${stdout.length} chars`);
+      console.log(`🟢 stderr length: ${stderr.length} chars`);
 
       try {
         // Parse Jest JSON output
         if (stdout.trim()) {
-          console.log("ðŸ“„ Parsing Jest JSON output...");
+          console.log("🟢 Parsing Jest JSON output...");
           const jestResults = JSON.parse(stdout);
           testData = {
             numTotalTests: jestResults.numTotalTests || 0,
@@ -73,10 +73,10 @@ async function runTestsWithNotification() {
             testExecError: code !== 0,
           };
           console.log(
-            `ðŸ“Š Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`
+            `🟢 Test Results: ${testData.numTotalTests} total, ${testData.numPassedTests} passed, ${testData.numFailedTests} failed`
           );
         } else {
-          console.log("âš ï¸ No JSON output from Jest");
+          console.log("🟡 No JSON output from Jest");
         }
 
         // Read coverage data
@@ -89,7 +89,7 @@ async function runTestsWithNotification() {
           const rawCoverage = fs.readFileSync(coveragePath, "utf8");
           const coverage = JSON.parse(rawCoverage);
           coverageData = coverage.total;
-          console.log("ðŸ“Š Coverage data loaded successfully");
+          console.log("🟢 Coverage data loaded successfully");
         }
 
         // Send notification
@@ -119,7 +119,7 @@ async function runTestsWithNotification() {
         // Exit with same code as Jest
         process.exit(code);
       } catch (error) {
-        console.error("âŒ Failed to process test results:", error.message);
+        console.error("🛑 Failed to process test results:", error.message);
 
         // Still try to send notification with basic info
         if (notifier.enabled) {
@@ -135,7 +135,7 @@ async function runTestsWithNotification() {
             await notifier.sendNotification(testData, coverageData, options);
           } catch (notifError) {
             console.error(
-              "âŒ Failed to send error notification:",
+              "🛑 Failed to send error notification:",
               notifError.message
             );
           }
