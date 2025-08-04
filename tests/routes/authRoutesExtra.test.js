@@ -10,6 +10,7 @@ describe("Auth Routes Extra Coverage Tests", () => {
   let app;
 
   beforeAll(() => {
+    jest.setTimeout(15000); // Tambah timeout untuk semua test di file ini
     // Set test environment
     process.env.NODE_ENV = "test";
     process.env.JWT_SECRET = "test_secret_key";
@@ -21,7 +22,6 @@ describe("Auth Routes Extra Coverage Tests", () => {
 
   describe("POST /api/auth/register - Additional Coverage", () => {
     test("should handle registration with minimal valid data", async () => {
-      jest.setTimeout(15000); // Tambah timeout 15 detik
       const userData = {
         email: "newuser@test.com",
         password: "password123",

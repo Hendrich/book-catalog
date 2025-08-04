@@ -1,22 +1,24 @@
-﻿const TelegramBot = require('node-telegram-bot-api');
-const fs = require('fs');
-const path = require('path');
+﻿const TelegramBot = require("node-telegram-bot-api");
+const fs = require("fs");
+const path = require("path");
 
 class TelegramTestNotifier {
   constructor() {
     this.token = process.env.TELEGRAM_BOT_TOKEN;
     this.chatId = process.env.TELEGRAM_CHAT_ID;
-    
+
     if (!this.token || !this.chatId) {
-      console.warn('âš ï¸ Telegram bot credentials not found. Notifications disabled.');
+      console.warn(
+        "Telegram bot credentials not found. Notifications disabled."
+      );
       this.enabled = false;
       return;
     }
-    
+
     this.bot = new TelegramBot(this.token, { polling: false });
     this.enabled = true;
-    
-    console.log('ðŸ“± Telegram Test Notifier initialized');
+
+    console.log("ðŸ“± Telegram Test Notifier initialized");
   }
 
   /**
@@ -26,15 +28,15 @@ class TelegramTestNotifier {
    */
   parseCoverageData(coverageData) {
     let coverage;
-    
-    if (typeof coverageData === 'string') {
+
+    if (typeof coverageData === "string") {
       // Read from file path
       try {
         const filePath = path.resolve(coverageData);
-        const rawData = fs.readFileSync(filePath, 'utf8');
+        const rawData = fs.readFileSync(filePath, "utf8");
         coverage = JSON.parse(rawData);
       } catch (error) {
-        console.error('Failed to read coverage file:', error.message);
+        console.error("Failed to read coverage file:", error.message);
         return null;
       }
     } else {
@@ -44,28 +46,28 @@ class TelegramTestNotifier {
 
     // Extract summary data
     const summary = coverage.total || coverage;
-    
+
     return {
       statements: {
         covered: summary.statements?.covered || 0,
         total: summary.statements?.total || 0,
-        pct: summary.statements?.pct || 0
+        pct: summary.statements?.pct || 0,
       },
       branches: {
         covered: summary.branches?.covered || 0,
         total: summary.branches?.total || 0,
-        pct: summary.branches?.pct || 0
+        pct: summary.branches?.pct || 0,
       },
       functions: {
         covered: summary.functions?.covered || 0,
         total: summary.functions?.total || 0,
-        pct: summary.functions?.pct || 0
+        pct: summary.functions?.pct || 0,
       },
       lines: {
         covered: summary.lines?.covered || 0,
         total: summary.lines?.total || 0,
-        pct: summary.lines?.pct || 0
-      }
+        pct: summary.lines?.pct || 0,
+      },
     };
   }
 
@@ -76,8 +78,12 @@ class TelegramTestNotifier {
    */
   parseTestResults(testResults) {
     // Handle different data formats
-    let numTotalTests, numPassedTests, numFailedTests, numPendingTests, testExecError;
-    
+    let numTotalTests,
+      numPassedTests,
+      numFailedTests,
+      numPendingTests,
+      testExecError;
+
     if (testResults.numTotalTests !== undefined) {
       // Jest results format
       numTotalTests = testResults.numTotalTests;
@@ -91,12 +97,16 @@ class TelegramTestNotifier {
       numPassedTests = testResults.numPassedTests || testResults.passed;
       numFailedTests = testResults.numFailedTests || testResults.failed;
       numPendingTests = testResults.numPendingTests || testResults.skipped;
-      testExecError = testResults.testExecError || testResults.hasErrors || false;
+      testExecError =
+        testResults.testExecError || testResults.hasErrors || false;
     }
 
-    const duration = testResults.testResults?.reduce((total, result) => {
-      return total + (result.perfStats?.end - result.perfStats?.start || 0);
-    }, 0) || testResults.duration || 0;
+    const duration =
+      testResults.testResults?.reduce((total, result) => {
+        return total + (result.perfStats?.end - result.perfStats?.start || 0);
+      }, 0) ||
+      testResults.duration ||
+      0;
 
     return {
       total: numTotalTests,
@@ -104,7 +114,7 @@ class TelegramTestNotifier {
       failed: numFailedTests,
       skipped: numPendingTests,
       duration: Math.round(duration),
-      hasErrors: testExecError || numFailedTests > 0
+      hasErrors: testExecError || numFailedTests > 0,
     };
   }
 
@@ -116,24 +126,24 @@ class TelegramTestNotifier {
    */
   getStatusEmoji(testData, coverageData) {
     if (testData.hasErrors || testData.failed > 0) {
-      return 'âŒ'; // Failed
+      return "âŒ"; // Failed
     }
-    
+
     if (coverageData) {
-      const avgCoverage = (
-        coverageData.statements.pct +
-        coverageData.branches.pct +
-        coverageData.functions.pct +
-        coverageData.lines.pct
-      ) / 4;
-      
-      if (avgCoverage >= 90) return 'ðŸŸ¢'; // Excellent
-      if (avgCoverage >= 80) return 'ðŸŸ¡'; // Good
-      if (avgCoverage >= 70) return 'ðŸŸ '; // Fair
-      return 'ðŸ”´'; // Poor
+      const avgCoverage =
+        (coverageData.statements.pct +
+          coverageData.branches.pct +
+          coverageData.functions.pct +
+          coverageData.lines.pct) /
+        4;
+
+      if (avgCoverage >= 90) return "ðŸŸ¢"; // Excellent
+      if (avgCoverage >= 80) return "ðŸŸ¡"; // Good
+      if (avgCoverage >= 70) return "ðŸŸ "; // Fair
+      return "ðŸ”´"; // Poor
     }
-    
-    return 'âœ…'; // Success without coverage
+
+    return "âœ…"; // Success without coverage
   }
 
   /**
@@ -145,10 +155,10 @@ class TelegramTestNotifier {
    */
   formatCleanMessage(testData, coverageData, options = {}) {
     const {
-      projectName = 'lab Catalog',
-      branch = 'main',
-      author = 'Automated Testing',
-      timestamp = new Date()
+      projectName = "lab Catalog",
+      branch = "main",
+      author = "Automated Testing",
+      timestamp = new Date(),
     } = options;
 
     // Validate and sanitize test data
@@ -158,38 +168,40 @@ class TelegramTestNotifier {
       failed: testData.failed || testData.numFailedTests || 0,
       skipped: testData.skipped || testData.numPendingTests || 0,
       duration: testData.duration || 0,
-      hasErrors: testData.hasErrors || testData.testExecError || (testData.failed > 0)
+      hasErrors:
+        testData.hasErrors || testData.testExecError || testData.failed > 0,
     };
 
     // Get time in format like "6:26AM"
-    const timeString = timestamp.toLocaleTimeString('en-US', { 
-      hour12: true, 
-      hour: 'numeric',
-      minute: '2-digit'
+    const timeString = timestamp.toLocaleTimeString("en-US", {
+      hour12: true,
+      hour: "numeric",
+      minute: "2-digit",
     });
 
     // Calculate pass percentage
-    const passPercentage = safeTestData.total > 0 
-      ? ((safeTestData.passed / safeTestData.total) * 100).toFixed(2)
-      : '0.00';
+    const passPercentage =
+      safeTestData.total > 0
+        ? ((safeTestData.passed / safeTestData.total) * 100).toFixed(2)
+        : "0.00";
 
     // Determine status emoji and project status
-    let statusIcon = 'ðŸŸ¢';
-    let statusText = 'SUCCESS';
-    
+    let statusIcon = "ðŸŸ¢";
+    let statusText = "SUCCESS";
+
     if (safeTestData.failed > 0 || safeTestData.hasErrors) {
-      statusIcon = 'ðŸ”´';
-      statusText = 'FAILED';
+      statusIcon = "ðŸ”´";
+      statusText = "FAILED";
     } else if (safeTestData.total === 0) {
-      statusIcon = 'âšª';
-      statusText = 'NO TESTS';
+      statusIcon = "âšª";
+      statusText = "NO TESTS";
     }
 
     // Build message in clean format like the image
     let message = `${statusIcon} **${projectName}** | ${timeString}\n\n`;
-    
+
     // Project identifier line
-    message += `**${projectName.replace(/\s+/g, '')}**\n`;
+    message += `**${projectName.replace(/\s+/g, "")}**\n`;
     message += `${author} | Test Coverage Report\n\n`;
 
     // Test metrics (simple bullet format like image)
@@ -238,26 +250,27 @@ class TelegramTestNotifier {
    */
   formatMessage(testData, coverageData, options = {}) {
     const {
-      projectName = 'lab Catalog App',
-      branch = 'main',
-      author = 'Automated',
-      timestamp = new Date()
+      projectName = "lab Catalog App",
+      branch = "main",
+      author = "Automated",
+      timestamp = new Date(),
     } = options;
 
     const statusEmoji = this.getStatusEmoji(testData, coverageData);
-    const timeString = timestamp.toLocaleTimeString('en-US', { 
-      hour12: true, 
-      hour: 'numeric',
-      minute: '2-digit'
+    const timeString = timestamp.toLocaleTimeString("en-US", {
+      hour12: true,
+      hour: "numeric",
+      minute: "2-digit",
     });
 
     // Calculate pass percentage
-    const passPercentage = testData.total > 0 
-      ? ((testData.passed / testData.total) * 100).toFixed(2)
-      : '0.00';
+    const passPercentage =
+      testData.total > 0
+        ? ((testData.passed / testData.total) * 100).toFixed(2)
+        : "0.00";
 
     let message = `ðŸ”´ **${projectName}** | ${timeString}\n\n`;
-    message += `**${statusEmoji} ${projectName.replace(/\s+/g, '-')}**\n`;
+    message += `**${statusEmoji} ${projectName.replace(/\s+/g, "-")}**\n`;
     message += `${author} | Test Coverage Report\n\n`;
 
     // Test Results
@@ -272,10 +285,18 @@ class TelegramTestNotifier {
     // Coverage Results (if available)
     if (coverageData) {
       message += `ðŸ“ˆ **Coverage Results:**\n`;
-      message += `- Statements = ${coverageData.statements.pct.toFixed(2)}% (${coverageData.statements.covered}/${coverageData.statements.total})\n`;
-      message += `- Branches = ${coverageData.branches.pct.toFixed(2)}% (${coverageData.branches.covered}/${coverageData.branches.total})\n`;
-      message += `- Functions = ${coverageData.functions.pct.toFixed(2)}% (${coverageData.functions.covered}/${coverageData.functions.total})\n`;
-      message += `- Lines = ${coverageData.lines.pct.toFixed(2)}% (${coverageData.lines.covered}/${coverageData.lines.total})\n\n`;
+      message += `- Statements = ${coverageData.statements.pct.toFixed(2)}% (${
+        coverageData.statements.covered
+      }/${coverageData.statements.total})\n`;
+      message += `- Branches = ${coverageData.branches.pct.toFixed(2)}% (${
+        coverageData.branches.covered
+      }/${coverageData.branches.total})\n`;
+      message += `- Functions = ${coverageData.functions.pct.toFixed(2)}% (${
+        coverageData.functions.covered
+      }/${coverageData.functions.total})\n`;
+      message += `- Lines = ${coverageData.lines.pct.toFixed(2)}% (${
+        coverageData.lines.covered
+      }/${coverageData.lines.total})\n\n`;
     }
 
     // Status Summary
@@ -310,22 +331,22 @@ class TelegramTestNotifier {
    */
   async sendNotification(testData, coverageData = null, options = {}) {
     if (!this.enabled) {
-      console.log('ðŸ“± Telegram notifications disabled');
+      console.log("ðŸ“± Telegram notifications disabled");
       return;
     }
 
     try {
       // Use clean format like the image
       const message = this.formatCleanMessage(testData, coverageData, options);
-      
+
       await this.bot.sendMessage(this.chatId, message, {
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true
+        parse_mode: "Markdown",
+        disable_web_page_preview: true,
       });
 
-      console.log('ðŸ“± Test notification sent to Telegram');
+      console.log("ðŸ“± Test notification sent to Telegram");
     } catch (error) {
-      console.error('Failed to send Telegram notification:', error.message);
+      console.error("Failed to send Telegram notification:", error.message);
     }
   }
 
@@ -337,22 +358,22 @@ class TelegramTestNotifier {
    */
   async sendDetailedNotification(testData, coverageData = null, options = {}) {
     if (!this.enabled) {
-      console.log('ðŸ“± Telegram notifications disabled');
+      console.log("ðŸ“± Telegram notifications disabled");
       return;
     }
 
     try {
       // Use detailed format
       const message = this.formatMessage(testData, coverageData, options);
-      
+
       await this.bot.sendMessage(this.chatId, message, {
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true
+        parse_mode: "Markdown",
+        disable_web_page_preview: true,
       });
 
-      console.log('ðŸ“± Detailed test notification sent to Telegram');
+      console.log("ðŸ“± Detailed test notification sent to Telegram");
     } catch (error) {
-      console.error('Failed to send Telegram notification:', error.message);
+      console.error("Failed to send Telegram notification:", error.message);
     }
   }
 
@@ -365,7 +386,7 @@ class TelegramTestNotifier {
   async sendCoverageNotification(coverageFilePath, testResults, options = {}) {
     const coverageData = this.parseCoverageData(coverageFilePath);
     const testData = this.parseTestResults(testResults);
-    
+
     await this.sendNotification(testData, coverageData, options);
   }
 
@@ -374,26 +395,27 @@ class TelegramTestNotifier {
    */
   async testConnection() {
     if (!this.enabled) {
-      console.log('âŒ Bot not enabled - missing credentials');
+      console.log("âŒ Bot not enabled - missing credentials");
       return false;
     }
 
     try {
       const me = await this.bot.getMe();
       console.log(`âœ… Bot connected: ${me.first_name} (@${me.username})`);
-      
+
       // Send test message
-      await this.bot.sendMessage(this.chatId, 'ðŸ¤– Test notification: Bot is working!');
-      console.log('âœ… Test message sent successfully');
-      
+      await this.bot.sendMessage(
+        this.chatId,
+        "ðŸ¤– Test notification: Bot is working!"
+      );
+      console.log("âœ… Test message sent successfully");
+
       return true;
     } catch (error) {
-      console.error('âŒ Bot connection failed:', error.message);
+      console.error("âŒ Bot connection failed:", error.message);
       return false;
     }
   }
 }
 
 module.exports = TelegramTestNotifier;
-
-
