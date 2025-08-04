@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "script-labs-app",
   "version": "1.0.0",
   "description": "A secure Script Labs API with Node.js, Express, and PostgreSQL",
@@ -69,5 +69,3 @@
     "npm": ">=8.0.0"
   }
 }
-
-
