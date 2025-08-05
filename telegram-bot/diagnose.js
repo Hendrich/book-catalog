@@ -128,7 +128,7 @@ async function runDiagnostics() {
         };
 
     const options = {
-      projectName: "lab Catalog App (Diagnostic)",
+      projectName: "Script Labs App (Diagnostic)",
       branch: process.env.GIT_BRANCH || "main",
       author: process.env.GIT_AUTHOR || "Diagnostic Test",
       timestamp: new Date(),

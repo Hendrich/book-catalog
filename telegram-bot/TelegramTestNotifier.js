@@ -155,7 +155,7 @@ class TelegramTestNotifier {
    */
   formatCleanMessage(testData, coverageData, options = {}) {
     const {
-      projectName = "lab Catalog",
+      projectName = "Script Labs",
       branch = "main",
       author = "Automated Testing",
       timestamp = new Date(),
@@ -250,7 +250,7 @@ class TelegramTestNotifier {
    */
   formatMessage(testData, coverageData, options = {}) {
     const {
-      projectName = "lab Catalog App",
+      projectName = "Script Labs App",
       branch = "main",
       author = "Automated",
       timestamp = new Date(),

@@ -95,7 +95,7 @@ async function runTestsWithNotification() {
         // Send notification
         if (notifier.enabled) {
           const options = {
-            projectName: "lab Catalog App",
+            projectName: "Script Labs App",
             branch:
               process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || "main",
             author:
@@ -125,7 +125,7 @@ async function runTestsWithNotification() {
         if (notifier.enabled) {
           try {
             const options = {
-              projectName: "lab Catalog App",
+              projectName: "Script Labs App",
               branch: process.env.GIT_BRANCH || "main",
               author: process.env.GIT_AUTHOR || "Automated",
               timestamp: new Date(),

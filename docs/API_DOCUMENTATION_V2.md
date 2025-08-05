@@ -11,7 +11,7 @@
 
 ## ðŸŽ¯ API Overview
 
-lab Catalog V2 RESTful API provides comprehensive endpoints for lab management, enhanced search capabilities, user authentication, and password recovery with full Supabase integration.
+Script Labs V2 RESTful API provides comprehensive endpoints for lab management, enhanced search capabilities, user authentication, and password recovery with full Supabase integration.
 
 ### **Base URL**
 
@@ -912,8 +912,8 @@ X-RateLimit-Window: 900
 | `/api/auth/login`           | 10    | 15 min | Per IP address |
 | `/api/auth/register`        | 5     | 1 hour | Per IP address |
 | `/api/auth/forgot-password` | 3     | 1 hour | Per email/IP   |
-| `/api/labs/search`         | 100   | 15 min | Per user       |
-| `/api/labs/*`              | 200   | 15 min | Per user       |
+| `/api/labs/search`          | 100   | 15 min | Per user       |
+| `/api/labs/*`               | 200   | 15 min | Per user       |
 | `/api/*` (general)          | 1000  | 15 min | Per user       |
 
 ---
@@ -1019,5 +1019,3 @@ A comprehensive Postman collection is available at:
 **Last Updated**: July 29, 2025  
 **API Version**: 2.0  
 **Next Review**: Monthly during active development
-
-

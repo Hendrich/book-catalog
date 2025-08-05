@@ -1,4 +1,4 @@
-﻿# ðŸ—ï¸ lab Catalog App - System Architecture V2.0
+﻿# ðŸ—ï¸ Script Labs App - System Architecture V2.0
 
 ## ðŸ“‹ Document Information
 
@@ -11,7 +11,7 @@
 
 ## ðŸŽ¯ Architecture Overview
 
-lab Catalog App V2 implements a modern, scalable architecture with Supabase integration, enhanced search capabilities, and comprehensive security features.
+Script Labs App V2 implements a modern, scalable architecture with Supabase integration, enhanced search capabilities, and comprehensive security features.
 
 ### ðŸ”„ High-Level Architecture
 
@@ -21,52 +21,52 @@ graph TB
         FE[Frontend UI]
         PWA[Progressive Web App]
     end
-    
+
     subgraph "API Gateway"
         LB[Load Balancer]
         CORS[CORS Handler]
         AUTH[Auth Middleware]
         RATE[Rate Limiter]
     end
-    
+
     subgraph "Application Layer"
         API[Express.js API]
         SEARCH[Search Service]
         EMAIL[Email Service]
         VALID[Validation Layer]
     end
-    
+
     subgraph "Data Layer"
         SUPABASE[(Supabase PostgreSQL)]
         REDIS[(Redis Cache)]
         FILES[File Storage]
     end
-    
+
     subgraph "External Services"
         TELEGRAM[Telegram Bot]
         MONITOR[Monitoring]
         LOGS[Logging Service]
     end
-    
+
     FE --> LB
     PWA --> LB
     LB --> CORS
     CORS --> AUTH
     AUTH --> RATE
     RATE --> API
-    
+
     API --> SEARCH
     API --> EMAIL
     API --> VALID
-    
+
     SEARCH --> SUPABASE
     EMAIL --> SUPABASE
     VALID --> REDIS
-    
+
     API --> TELEGRAM
     API --> MONITOR
     API --> LOGS
-    
+
     SUPABASE --> FILES
 ```
 
@@ -75,6 +75,7 @@ graph TB
 ## ðŸ›ï¸ Layered Architecture
 
 ### 1. **Presentation Layer**
+
 ```
 ðŸ“± Frontend (Client)
 â”œâ”€â”€ HTML5/CSS3/JavaScript
@@ -84,6 +85,7 @@ graph TB
 ```
 
 ### 2. **API Gateway Layer**
+
 ```
 ðŸšª Gateway Services
 â”œâ”€â”€ Load Balancing
@@ -95,6 +97,7 @@ graph TB
 ```
 
 ### 3. **Business Logic Layer**
+
 ```
 âš™ï¸ Application Services
 â”œâ”€â”€ lab Management Service
@@ -107,6 +110,7 @@ graph TB
 ```
 
 ### 4. **Data Access Layer**
+
 ```
 ðŸ“Š Data Services
 â”œâ”€â”€ Supabase Client
@@ -118,6 +122,7 @@ graph TB
 ```
 
 ### 5. **Infrastructure Layer**
+
 ```
 ðŸ”§ Infrastructure
 â”œâ”€â”€ Supabase Database
@@ -140,12 +145,12 @@ sequenceDiagram
     participant API as API Server
     participant SUPA as Supabase Auth
     participant DB as Database
-    
+
     C->>API: Login Request
     API->>SUPA: Validate Credentials
     SUPA->>API: Auth Token
     API->>C: JWT + Supabase Token
-    
+
     C->>API: API Request + JWT
     API->>API: Validate JWT
     API->>SUPA: Check Permissions
@@ -202,27 +207,27 @@ graph LR
         FILE[File Uploads]
         EXT[External APIs]
     end
-    
+
     subgraph "Data Processing"
         VALID[Validation]
         TRANSFORM[Transformation]
         CACHE[Caching]
     end
-    
+
     subgraph "Data Storage"
         PRIMARY[(Primary DB)]
         BACKUP[(Backup DB)]
         SEARCH[(Search Index)]
     end
-    
+
     USER --> VALID
     FILE --> VALID
     EXT --> VALID
-    
+
     VALID --> TRANSFORM
     TRANSFORM --> CACHE
     CACHE --> PRIMARY
-    
+
     PRIMARY --> BACKUP
     PRIMARY --> SEARCH
 ```
@@ -251,26 +256,26 @@ graph TB
         FILTERS[Filters & Sorting]
         PAGINATION[Pagination]
     end
-    
+
     subgraph "Search Processing"
         PARSER[Query Parser]
         OPTIMIZER[Query Optimizer]
         EXECUTOR[Search Executor]
     end
-    
+
     subgraph "Search Backend"
         POSTGRES[PostgreSQL FTS]
         INDEXES[Search Indexes]
         CACHE[Result Cache]
     end
-    
+
     QUERY --> PARSER
     FILTERS --> PARSER
     PAGINATION --> PARSER
-    
+
     PARSER --> OPTIMIZER
     OPTIMIZER --> EXECUTOR
-    
+
     EXECUTOR --> POSTGRES
     EXECUTOR --> INDEXES
     EXECUTOR --> CACHE
@@ -310,26 +315,26 @@ graph LR
         WELCOME[Welcome Email]
         NOTIFY[Notifications]
     end
-    
+
     subgraph "Email Processing"
         QUEUE[Email Queue]
         TEMPLATE[Template Engine]
         DELIVERY[Delivery Service]
     end
-    
+
     subgraph "Email Providers"
         SUPABASE[Supabase Email]
         SENDGRID[SendGrid]
         FALLBACK[Fallback Service]
     end
-    
+
     FORGOT --> QUEUE
     WELCOME --> QUEUE
     NOTIFY --> QUEUE
-    
+
     QUEUE --> TEMPLATE
     TEMPLATE --> DELIVERY
-    
+
     DELIVERY --> SUPABASE
     DELIVERY --> SENDGRID
     DELIVERY --> FALLBACK
@@ -367,27 +372,27 @@ graph TB
         CI[CI/CD Events]
         MANUAL[Manual Triggers]
     end
-    
+
     subgraph "Processing"
         PARSER[Data Parser]
         FORMAT[Message Formatter]
         VALIDATE[Data Validator]
     end
-    
+
     subgraph "Delivery"
         BOT[Telegram Bot API]
         CHANNEL[Channel/Group]
         FALLBACK[Fallback Notification]
     end
-    
+
     TEST --> PARSER
     CI --> PARSER
     MANUAL --> PARSER
-    
+
     PARSER --> FORMAT
     FORMAT --> VALIDATE
     VALIDATE --> BOT
-    
+
     BOT --> CHANNEL
     BOT --> FALLBACK
 ```
@@ -405,28 +410,28 @@ graph TB
         OLD_DATA[Existing Data]
         OLD_SCHEMA[Old Schema]
     end
-    
+
     subgraph "Migration Process"
         EXTRACT[Data Extraction]
         TRANSFORM[Data Transformation]
         VALIDATE[Data Validation]
         LOAD[Data Loading]
     end
-    
+
     subgraph "Target"
         SUPABASE[(Supabase)]
         NEW_SCHEMA[Enhanced Schema]
         NEW_FEATURES[New Features]
     end
-    
+
     OLD_DB --> EXTRACT
     OLD_DATA --> EXTRACT
     OLD_SCHEMA --> EXTRACT
-    
+
     EXTRACT --> TRANSFORM
     TRANSFORM --> VALIDATE
     VALIDATE --> LOAD
-    
+
     LOAD --> SUPABASE
     LOAD --> NEW_SCHEMA
     LOAD --> NEW_FEATURES
@@ -471,26 +476,26 @@ graph TB
         DB_METRICS[Database Metrics]
         SERVER_METRICS[Server Metrics]
     end
-    
+
     subgraph "Processing"
         AGGREGATION[Data Aggregation]
         ANALYSIS[Performance Analysis]
         ALERTING[Alert Processing]
     end
-    
+
     subgraph "Visualization"
         DASHBOARD[Performance Dashboard]
         REPORTS[Performance Reports]
         NOTIFICATIONS[Alert Notifications]
     end
-    
+
     APM --> AGGREGATION
     DB_METRICS --> AGGREGATION
     SERVER_METRICS --> AGGREGATION
-    
+
     AGGREGATION --> ANALYSIS
     ANALYSIS --> ALERTING
-    
+
     ALERTING --> DASHBOARD
     ALERTING --> REPORTS
     ALERTING --> NOTIFICATIONS
@@ -530,28 +535,28 @@ graph LR
         BRANCH[Feature Branches]
         PR[Pull Requests]
     end
-    
+
     subgraph "CI Pipeline"
         BUILD[Build]
         TEST[Testing]
         LINT[Code Quality]
         SECURITY[Security Scan]
     end
-    
+
     subgraph "CD Pipeline"
         STAGING[Staging Deploy]
         PROD[Production Deploy]
         ROLLBACK[Rollback]
     end
-    
+
     GIT --> BUILD
     BRANCH --> BUILD
     PR --> BUILD
-    
+
     BUILD --> TEST
     TEST --> LINT
     LINT --> SECURITY
-    
+
     SECURITY --> STAGING
     STAGING --> PROD
     PROD --> ROLLBACK
@@ -583,6 +588,7 @@ graph LR
 ## ðŸ“‹ Technology Stack
 
 ### Frontend Stack
+
 ```
 ðŸŽ¨ Frontend Technologies
 â”œâ”€â”€ Core Technologies
@@ -600,6 +606,7 @@ graph LR
 ```
 
 ### Backend Stack
+
 ```
 âš™ï¸ Backend Technologies
 â”œâ”€â”€ Runtime & Framework
@@ -621,6 +628,7 @@ graph LR
 ```
 
 ### DevOps Stack
+
 ```
 ðŸ”§ DevOps Technologies
 â”œâ”€â”€ Version Control
@@ -645,6 +653,7 @@ graph LR
 ## ðŸ”® Future Architecture Considerations
 
 ### Scalability Enhancements
+
 ```
 ðŸ“ˆ Future Scalability
 â”œâ”€â”€ Microservices Architecture
@@ -663,6 +672,7 @@ graph LR
 ```
 
 ### Advanced Features
+
 ```
 ðŸš€ Future Features
 â”œâ”€â”€ Real-time Capabilities
@@ -685,14 +695,14 @@ graph LR
 
 ### Quality Attributes
 
-| Attribute | Current | Target | Measurement |
-|-----------|---------|--------|-------------|
-| **Availability** | 99.0% | 99.9% | Uptime monitoring |
-| **Performance** | Good | Excellent | Response time < 300ms |
-| **Scalability** | Limited | High | Concurrent users: 1000+ |
-| **Security** | Good | Excellent | Security audit score |
-| **Maintainability** | Good | Excellent | Code complexity metrics |
-| **Reliability** | Good | Excellent | Error rate < 0.1% |
+| Attribute           | Current | Target    | Measurement             |
+| ------------------- | ------- | --------- | ----------------------- |
+| **Availability**    | 99.0%   | 99.9%     | Uptime monitoring       |
+| **Performance**     | Good    | Excellent | Response time < 300ms   |
+| **Scalability**     | Limited | High      | Concurrent users: 1000+ |
+| **Security**        | Good    | Excellent | Security audit score    |
+| **Maintainability** | Good    | Excellent | Code complexity metrics |
+| **Reliability**     | Good    | Excellent | Error rate < 0.1%       |
 
 ### Architecture Decision Records (ADRs)
 
@@ -706,7 +716,8 @@ graph LR
 
 ## ðŸŽ¯ Conclusion
 
-The lab Catalog App V2 architecture provides a solid foundation for:
+The Script Labs App V2 architecture provides a solid foundation for:
+
 - **Scalable Growth**: Supabase backend with modern stack
 - **Enhanced Features**: Search, password reset, notifications
 - **Security First**: Comprehensive security layers
@@ -720,5 +731,3 @@ This architecture supports current requirements while providing flexibility for 
 **Document Status**: âœ… Complete  
 **Last Updated**: July 29, 2025  
 **Next Review**: During implementation milestones
-
-

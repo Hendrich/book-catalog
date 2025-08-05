@@ -1,6 +1,6 @@
 ﻿# Product Requirements Document (PRD) - Version 2.0
 
-## lab Catalog Application - Enhanced Features
+## Script Labs Application - Enhanced Features
 
 ### Document Information
 
@@ -15,7 +15,7 @@
 
 ### 1.1 Product Overview
 
-lab Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku dengan penambahan fitur pencarian & filter buku, sistem forgot password yang aman, dan migrasi penuh ke Supabase sebagai backend database utama.
+Script Labs App V2 adalah peningkatan dari aplikasi manajemen katalog buku dengan penambahan fitur pencarian & filter buku, sistem forgot password yang aman, dan migrasi penuh ke Supabase sebagai backend database utama.
 
 ### 1.2 Business Objectives
 
@@ -37,15 +37,16 @@ lab Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku denga
 
 ### 2.1 New Features Summary
 
-| Feature | Priority | Status | Impact |
-|---------|----------|--------|--------|
-| Search & Filter labs | High | ï¿½ Planned | High |
-| Forgot Password System | High | ðŸ“‹ Planned | Medium |
-| Supabase Migration | High | ðŸ“‹ Planned | High |
+| Feature                | Priority | Status       | Impact |
+| ---------------------- | -------- | ------------ | ------ |
+| Search & Filter labs   | High     | ï¿½ Planned  | High   |
+| Forgot Password System | High     | ðŸ“‹ Planned | Medium |
+| Supabase Migration     | High     | ðŸ“‹ Planned | High   |
 
 ### 2.2 Migration Rationale
 
 **From Local PostgreSQL to Supabase:**
+
 - **Scalability**: Auto-scaling database
 - **Authentication**: Built-in auth with email verification
 - **Real-time**: Real-time subscriptions capability
@@ -58,11 +59,11 @@ lab Catalog App V2 adalah peningkatan dari aplikasi manajemen katalog buku denga
 
 ### 3.1 Search & Filter System
 
-| Feature ID | Feature Name | Priority | Description |
-|------------|-------------|----------|-------------|
-| SEARCH-001 | Basic Text Search | High | Search labs by title and author |
-| SEARCH-002 | Filter by Title/Author | High | Filter labs by title or author |
-| SEARCH-003 | Sort Options | High | Sort by title, author, date added |
+| Feature ID | Feature Name           | Priority | Description                       |
+| ---------- | ---------------------- | -------- | --------------------------------- |
+| SEARCH-001 | Basic Text Search      | High     | Search labs by title and author   |
+| SEARCH-002 | Filter by Title/Author | High     | Filter labs by title or author    |
+| SEARCH-003 | Sort Options           | High     | Sort by title, author, date added |
 
 #### 3.1.1 Search API Specifications
 
@@ -98,14 +99,14 @@ Response:
 
 ### 3.2 Forgot Password System
 
-| Feature ID | Feature Name | Priority | Description |
-|------------|-------------|----------|-------------|
-| FORGOT-001 | Password Reset Request | High | User requests password reset via email |
-| FORGOT-002 | Email Verification | High | Send secure reset link to user email |
-| FORGOT-003 | Token Validation | High | Validate reset token and expiration |
-| FORGOT-004 | Password Update | High | Secure password update with new hash |
-| FORGOT-005 | Reset Notification | Medium | Email confirmation after successful reset |
-| FORGOT-006 | Rate Limiting | High | Prevent abuse with rate limiting |
+| Feature ID | Feature Name           | Priority | Description                               |
+| ---------- | ---------------------- | -------- | ----------------------------------------- |
+| FORGOT-001 | Password Reset Request | High     | User requests password reset via email    |
+| FORGOT-002 | Email Verification     | High     | Send secure reset link to user email      |
+| FORGOT-003 | Token Validation       | High     | Validate reset token and expiration       |
+| FORGOT-004 | Password Update        | High     | Secure password update with new hash      |
+| FORGOT-005 | Reset Notification     | Medium   | Email confirmation after successful reset |
+| FORGOT-006 | Rate Limiting          | High     | Prevent abuse with rate limiting          |
 
 #### 3.2.1 Forgot Password API Flow
 
@@ -145,6 +146,7 @@ Frontend (Enhanced UI) â†” Backend API (Node.js/Express) â†” Supabase 
 ### 4.2 Technology Stack Updates
 
 **Added/Updated:**
+
 - **Database**: Supabase PostgreSQL (replacing local PostgreSQL)
 - **Authentication**: Supabase Auth + JWT hybrid approach
 - **Email Service**: Supabase built-in email (or SendGrid integration)
@@ -152,6 +154,7 @@ Frontend (Enhanced UI) â†” Backend API (Node.js/Express) â†” Supabase 
 - **Real-time**: Supabase real-time subscriptions (future feature)
 
 **Maintained:**
+
 - **Frontend**: HTML5, CSS3, Enhanced JavaScript
 - **Backend**: Node.js, Express.js (enhanced middleware)
 - **Security**: bcryptjs, CORS, Helmet
@@ -250,7 +253,6 @@ Response:
 }
 ```
 
-
 ### 5.2 Password Reset Endpoints
 
 ```javascript
@@ -298,6 +300,7 @@ Response: {
 ### 6.1 Database Migration Plan
 
 #### Phase 1: Supabase Setup (Week 1)
+
 ```sql
 -- 1. Create Supabase project
 -- 2. Set up authentication
@@ -321,6 +324,7 @@ CREATE POLICY "Users can delete their own labs" ON public.labs
 ```
 
 #### Phase 2: Data Migration (Week 2)
+
 ```javascript
 // Migration script
 const migrationScript = `
@@ -342,6 +346,7 @@ COPY (
 ```
 
 #### Phase 3: API Updates (Week 3)
+
 - Update database connection to Supabase
 - Implement new search endpoints
 - Add forgot password functionality
@@ -366,15 +371,15 @@ const jwtConfig = {
   // Primary: Supabase JWT
   supabase: {
     jwt_secret: process.env.SUPABASE_JWT_SECRET,
-    algorithm: 'HS256',
-    expiresIn: '1h'
+    algorithm: "HS256",
+    expiresIn: "1h",
   },
   // Fallback: Custom JWT
   custom: {
     jwt_secret: process.env.JWT_SECRET,
-    algorithm: 'HS256',
-    expiresIn: '24h'
-  }
+    algorithm: "HS256",
+    expiresIn: "24h",
+  },
 };
 ```
 
@@ -399,11 +404,11 @@ const jwtConfig = {
 
 ### 8.1 Search Performance
 
-| Metric | Target | Current | Improvement |
-|--------|--------|---------|-------------|
-| Search Response Time | < 300ms | N/A | New Feature |
-| Results per Page | 10-50 | N/A | Configurable |
-| Concurrent Searches | 100/min | N/A | Load Testing Required |
+| Metric               | Target  | Current | Improvement           |
+| -------------------- | ------- | ------- | --------------------- |
+| Search Response Time | < 300ms | N/A     | New Feature           |
+| Results per Page     | 10-50   | N/A     | Configurable          |
+| Concurrent Searches  | 100/min | N/A     | Load Testing Required |
 
 ### 8.2 Database Performance
 
@@ -413,7 +418,7 @@ SELECT COUNT(*) FROM labs WHERE user_id = $1;
 
 -- Search query performance
 EXPLAIN ANALYZE
-SELECT * FROM labs 
+SELECT * FROM labs
 WHERE user_id = $1 AND (title ILIKE $2 OR author ILIKE $3);
 ```
 
@@ -425,44 +430,44 @@ WHERE user_id = $1 AND (title ILIKE $2 OR author ILIKE $3);
 
 ```javascript
 // Search functionality tests
-describe('lab Search API', () => {
-  test('should return labs matching search query', async () => {
+describe("lab Search API", () => {
+  test("should return labs matching search query", async () => {
     const response = await request(app)
-      .get('/api/labs/search?q=javascript')
-      .set('Authorization', `Bearer ${validToken}`)
+      .get("/api/labs/search?q=javascript")
+      .set("Authorization", `Bearer ${validToken}`)
       .expect(200);
-    
+
     expect(response.body.data.labs).toHaveLength(5);
     expect(response.body.performance.query_time_ms).toBeLessThan(200);
   });
 
-  test('should handle complex filters', async () => {
+  test("should handle complex filters", async () => {
     const response = await request(app)
-      .get('/api/labs/search?category=Technical&year_from=2020&sort_by=rating')
-      .set('Authorization', `Bearer ${validToken}`)
+      .get("/api/labs/search?category=Technical&year_from=2020&sort_by=rating")
+      .set("Authorization", `Bearer ${validToken}`)
       .expect(200);
-    
-    expect(response.body.data.filters_applied.category).toBe('Technical');
+
+    expect(response.body.data.filters_applied.category).toBe("Technical");
   });
 });
 
 // Password reset tests
-describe('Password Reset Flow', () => {
-  test('should send reset email for valid user', async () => {
+describe("Password Reset Flow", () => {
+  test("should send reset email for valid user", async () => {
     const response = await request(app)
-      .post('/api/auth/forgot-password')
-      .send({ email: 'test@example.com' })
+      .post("/api/auth/forgot-password")
+      .send({ email: "test@example.com" })
       .expect(200);
-    
+
     expect(emailService.sendEmail).toHaveBeenCalled();
   });
 
-  test('should validate reset token correctly', async () => {
-    const token = await generateResetToken('user_id');
+  test("should validate reset token correctly", async () => {
+    const token = await generateResetToken("user_id");
     const response = await request(app)
       .get(`/api/auth/reset-password/${token}`)
       .expect(200);
-    
+
     expect(response.body.data.token_valid).toBe(true);
   });
 });
@@ -472,19 +477,19 @@ describe('Password Reset Flow', () => {
 
 ```javascript
 // Migration test suite
-describe('Database Migration', () => {
-  test('should migrate all labs data correctly', async () => {
+describe("Database Migration", () => {
+  test("should migrate all labs data correctly", async () => {
     const oldCount = await getOldDatabaseBookCount();
     await runMigration();
     const newCount = await getSupabaseBookCount();
-    
+
     expect(newCount).toBe(oldCount);
   });
 
-  test('should maintain data integrity after migration', async () => {
+  test("should maintain data integrity after migration", async () => {
     const sampleBooks = await getRandomBooksFromOldDB(10);
     await runMigration();
-    
+
     for (const lab of sampleBooks) {
       const migratedBook = await getBookFromSupabase(lab.id);
       expect(migratedBook.title).toBe(lab.title);
@@ -499,23 +504,27 @@ describe('Database Migration', () => {
 ## 10. Implementation Timeline
 
 ### Phase 1: Foundation Enhancement (Week 1-2)
+
 - [x] âœ… Project structure analysis
 - [ ] ðŸ”„ Supabase project setup
 - [ ] ðŸ”„ Enhanced database schema
 - [ ] ðŸ“‹ Authentication system update
 
 ### Phase 2: Search & Filter (Week 3-4)
+
 - [ ] ðŸ“‹ Basic search implementation
 - [ ] ðŸ“‹ Search API endpoints
 - [ ] ðŸ“‹ Frontend search UI
 
 ### Phase 3: Forgot Password (Week 5-6)
+
 - [ ] ðŸ“‹ Email service integration
 - [ ] ðŸ“‹ Password reset flow
 - [ ] ðŸ“‹ Security implementation
 - [ ] ðŸ“‹ Frontend reset forms
 
 ### Phase 4: Migration & Testing (Week 7-8)
+
 - [ ] ðŸ“‹ Data migration scripts
 - [ ] ðŸ“‹ System testing
 - [ ] ðŸ“‹ Security audit
@@ -537,17 +546,17 @@ describe('Database Migration', () => {
 // Performance test targets
 const performanceTargets = {
   search: {
-    basic_search: '< 300ms',
-    pagination: '< 100ms'
+    basic_search: "< 300ms",
+    pagination: "< 100ms",
   },
   auth: {
-    password_reset_request: '< 1s',
-    token_validation: '< 100ms',
-    password_update: '< 500ms'
+    password_reset_request: "< 1s",
+    token_validation: "< 100ms",
+    password_update: "< 500ms",
   },
   database: {
-    migration_success: '100%'
-  }
+    migration_success: "100%",
+  },
 };
 ```
 
@@ -557,34 +566,36 @@ const performanceTargets = {
 
 ### 12.1 Technical Risks
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| Migration Data Loss | Critical | Low | Comprehensive backup strategy, parallel testing |
-| Search Performance | High | Medium | Database indexing, query optimization |
-| Email Delivery Issues | Medium | Medium | Multiple email providers, monitoring |
-| Supabase Limitations | High | Low | Thorough testing, fallback plans |
+| Risk                  | Impact   | Probability | Mitigation                                      |
+| --------------------- | -------- | ----------- | ----------------------------------------------- |
+| Migration Data Loss   | Critical | Low         | Comprehensive backup strategy, parallel testing |
+| Search Performance    | High     | Medium      | Database indexing, query optimization           |
+| Email Delivery Issues | Medium   | Medium      | Multiple email providers, monitoring            |
+| Supabase Limitations  | High     | Low         | Thorough testing, fallback plans                |
 
 ### 12.2 Migration Risks
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| User Data Corruption | Critical | Low | Staged migration, rollback procedures |
-| Service Downtime | High | Medium | Blue-green deployment, feature flags |
-| Authentication Breaking | High | Low | Hybrid auth approach, gradual migration |
-| Performance Regression | Medium | Medium | Load testing, performance monitoring |
+| Risk                    | Impact   | Probability | Mitigation                              |
+| ----------------------- | -------- | ----------- | --------------------------------------- |
+| User Data Corruption    | Critical | Low         | Staged migration, rollback procedures   |
+| Service Downtime        | High     | Medium      | Blue-green deployment, feature flags    |
+| Authentication Breaking | High     | Low         | Hybrid auth approach, gradual migration |
+| Performance Regression  | Medium   | Medium      | Load testing, performance monitoring    |
 
 ---
 
 ## 13. Conclusion
 
-lab Catalog V2 focuses on three core enhancements: search functionality, password recovery, and Supabase migration. This streamlined approach ensures reliable implementation while maintaining system stability.
+Script Labs V2 focuses on three core enhancements: search functionality, password recovery, and Supabase migration. This streamlined approach ensures reliable implementation while maintaining system stability.
 
 ### Key Deliverables:
+
 1. **Search System** - Basic search by title and author
-2. **Password Recovery** - Email-based password reset with security measures  
+2. **Password Recovery** - Email-based password reset with security measures
 3. **Supabase Migration** - Complete transition to managed database service
 
 ### Next Steps:
+
 1. Review and approve this PRD
 2. Set up development environment with Supabase
 3. Begin implementation following the phased approach
@@ -594,5 +605,3 @@ lab Catalog V2 focuses on three core enhancements: search functionality, passwor
 **Document Status**: Ready for Development  
 **Approval Required**: Technical Lead, Product Owner  
 **Next Review**: Weekly during development phase
-
-

@@ -1,4 +1,4 @@
-﻿# ðŸ“Š lab Catalog App - Database Architecture V2.0
+﻿# ðŸ“Š Script Labs App - Database Architecture V2.0
 
 ## ðŸ“‹ Document Information
 
@@ -11,13 +11,14 @@
 
 ## ðŸŽ¯ Database Architecture Overview
 
-lab Catalog V2 implements a modern PostgreSQL database architecture using Supabase, featuring enhanced search capabilities, security policies, and optimized performance for scalable lab management.
+Script Labs V2 implements a modern PostgreSQL database architecture using Supabase, featuring enhanced search capabilities, security policies, and optimized performance for scalable lab management.
 
 ---
 
 ## ðŸ—ï¸ Database Technology Stack
 
 ### **Primary Database System**
+
 ```
 ðŸ—„ï¸ Database Stack
 â”œâ”€â”€ Database Engine: PostgreSQL 15+
@@ -29,6 +30,7 @@ lab Catalog V2 implements a modern PostgreSQL database architecture using Supaba
 ```
 
 ### **Database Features**
+
 - **ACID Compliance**: Full transaction support
 - **Row Level Security (RLS)**: User data isolation
 - **Full-Text Search**: PostgreSQL native search
@@ -47,7 +49,7 @@ erDiagram
     auth_users ||--o{ labs : "owns"
     auth_users ||--o{ password_reset_tokens : "has"
     auth_users ||--o{ user_sessions : "maintains"
-    
+
     auth_users {
         uuid id PK
         string email UK
@@ -57,7 +59,7 @@ erDiagram
         timestamp updated_at
         boolean email_confirmed
     }
-    
+
     labs {
         uuid id PK
         varchar title
@@ -74,7 +76,7 @@ erDiagram
         timestamp updated_at
         tsvector search_vector
     }
-    
+
     password_reset_tokens {
         uuid id PK
         uuid user_id FK
@@ -83,7 +85,7 @@ erDiagram
         boolean used
         timestamp created_at
     }
-    
+
     user_sessions {
         uuid id PK
         uuid user_id FK
@@ -98,6 +100,7 @@ erDiagram
 ### **Enhanced Table Definitions**
 
 #### **1. Users Table (Supabase Auth)**
+
 ```sql
 -- Managed by Supabase Auth
 -- auth.users table structure (reference)
@@ -137,29 +140,30 @@ CREATE TABLE auth.users (
 ```
 
 #### **2. labs Table (Enhanced)**
+
 ```sql
 CREATE TABLE public.labs (
   -- Primary identifiers
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  
+
   -- Basic lab information
   title VARCHAR(500) NOT NULL CHECK (LENGTH(TRIM(title)) > 0),
   author VARCHAR(300) NOT NULL CHECK (LENGTH(TRIM(author)) > 0),
-  
+
   -- Extended metadata
   category VARCHAR(100),
   publication_year INTEGER CHECK (publication_year >= 1000 AND publication_year <= EXTRACT(YEAR FROM NOW()) + 10),
   isbn VARCHAR(20) CHECK (isbn ~ '^(97[89])?\d{9}(\d|X)$' OR isbn IS NULL),
   rating INTEGER CHECK (rating >= 1 AND rating <= 5),
   reading_status VARCHAR(20) DEFAULT 'to_read' CHECK (reading_status IN ('to_read', 'reading', 'read')),
-  
+
   -- User content
   notes TEXT CHECK (LENGTH(notes) <= 10000),
   cover_url TEXT CHECK (cover_url ~ '^https?://' OR cover_url IS NULL),
-  
+
   -- Relationships
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  
+
   -- Search optimization
   search_vector TSVECTOR GENERATED ALWAYS AS (
     setweight(to_tsvector('english', COALESCE(title, '')), 'A') ||
@@ -167,37 +171,38 @@ CREATE TABLE public.labs (
     setweight(to_tsvector('english', COALESCE(category, '')), 'C') ||
     setweight(to_tsvector('english', COALESCE(notes, '')), 'D')
   ) STORED,
-  
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Comments for documentation
-COMMENT ON TABLE public.labs IS 'User lab catalog with enhanced search and metadata';
+COMMENT ON TABLE public.labs IS 'User Script Labs with enhanced search and metadata';
 COMMENT ON COLUMN public.labs.search_vector IS 'Full-text search vector with weighted fields';
 COMMENT ON COLUMN public.labs.rating IS 'User rating from 1-5 stars';
 COMMENT ON COLUMN public.labs.reading_status IS 'Current reading status: to_read, reading, read';
 ```
 
 #### **3. Password Reset Tokens Table**
+
 ```sql
 CREATE TABLE public.password_reset_tokens (
   -- Primary identifier
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  
+
   -- User reference
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  
+
   -- Token management
   token VARCHAR(255) UNIQUE NOT NULL,
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
   used BOOLEAN DEFAULT FALSE,
-  
+
   -- Security tracking
   ip_address INET,
   user_agent TEXT,
-  
+
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   used_at TIMESTAMP WITH TIME ZONE
@@ -210,24 +215,25 @@ COMMENT ON COLUMN public.password_reset_tokens.expires_at IS 'Token expiration t
 ```
 
 #### **4. User Sessions Table (Optional - for enhanced session management)**
+
 ```sql
 CREATE TABLE public.user_sessions (
   -- Primary identifier
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  
+
   -- User reference
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  
+
   -- Session management
   session_token VARCHAR(255) UNIQUE NOT NULL,
   refresh_token VARCHAR(255),
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  
+
   -- Session metadata
   session_data JSONB DEFAULT '{}',
   ip_address INET,
   user_agent TEXT,
-  
+
   -- Activity tracking
   last_activity TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -279,26 +285,26 @@ CREATE INDEX idx_user_sessions_last_activity ON public.user_sessions(last_activi
 
 ```sql
 -- Query to analyze index usage
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
   idx_tup_read,
   idx_tup_fetch,
   idx_scan
-FROM pg_stat_user_indexes 
+FROM pg_stat_user_indexes
 WHERE schemaname = 'public'
 ORDER BY idx_scan DESC;
 
 -- Query to find unused indexes
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
   idx_scan,
   pg_size_pretty(pg_relation_size(indexrelid)) as size
-FROM pg_stat_user_indexes 
-WHERE idx_scan = 0 
+FROM pg_stat_user_indexes
+WHERE idx_scan = 0
   AND schemaname = 'public'
 ORDER BY pg_relation_size(indexrelid) DESC;
 ```
@@ -317,43 +323,43 @@ ALTER TABLE public.user_sessions ENABLE ROW LEVEL SECURITY;
 
 -- labs table policies
 CREATE POLICY "users_can_view_own_books" ON public.labs
-  FOR SELECT 
+  FOR SELECT
   USING (auth.uid() = user_id);
 
 CREATE POLICY "users_can_insert_own_books" ON public.labs
-  FOR INSERT 
+  FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "users_can_update_own_books" ON public.labs
-  FOR UPDATE 
+  FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "users_can_delete_own_books" ON public.labs
-  FOR DELETE 
+  FOR DELETE
   USING (auth.uid() = user_id);
 
 -- Password reset tokens policies
 CREATE POLICY "users_can_view_own_reset_tokens" ON public.password_reset_tokens
-  FOR SELECT 
+  FOR SELECT
   USING (auth.uid() = user_id);
 
 CREATE POLICY "service_can_manage_reset_tokens" ON public.password_reset_tokens
-  FOR ALL 
+  FOR ALL
   USING (auth.role() = 'service_role');
 
--- User sessions policies  
+-- User sessions policies
 CREATE POLICY "users_can_view_own_sessions" ON public.user_sessions
-  FOR SELECT 
+  FOR SELECT
   USING (auth.uid() = user_id);
 
 CREATE POLICY "users_can_update_own_sessions" ON public.user_sessions
-  FOR UPDATE 
+  FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "users_can_delete_own_sessions" ON public.user_sessions
-  FOR DELETE 
+  FOR DELETE
   USING (auth.uid() = user_id);
 ```
 
@@ -377,8 +383,8 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  DELETE FROM public.password_reset_tokens 
-  WHERE expires_at < NOW() 
+  DELETE FROM public.password_reset_tokens
+  WHERE expires_at < NOW()
     OR (used = true AND created_at < NOW() - INTERVAL '24 hours');
 END;
 $$;
@@ -396,7 +402,7 @@ GRANT EXECUTE ON FUNCTION public.cleanup_expired_tokens() TO service_role;
 ```sql
 -- Update timestamp trigger function
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
-RETURNS TRIGGER 
+RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -429,7 +435,7 @@ SECURITY DEFINER
 AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     b.id,
     b.title,
     b.author,
@@ -437,17 +443,17 @@ BEGIN
     b.reading_status,
     b.rating,
     b.created_at,
-    CASE 
+    CASE
       WHEN p_search_query = '' THEN 0
       ELSE ts_rank(b.search_vector, plainto_tsquery('english', p_search_query))
     END AS search_rank
   FROM public.labs b
-  WHERE 
+  WHERE
     b.user_id = p_user_id
     AND (p_search_query = '' OR b.search_vector @@ plainto_tsquery('english', p_search_query))
     AND (p_category IS NULL OR b.category = p_category)
     AND (p_reading_status IS NULL OR b.reading_status = p_reading_status)
-  ORDER BY 
+  ORDER BY
     CASE WHEN p_search_query = '' THEN b.created_at ELSE search_rank END DESC,
     b.created_at DESC
   LIMIT p_limit
@@ -471,7 +477,7 @@ SECURITY DEFINER
 AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     COUNT(*) as total_labs,
     COUNT(*) FILTER (WHERE reading_status = 'read') as labs_read,
     COUNT(*) FILTER (WHERE reading_status = 'reading') as labs_reading,
@@ -497,7 +503,7 @@ SECURITY DEFINER
 AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     prt.user_id,
     au.email,
     prt.expires_at,
@@ -534,7 +540,7 @@ RETURNS TRIGGER
 LANGUAGE plpgsql
 AS $$
 BEGIN
-  NEW.search_vector := 
+  NEW.search_vector :=
     setweight(to_tsvector('english', COALESCE(NEW.title, '')), 'A') ||
     setweight(to_tsvector('english', COALESCE(NEW.author, '')), 'B') ||
     setweight(to_tsvector('english', COALESCE(NEW.category, '')), 'C') ||
@@ -558,7 +564,7 @@ $$;
 
 ```sql
 -- Optimized search query with explain plan
-EXPLAIN (ANALYZE, BUFFERS) 
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM public.search_books(
   'user-uuid-here'::uuid,
   'javascript programming',
@@ -569,19 +575,19 @@ SELECT * FROM public.search_books(
 );
 
 -- Performance monitoring query
-SELECT 
+SELECT
   query,
   calls,
   total_time,
   mean_time,
   rows
-FROM pg_stat_statements 
+FROM pg_stat_statements
 WHERE query LIKE '%labs%'
 ORDER BY total_time DESC
 LIMIT 10;
 
 -- Index usage statistics
-SELECT 
+SELECT
   t.tablename,
   indexname,
   c.reltuples as num_rows,
@@ -603,7 +609,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 ### **Performance Tuning Configuration**
 
 ```sql
--- Optimize PostgreSQL for lab catalog workload
+-- Optimize PostgreSQL for Script Labs workload
 -- These would be set in postgresql.conf or via Supabase dashboard
 
 -- Memory settings
@@ -636,27 +642,27 @@ SELECT pg_stat_reset();
 
 ```sql
 -- Point-in-time recovery information
-SELECT 
+SELECT
   pg_is_in_recovery() as in_recovery,
   pg_last_wal_receive_lsn() as last_wal_receive,
   pg_last_wal_replay_lsn() as last_wal_replay,
   pg_last_xact_replay_timestamp() as last_replay_time;
 
 -- Database size monitoring
-SELECT 
+SELECT
   pg_database.datname,
   pg_size_pretty(pg_database_size(pg_database.datname)) AS size
 FROM pg_database
 WHERE datname = current_database();
 
 -- Table size monitoring
-SELECT 
+SELECT
   schemaname,
   tablename,
   pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
   pg_size_pretty(pg_relation_size(schemaname||'.'||tablename)) as table_size,
   pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename) - pg_relation_size(schemaname||'.'||tablename)) as index_size
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname = 'public'
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 ```
@@ -666,7 +672,7 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 ```sql
 -- Export labs data
 COPY (
-  SELECT 
+  SELECT
     b.id,
     b.title,
     b.author,
@@ -686,7 +692,7 @@ COPY (
 
 -- Export user statistics
 COPY (
-  SELECT 
+  SELECT
     au.email,
     au.created_at as user_created_at,
     stats.*
@@ -713,7 +719,7 @@ REINDEX INDEX CONCURRENTLY idx_labs_search_vector;
 SELECT pg_stat_reset_single_table_counters('public.labs'::regclass);
 
 -- Check for table bloat
-SELECT 
+SELECT
   schemaname,
   tablename,
   pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
@@ -729,23 +735,23 @@ ORDER BY n_dead_tup DESC;
 
 ```sql
 -- Connection monitoring
-SELECT 
+SELECT
   count(*) as total_connections,
   count(*) FILTER (WHERE state = 'active') as active_connections,
   count(*) FILTER (WHERE state = 'idle') as idle_connections
 FROM pg_stat_activity;
 
 -- Long running queries
-SELECT 
+SELECT
   pid,
   now() - pg_stat_activity.query_start AS duration,
-  query 
-FROM pg_stat_activity 
+  query
+FROM pg_stat_activity
 WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes'
   AND state != 'idle';
 
 -- Lock monitoring
-SELECT 
+SELECT
   t.relname,
   l.locktype,
   page,
@@ -766,19 +772,19 @@ ORDER BY relation ASC;
 
 ### **Performance Metrics**
 
-| Metric | Target | Monitoring Query |
-|--------|--------|------------------|
-| Average Query Response Time | < 100ms | `SELECT mean_time FROM pg_stat_statements WHERE query LIKE '%labs%'` |
-| Search Query Performance | < 200ms | `EXPLAIN ANALYZE SELECT * FROM search_books(...)` |
-| Index Hit Ratio | > 95% | `SELECT sum(idx_blks_hit) * 100 / sum(idx_blks_hit + idx_blks_read) FROM pg_statio_user_indexes` |
-| Table Hit Ratio | > 95% | `SELECT sum(heap_blks_hit) * 100 / sum(heap_blks_hit + heap_blks_read) FROM pg_statio_user_tables` |
-| Connection Usage | < 80% | `SELECT count(*) * 100.0 / current_setting('max_connections')::int FROM pg_stat_activity` |
+| Metric                      | Target  | Monitoring Query                                                                                   |
+| --------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
+| Average Query Response Time | < 100ms | `SELECT mean_time FROM pg_stat_statements WHERE query LIKE '%labs%'`                               |
+| Search Query Performance    | < 200ms | `EXPLAIN ANALYZE SELECT * FROM search_books(...)`                                                  |
+| Index Hit Ratio             | > 95%   | `SELECT sum(idx_blks_hit) * 100 / sum(idx_blks_hit + idx_blks_read) FROM pg_statio_user_indexes`   |
+| Table Hit Ratio             | > 95%   | `SELECT sum(heap_blks_hit) * 100 / sum(heap_blks_hit + heap_blks_read) FROM pg_statio_user_tables` |
+| Connection Usage            | < 80%   | `SELECT count(*) * 100.0 / current_setting('max_connections')::int FROM pg_stat_activity`          |
 
 ### **Business Metrics**
 
 ```sql
 -- Daily active users
-SELECT 
+SELECT
   DATE(last_sign_in_at) as date,
   COUNT(DISTINCT id) as daily_active_users
 FROM auth.users
@@ -787,7 +793,7 @@ GROUP BY DATE(last_sign_in_at)
 ORDER BY date DESC;
 
 -- lab creation trends
-SELECT 
+SELECT
   DATE(created_at) as date,
   COUNT(*) as books_created,
   COUNT(DISTINCT user_id) as active_users
@@ -806,6 +812,7 @@ ORDER BY date DESC;
 ## ðŸŽ¯ Database Architecture Summary
 
 ### **Key Features Implemented**
+
 - âœ… **Scalable Schema**: Supabase PostgreSQL with modern design
 - âœ… **Full-Text Search**: Optimized search with ranking and weighting
 - âœ… **Security**: Row Level Security with comprehensive policies
@@ -814,6 +821,7 @@ ORDER BY date DESC;
 - âœ… **Monitoring**: Health checks and performance metrics
 
 ### **Performance Characteristics**
+
 - **Search Queries**: Target < 200ms response time
 - **CRUD Operations**: Target < 100ms response time
 - **Concurrent Users**: Designed for 1000+ simultaneous users
@@ -821,17 +829,16 @@ ORDER BY date DESC;
 - **Backup/Recovery**: 30-day point-in-time recovery
 
 ### **Security Features**
+
 - **Data Isolation**: RLS ensures users only see their own data
 - **Token Security**: Secure password reset with expiration
 - **Audit Trail**: Comprehensive logging and monitoring
 - **Access Control**: Granular permissions and role-based access
 
-**This database architecture provides a robust, scalable foundation for lab Catalog V2!** ðŸ“š
+**This database architecture provides a robust, scalable foundation for Script Labs V2!** ðŸ“š
 
 ---
 
 **Document Status**: âœ… Complete  
 **Last Updated**: July 29, 2025  
 **Next Review**: During implementation milestones
-
-

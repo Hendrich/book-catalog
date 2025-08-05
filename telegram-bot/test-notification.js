@@ -51,7 +51,7 @@ async function testTelegramNotification() {
     };
 
     const options = {
-      projectName: "lab Catalog App",
+      projectName: "Script Labs App",
       branch: process.env.GIT_BRANCH || "main",
       author: process.env.GIT_AUTHOR || "Test User",
       timestamp: new Date(),

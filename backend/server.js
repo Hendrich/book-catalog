@@ -43,7 +43,7 @@ try {
     // Fallback minimal spec for tests
     openApiSpec = {
       openapi: "3.0.0",
-      info: { title: "lab Catalog API", version: "2.0.0" },
+      info: { title: "Script Labs API", version: "2.0.0" },
       paths: {},
     };
   }
@@ -55,7 +55,7 @@ try {
   // Minimal fallback spec
   openApiSpec = {
     openapi: "3.0.0",
-    info: { title: "lab Catalog API", version: "2.0.0" },
+    info: { title: "Script Labs API", version: "2.0.0" },
     paths: {},
   };
 }
@@ -191,7 +191,7 @@ const swaggerOptions = {
     .swagger-ui .info { margin: 50px 0; }
     .swagger-ui .info .title { color: #3b82f6; }
   `,
-  customSiteTitle: "lab Catalog API Documentation",
+  customSiteTitle: "Script Labs API Documentation",
   customfavIcon: "/favicon.ico",
 };
 

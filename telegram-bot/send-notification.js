@@ -82,7 +82,7 @@ async function sendTestNotification() {
 
     // Enhanced options with GitHub Actions context
     const options = {
-      projectName: "lab Catalog App",
+      projectName: "Script Labs App",
       branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || "main",
       author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || "Automated",
       timestamp: new Date(),

@@ -144,7 +144,7 @@ async function runTestsWithCleanNotification() {
   }
 
   const options = {
-    projectName: "lab Catalog App",
+    projectName: "Script Labs App",
     branch: process.env.GIT_BRANCH || "main",
     author: process.env.GIT_AUTHOR || "Jest Testing",
     timestamp: new Date(),

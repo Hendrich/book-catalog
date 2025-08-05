@@ -1,6 +1,6 @@
 ﻿# Product Requirements Document (PRD)
 
-## lab Catalog Application
+## Script Labs Application
 
 ### Document Information
 
@@ -15,7 +15,7 @@
 
 ### 1.1 Product Overview
 
-lab Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku pribadi dengan sistem autentikasi yang aman. Aplikasi ini memungkinkan pengguna untuk mendaftar, login, dan mengelola koleksi buku mereka dengan operasi CRUD (Create, Read, Update, Delete).
+Script Labs App adalah aplikasi web full-stack untuk manajemen katalog buku pribadi dengan sistem autentikasi yang aman. Aplikasi ini memungkinkan pengguna untuk mendaftar, login, dan mengelola koleksi buku mereka dengan operasi CRUD (Create, Read, Update, Delete).
 
 ### 1.2 Business Objectives
 
@@ -77,14 +77,14 @@ lab Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku prib
 
 ### 3.2 lab Management
 
-| Feature ID | Feature Name    | Priority | Description                                      |
-| ---------- | --------------- | -------- | ------------------------------------------------ |
-| lab-001   | View All labs  | High     | User dapat melihat semua buku dalam koleksi      |
-| lab-002   | Add New lab    | High     | User dapat menambah buku baru (title, author)    |
-| lab-003   | Update lab     | High     | User dapat mengedit informasi buku               |
-| lab-004   | Delete lab     | High     | User dapat menghapus buku dari koleksi           |
-| lab-005   | lab Search     | Medium   | User dapat mencari buku berdasarkan title/author |
-| lab-006   | lab Categories | Low      | User dapat mengkategorikan buku                  |
+| Feature ID | Feature Name   | Priority | Description                                      |
+| ---------- | -------------- | -------- | ------------------------------------------------ |
+| lab-001    | View All labs  | High     | User dapat melihat semua buku dalam koleksi      |
+| lab-002    | Add New lab    | High     | User dapat menambah buku baru (title, author)    |
+| lab-003    | Update lab     | High     | User dapat mengedit informasi buku               |
+| lab-004    | Delete lab     | High     | User dapat menghapus buku dari koleksi           |
+| lab-005    | lab Search     | Medium   | User dapat mencari buku berdasarkan title/author |
+| lab-006    | lab Categories | Low      | User dapat mengkategorikan buku                  |
 
 ### 3.3 User Interface
 
@@ -92,8 +92,8 @@ lab Catalog App adalah aplikasi web full-stack untuk manajemen katalog buku prib
 | ---------- | ------------------- | -------- | ---------------------------------------- |
 | UI-001     | Responsive Design   | High     | UI responsif untuk desktop dan mobile    |
 | UI-002     | Login/Register Form | High     | Form yang user-friendly untuk auth       |
-| UI-003     | lab List Display   | High     | Tampilan list buku yang mudah dibaca     |
-| UI-004     | Add/Edit lab Modal | High     | Modal untuk input data buku              |
+| UI-003     | lab List Display    | High     | Tampilan list buku yang mudah dibaca     |
+| UI-004     | Add/Edit lab Modal  | High     | Modal untuk input data buku              |
 | UI-005     | Error Messages      | High     | Pesan error yang informatif              |
 | UI-006     | Loading States      | Medium   | Indikator loading untuk async operations |
 
@@ -398,5 +398,3 @@ public.labs (
 **Document Status**: Active Development
 **Next Review Date**: Weekly during development phase
 **Stakeholders**: Development Team, Product Owner
-
-

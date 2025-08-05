@@ -36,9 +36,9 @@ async function testCleanFormat() {
   };
 
   const options = {
-    projectName: "lab Catalog App",
+    projectName: "Script Labs App",
     branch: "main",
-    author: "Admin lab Catalog",
+    author: "Admin Script Labs",
     timestamp: new Date(),
   };
 

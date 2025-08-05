@@ -5,8 +5,9 @@ Bot Telegram dengan format pesan yang clean dan modern seperti pada gambar refer
 ## ðŸ“± Format Pesan Baru
 
 ### **Format Clean (Seperti Gambar)**
+
 ```
-ðŸŸ¢ lab Catalog App - Daily Test | 6:26AM
+ðŸŸ¢ Script Labs App - Daily Test | 6:26AM
 
 scriptlabsApp/automated-testing
 Jest Testing | Jest Testing
@@ -28,8 +29,9 @@ Jest Testing | Jest Testing
 ```
 
 ### **Format Detailed (Original)**
+
 ```
-ðŸ”´ lab Catalog App | 6:26AM
+ðŸ”´ Script Labs App | 6:26AM
 
 ðŸ”´ lab-Catalog-App
 Automated | Test Coverage Report
@@ -56,17 +58,20 @@ Automated | Test Coverage Report
 ## ðŸš€ Cara Penggunaan
 
 ### **1. Format Clean (Recommended)**
+
 ```bash
 npm run test:coverage        # Clean format (default)
 npm run test:coverage:clean  # Explicit clean format
 ```
 
 ### **2. Format Detailed**
+
 ```bash
 npm run test:coverage:advanced  # Advanced runner with detailed format
 ```
 
 ### **3. Test Format Manual**
+
 ```bash
 npm run telegram:clean      # Test clean format
 npm run telegram:test       # Test original format
@@ -74,33 +79,36 @@ npm run telegram:test       # Test original format
 
 ## ðŸŽ¯ Status Indicators
 
-| Status | Icon | Kondisi |
-|--------|------|---------|
-| SUCCESS | ðŸŸ¢ | Semua test passed |
-| FAILED | ðŸ”´ | Ada test yang failed |
-| NO TESTS | âšª | Tidak ada test ditemukan |
+| Status   | Icon | Kondisi                  |
+| -------- | ---- | ------------------------ |
+| SUCCESS  | ðŸŸ¢ | Semua test passed        |
+| FAILED   | ðŸ”´ | Ada test yang failed     |
+| NO TESTS | âšª  | Tidak ada test ditemukan |
 
 ## âš™ï¸ Konfigurasi Format
 
 ### **Menggunakan Clean Format**
+
 ```javascript
 // Secara default menggunakan clean format
 await notifier.sendNotification(testData, coverageData, options);
 ```
 
 ### **Menggunakan Detailed Format**
+
 ```javascript
 // Untuk format detailed
 await notifier.sendDetailedNotification(testData, coverageData, options);
 ```
 
 ### **Custom Format**
+
 ```javascript
 // Custom message format
 const customMessage = notifier.formatCleanMessage(testData, coverageData, {
-  projectName: 'Your Project Name',
-  branch: 'main',
-  author: 'Your Name'
+  projectName: "Your Project Name",
+  branch: "main",
+  author: "Your Name",
 });
 ```
 
@@ -111,7 +119,7 @@ const customMessage = notifier.formatCleanMessage(testData, coverageData, {
 âœ… **Time Format** - Format waktu yang user-friendly (6:26AM)  
 âœ… **Simple Metrics** - Metrics essential tanpa noise  
 âœ… **Coverage Summary** - Coverage percentage yang clean  
-âœ… **Auto Status** - Status otomatis berdasarkan hasil test  
+âœ… **Auto Status** - Status otomatis berdasarkan hasil test
 
 ## ðŸ”§ Customization
 
@@ -126,5 +134,3 @@ formatCleanMessage(testData, coverageData, options = {}) {
 ```
 
 Bot sekarang mendukung dua format: **Clean** (default) dan **Detailed**, disesuaikan dengan kebutuhan project Anda! ðŸŽ‰
-
-

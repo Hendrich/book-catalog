@@ -119,7 +119,7 @@ async function verifyDataAccuracy() {
 
   const notifier = new TelegramTestNotifier();
   const options = {
-    projectName: "lab Catalog App",
+    projectName: "Script Labs App",
     branch: process.env.GIT_BRANCH || "main",
     author: process.env.GIT_AUTHOR || "Data Verification",
     timestamp: new Date(),

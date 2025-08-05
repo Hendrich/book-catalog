@@ -161,7 +161,7 @@ async function runCITests() {
 
     // Prepare options with GitHub context
     const options = {
-      projectName: "lab Catalog",
+      projectName: "Script Labs",
       branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || "main",
       author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || "Automated",
       timestamp: new Date(),
@@ -201,7 +201,7 @@ async function runCITests() {
     };
 
     const failureOptions = {
-      projectName: "lab Catalog",
+      projectName: "Script Labs",
       branch: process.env.GIT_BRANCH || process.env.GITHUB_REF_NAME || "main",
       author: process.env.GIT_AUTHOR || process.env.GITHUB_ACTOR || "Automated",
       timestamp: new Date(),
