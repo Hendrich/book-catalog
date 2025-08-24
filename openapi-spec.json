@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Script Labs API",
-    "description": "A secure Script Labs API built with Node.js and Express, featuring JWT authentication via Supabase and CRUD operations for labs management.",
+    "description": "A secure Script Labs API built with Node.js and Express, featuring JWT authentication via Supabase and CRUD operations for Labs management.",
     "version": "1.0.0",
     "contact": {
       "name": "Hendri Christianto",
@@ -15,7 +15,7 @@
       "description": "Local development server"
     },
     {
-      "url": "https://script-labs-app-z8p8.onrender.com",
+      "url": "https://script-Labs-app-z8p8.onrender.com",
       "description": "Production server on Render"
     }
   ],
@@ -25,10 +25,10 @@
     }
   ],
   "paths": {
-    "/api/labs/search": {
+    "/api/Labs/search": {
       "get": {
-        "summary": "Search labs by title or author",
-        "description": "Search labs for the authenticated user by title or author. Tidak mengubah database.",
+        "summary": "Search Labs by title or author",
+        "description": "Search Labs for the authenticated user by title or author. Tidak mengubah database.",
         "tags": ["Labs"],
         "security": [{ "BearerAuth": [] }],
         "parameters": [
@@ -107,10 +107,10 @@
         }
       }
     },
-    "/api/labs": {
+    "/api/Labs": {
       "get": {
-        "summary": "Get all labs",
-        "description": "Retrieve all labs belonging to the authenticated user",
+        "summary": "Get all Labs",
+        "description": "Retrieve all Labs belonging to the authenticated user",
         "tags": ["Labs"],
         "security": [
           {
@@ -119,7 +119,7 @@
         ],
         "responses": {
           "200": {
-            "description": "List of labs retrieved successfully",
+            "description": "List of Labs retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -154,8 +154,8 @@
         }
       },
       "post": {
-        "summary": "Add a new lab",
-        "description": "Create a new lab entry for the authenticated user",
+        "summary": "Add a new Lab",
+        "description": "Create a new Lab entry for the authenticated user",
         "tags": ["Labs"],
         "security": [
           {
@@ -178,11 +178,11 @@
         },
         "responses": {
           "201": {
-            "description": "lab created successfully",
+            "description": "Lab created successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/lab"
+                  "$ref": "#/components/schemas/Lab"
                 },
                 "example": {
                   "id": 25,
@@ -215,11 +215,11 @@
         }
       }
     },
-    "/api/labs/{id}": {
+    "/api/Labs/{id}": {
       "put": {
-        "summary": "Update a lab",
-        "description": "Update an existing lab (user can only update their own labs)",
-        "tags": ["labs"],
+        "summary": "Update a Lab",
+        "description": "Update an existing Lab (user can only update their own Labs)",
+        "tags": ["Labs"],
         "security": [
           {
             "BearerAuth": []
@@ -230,7 +230,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "lab ID",
+            "description": "Lab ID",
             "schema": {
               "type": "integer",
               "example": 14
@@ -253,11 +253,11 @@
         },
         "responses": {
           "200": {
-            "description": "lab updated successfully",
+            "description": "Lab updated successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/lab"
+                  "$ref": "#/components/schemas/Lab"
                 },
                 "example": {
                   "id": 14,
@@ -285,14 +285,14 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "lab not found or unauthorized",
+            "description": "Lab not found or unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "lab not found or unauthorized"
+                  "message": "Lab not found or unauthorized"
                 }
               }
             }
@@ -303,9 +303,9 @@
         }
       },
       "delete": {
-        "summary": "Delete a lab",
-        "description": "Delete an existing lab (user can only delete their own labs)",
-        "tags": ["labs"],
+        "summary": "Delete a Lab",
+        "description": "Delete an existing Lab (user can only delete their own Labs)",
+        "tags": ["Labs"],
         "security": [
           {
             "BearerAuth": []
@@ -316,7 +316,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "lab ID",
+            "description": "Lab ID",
             "schema": {
               "type": "integer",
               "example": 14
@@ -325,14 +325,14 @@
         ],
         "responses": {
           "200": {
-            "description": "lab deleted successfully",
+            "description": "Lab deleted successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SuccessMessage"
                 },
                 "example": {
-                  "message": "lab deleted successfully"
+                  "message": "Lab deleted successfully"
                 }
               }
             }
@@ -341,14 +341,14 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "lab not found or unauthorized",
+            "description": "Lab not found or unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "lab not found or unauthorized"
+                  "message": "Lab not found or unauthorized"
                 }
               }
             }
@@ -680,28 +680,28 @@
       }
     },
     "schemas": {
-      "lab": {
+      "Lab": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
-            "description": "Unique identifier for the lab",
+            "description": "Unique identifier for the Lab",
             "example": 14
           },
           "title": {
             "type": "string",
-            "description": "Title of the lab",
+            "description": "Title of the Lab",
             "example": "Atomic Habits"
           },
           "author": {
             "type": "string",
-            "description": "Author of the lab",
+            "description": "Author of the Lab",
             "example": "James Clear"
           },
           "user_id": {
             "type": "string",
             "format": "uuid",
-            "description": "ID of the user who owns this lab",
+            "description": "ID of the user who owns this Lab",
             "example": "cd004999d-7d4b-4167-a9af-0f15783caee5"
           }
         },
@@ -712,12 +712,12 @@
         "properties": {
           "title": {
             "type": "string",
-            "description": "Title of the lab",
+            "description": "Title of the Lab",
             "example": "Atomic Habits"
           },
           "author": {
             "type": "string",
-            "description": "Author of the lab",
+            "description": "Author of the Lab",
             "example": "James Clear"
           }
         },
@@ -856,8 +856,8 @@
       "description": "Authentication endpoints using backend API with Supabase"
     },
     {
-      "name": "labs",
-      "description": "lab management endpoints (CRUD operations)"
+      "name": "Labs",
+      "description": "Lab management endpoints (CRUD operations)"
     }
   ]
 }
